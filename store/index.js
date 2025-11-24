@@ -1,17 +1,36 @@
 export const state = () => ({
   darkMode: true,
-  user_data: {}
+  user_data: {},
+  isAuthenticated: false,
+  token: null
 })
 
 export const mutations = {
   setUserData(state, payload) {
     state.user_data = payload
   },
-  setIsDarkMode(state) {
-    state.darkMode = state
+  setToken(state, token) {
+    state.token = token
+  },
+  setIsAuthenticated(state, status) {
+    state.isAuthenticated = status
+  },
+  setIsDarkMode(state, value) {
+    state.darkMode = value
+  },
+  resetAuth(state) {
+    state.user_data = {}
+    state.token = null
+    state.isAuthenticated = false
   }
 }
 
 export const actions = {
-  
+  login({ commit }, { token }) {
+    commit('setToken', token)
+    commit('setIsAuthenticated', true)
+  },
+  logout({ commit }) {
+    commit('resetAuth')
+  }
 }
