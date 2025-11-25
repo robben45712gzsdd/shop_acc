@@ -5,9 +5,29 @@
       <nuxt-link
         :to="{
           name: 'AccountCategories',
-          params: { categoryName: 'lien-minh-huyen-thoai' },
+          params: { categoryName: 'freefire' },
         }"
         class="type-account"
+      >
+        <div class="wrap-type-account">
+          <img
+            class="img-type-account"
+            src="@/assets/images/acc-game-freefire.gif"
+            alt=""
+          />
+          <p class="name-type-acc"><strong>danh mục acc freefire</strong></p>
+          <p class="num-acc">Số tài khoản: <strong>2,816</strong></p>
+          <div class="btn-buy-now">
+            <img src="@/assets/images/btn-buy-now.png" alt="" />
+          </div>
+        </div>
+      </nuxt-link>
+      <nuxt-link
+        :to="{
+          name: 'AccountCategories',
+          params: { categoryName: 'lien-minh-huyen-thoai' },
+        }"
+        class="type-account disabled"
       >
         <div class="wrap-type-account">
           <img
@@ -27,7 +47,7 @@
           name: 'AccountCategories',
           params: { categoryName: 'lien-quan' },
         }"
-        class="type-account"
+        class="type-account disabled"
       >
         <div class="wrap-type-account">
           <img
@@ -47,7 +67,7 @@
           name: 'AccountCategories',
           params: { categoryName: 'toc-chien' },
         }"
-        class="type-account"
+        class="type-account disabled"
       >
         <div class="wrap-type-account">
           <img
@@ -56,26 +76,6 @@
             alt=""
           />
           <p class="name-type-acc"><strong>danh mục acc tốc chiến</strong></p>
-          <p class="num-acc">Số tài khoản: <strong>2,816</strong></p>
-          <div class="btn-buy-now">
-            <img src="@/assets/images/btn-buy-now.png" alt="" />
-          </div>
-        </div>
-      </nuxt-link>
-      <nuxt-link
-        :to="{
-          name: 'AccountCategories',
-          params: { categoryName: 'freefire' },
-        }"
-        class="type-account"
-      >
-        <div class="wrap-type-account">
-          <img
-            class="img-type-account"
-            src="@/assets/images/acc-game-freefire.gif"
-            alt=""
-          />
-          <p class="name-type-acc"><strong>danh mục acc freefire</strong></p>
           <p class="num-acc">Số tài khoản: <strong>2,816</strong></p>
           <div class="btn-buy-now">
             <img src="@/assets/images/btn-buy-now.png" alt="" />

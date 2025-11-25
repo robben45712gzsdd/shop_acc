@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie'
 export const state = () => ({
   darkMode: true,
   user_data: {},
@@ -6,11 +7,12 @@ export const state = () => ({
 })
 
 export const mutations = {
-  setUserData(state, payload) {
+  setUserData(state, payload) {    
     state.user_data = payload
   },
   setToken(state, token) {
     state.token = token
+    Cookies.set('token', token)
   },
   setIsAuthenticated(state, status) {
     state.isAuthenticated = status
@@ -21,7 +23,8 @@ export const mutations = {
   resetAuth(state) {
     state.user_data = {}
     state.token = null
-    state.isAuthenticated = false
+    state.isAuthenticated = false 
+    Cookies.remove('token')
   }
 }
 

@@ -3,31 +3,39 @@ import auth from '~/api/auth'
 
 export default async function ({ store, redirect, route }) {
   const currentPath = route.path.toLowerCase()
-  const routerDontNeedLogin = ['/auth/login', '/auth/signup']
-  const isAuthRoute = routerDontNeedLogin.includes(currentPath)
+  const authRoutes = ['/login', '/signup']
+  const isAuthRoute = authRoutes.includes(currentPath)
 
-  let token = store.state.auth.token || Cookies.get('token')
+  const token = Cookies.get('token')
 
+  // Nếu có token → cố gắng restore session
   if (token) {
-    // Lưu token vào store nếu chưa có
-    if (!store.state.auth.token) {
-      await store.dispatch('auth/login', { token })
-    }
+    await store.dispatch('login', { token })
   }
 
-  // Nếu route cần xác thực
+  const isLoggedIn = store.state.isAuthenticated
+
+  // 🔥 Nếu đã đăng nhập mà vào /login hoặc /signup → đưa về /
+  if (isLoggedIn && isAuthRoute) {
+    return redirect('/')
+  }
+
+  // 🔥 Nếu route cần login
   if (!isAuthRoute) {
-    if (!store.state.auth.isAuthenticated) {
-      try {
-        const res = await auth.getMainProfile(token)
-        const { avatarUrl, accountId, name, role, phoneNumber, email } = res?.data
-        store.commit('auth/setUserData', { avatarUrl, accountId, name, phoneNumber, email })
-        store.commit('auth/setIsAuthenticated', true)
-      } catch (err) {
-        console.error('Error fetching profile:', err)
-        store.dispatch('auth/logout')
-        return redirect('/auth/login')
+    try {
+      const res = await auth.getMainProfile()
+
+      if (!res.success) {
+        store.dispatch('logout')
+        return redirect('/login')
       }
+
+      store.commit('setUserData', res.data)
+      store.commit('setIsAuthenticated', true)
+    } catch (err) {
+      console.error('Error fetching profile:', err)
+      store.dispatch('logout')
+      return redirect('/login')
     }
   }
 }

@@ -56,8 +56,8 @@ export default {
           userName: this.name_account,
           password: this.password,
         });
-        if (res.status === true) {
-          this.$store.commit('setUserData', res.data);
+        if (res.success === true) {
+          this.$store.dispatch('login', { token: res.data?.accessToken });
           this.$router.push('/');
         } else {
           this.error = res.message || 'Đăng nhập thất bại!';
@@ -70,15 +70,16 @@ export default {
 };
 </script>
 <style lang="scss">
-.hr{
+.hr {
   width: 100%;
   height: 0.1px;
   background-color: rgba(51, 51, 51, 0.692);
 }
+
 .login-page,
 .register-page {
   width: 100%;
-  height: calc(100vh - 150px);
+  height: calc(100vh - 70px);
   background-color: white;
   display: flex;
   justify-content: center;

@@ -66,7 +66,6 @@ export default {
 <style lang="scss">
 .homepage-content {
   padding-top: 1px;
-  margin-top: 53px;
   background-image: url("@/assets/images/bg.png");
   background-repeat: no-repeat;
   background-attachment: fixed;
@@ -155,7 +154,6 @@ section {
     justify-content: center;
     align-items: center;
     background-color: var(--black-three);
-    margin-bottom: 60px;
 
     .title {
       text-transform: uppercase;

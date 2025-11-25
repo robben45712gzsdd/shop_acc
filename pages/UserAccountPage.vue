@@ -3,9 +3,9 @@
     <div class="wrap-account-page">
       <div class="top-avatar" v-show="nav.accountInfor">
         <div class="avatar">
-          <img src="@/assets/images/avatar-user.jpg" alt="" />
+          <img :src="user.avatarUrl" alt="" />
         </div>
-        <p class="username"><strong>Dũng Dương - ( ID: 745508)</strong></p>
+        <p class="username"><strong>{{ user.name }} - (ID: {{ user.userId }})</strong></p>
       </div>
       <div class="wrap-user-infor">
         <div class="navigation">
@@ -23,7 +23,7 @@
           >
             <i class="fa fa-lock" aria-hidden="true"></i> Đổi mật khẩu
           </p>
-          <div class="title"><strong>trò chơi</strong></div>
+          <!-- <div class="title"><strong>trò chơi</strong></div>
           <p
             @click="navigateTo('gameHistory')"
             :class="{ active: nav.gameHistory }"
@@ -35,7 +35,7 @@
             :class="{ active: nav.withdrawItem }"
           >
             <i class="fa fa-reply-all" aria-hidden="true"></i> Rút vật phẩm
-          </p>
+          </p> -->
           <div class="title"><strong>giao dịch</strong></div>
           <p
             @click="navigateTo('autoRechargeCard')"
@@ -69,12 +69,12 @@
           >
             <i class="fa fa-book" aria-hidden="true"></i> Lịch sử mua nick
           </p>
-          <p
+          <!-- <p
             @click="navigateTo('itemPurchaseHistory')"
             :class="{ active: nav.itemPurchaseHistory }"
           >
             <i class="fa fa-cubes" aria-hidden="true"></i> Lịch sử mua vật phẩm
-          </p>
+          </p> -->
         </div>
         <div class="information">
           <AccountInformations v-show="nav.accountInfor" />
@@ -132,6 +132,11 @@ export default {
         itemPurchaseHistory: false,
       },
     };
+  },
+  computed : {
+    user() {
+      return this.$store.state?.user_data  || {};
+    },
   },
 
   methods: {

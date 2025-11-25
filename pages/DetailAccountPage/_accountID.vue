@@ -50,7 +50,7 @@
           <div class="recharge-atm-momo">
             <p>
               <strong
-                >nạp atm/momo tặng 25% tự động 24/24 -
+                >nạp atm/momo tự động 24/24 -
                 <nuxt-link to="/">xem tại đây</nuxt-link></strong
               >
             </p>

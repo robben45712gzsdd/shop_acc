@@ -1,9 +1,6 @@
 export default {
   ssr: false,
   components: true,
-  /*
-   ** Headers of the page
-   */
   head: {
     titleTemplate: "%s - " + process.env.npm_package_name,
     title: process.env.npm_package_name || "",
@@ -24,41 +21,18 @@ export default {
       },
     ],
   },
-  /*
-   ** Customize the progress-bar color
-   */
   loading: { color: "#fff" },
-  /*
-   ** Global CSS
-   */
-  css: ["~/assets/styles/main.scss"],
-  /*
-   ** Plugins to load before mounting the App
-   */
   modules: ["@nuxtjs/axios"],
   plugins: ["~/plugins/axios.js"],
-  /*
-   ** Nuxt.js dev-modules
-   */
   buildModules: ["@nuxtjs/vuetify"],
-  /*
-   ** Nuxt.js modules
-   */
-  /*
-   ** vuetify module configuration
-   ** https://github.com/nuxt-community/vuetify-module
-   */
   vuetify: {
     customVariables: ["~/assets/styles/variables.scss"],
   },
-
-  /*
-   ** Build configuration
-   */
+  css: ["~/assets/styles/main.scss"],
+  router: {
+    middleware: ["auth"],
+  },
   build: {
-    /*
-     ** You can extend webpack config here
-     */
     extend(config, ctx) {},
   },
 };

@@ -151,25 +151,6 @@ a {
   }
 }
 
-footer {
-  width: 100%;
-  background-color: #000000;
-  color: white;
-
-  .wrap-footer {
-    max-width: var(--max-width);
-    margin: 0px auto;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-
-    p {
-      line-height: 30px;
-      padding: 0px 40px;
-    }
-  }
-}
-
 @media (max-width: 1000px) {
   .dark-mode {
     .mobile-menu-bar {
@@ -254,5 +235,36 @@ footer {
         display: none !important;
       }
     }
+  }
+}
+
+.disabled {
+  position: relative;
+  cursor: not-allowed;
+  pointer-events: none;
+
+  &::before {
+    content: "ĐANG PHÁT TRIỂN";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-12deg);
+    font-size: 2rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.28); /* chữ đỏ nhạt */
+    white-space: nowrap;
+    z-index: 10;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  &::after {
+    /* lớp mờ nhẹ nền */
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(1px);    /* hiệu ứng mờ sang */
+    z-index: 5;
   }
 }

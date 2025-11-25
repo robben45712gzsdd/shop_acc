@@ -24,7 +24,7 @@ body {
 
 #notfound {
   position: relative;
-  height: 100vh;
+  height: calc(100vh - 70px);
   background-image: url("@/assets/images/bg.png");
   background-repeat: no-repeat;
   background-attachment: fixed;
