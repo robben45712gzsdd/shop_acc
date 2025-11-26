@@ -31,9 +31,9 @@
     <section>
       <RechargeOnline />
       <ListGameAccount />
-      <div class="hot-mini-game">
+      <!-- <div class="hot-mini-game">
         <div class="title"><strong>mini game siêu hot</strong></div>
-      </div>
+      </div> -->
     </section>
   </div>
 </template>
@@ -66,7 +66,6 @@ export default {
 <style lang="scss">
 .homepage-content {
   padding-top: 1px;
-  background-image: url("@/assets/images/bg.png");
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
@@ -75,6 +74,7 @@ export default {
 .notice-box {
   width: 100%;
   height: 100%;
+  z-index: 1000;
   position: fixed;
   top: 0;
   left: 0;

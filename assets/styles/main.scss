@@ -30,7 +30,11 @@ html,
   box-sizing: border-box;
 }
 
-
+#main.dark-mode {
+  min-height: calc(100vh - 70px);
+  background-image: url("@/assets/images/bg.png");
+  background-repeat: no-repeat;
+}
 p{
   line-height: 1.2;
   margin: 10px 0;

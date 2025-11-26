@@ -41,8 +41,23 @@ const getMainProfile = async () => {
   });
 };
 
+// change password
+const changePassword = async (body) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`/Auth/ChangePassword`, body)
+      .then((response) => {
+        resolve(response?.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
 export default {
   login,
   register,
   getMainProfile,
+  changePassword,
 };

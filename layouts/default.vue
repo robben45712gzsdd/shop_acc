@@ -61,7 +61,7 @@
       </div>
     </div>
 
-    <div class="!mt-[70px] min-h-[calc(100vh-70px)]">
+    <div class="!mt-[70px] min-h-[calc(100vh-70px)]" :class="{ 'dark-mode': darkMode }" id="main">
       <Nuxt />
     </div>
 
@@ -162,7 +162,7 @@
                 <div class="quick-amounts">
                   <button v-for="amt in quickAmounts" :key="amt" type="button"
                     @click="handleInputRecharge(rechargeAmount + amt)" class="quick-btn">
-                   +{{ (amt / 1000).toLocaleString() }}K
+                    +{{ (amt / 1000).toLocaleString() }}K
                   </button>
                 </div>
 
@@ -621,11 +621,11 @@ export default {
     }
 
     &.zalo {
-      background: linear-gradient(135deg, #0084ff, #005dd3);
+      background: rgb(255, 255, 255);
     }
 
     &.facebook {
-      background: linear-gradient(135deg, #4267B2, #385185);
+      background: white;
     }
   }
 

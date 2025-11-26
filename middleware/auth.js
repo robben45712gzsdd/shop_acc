@@ -1,41 +1,43 @@
-import Cookies from 'js-cookie'
-import auth from '~/api/auth'
+import Cookies from "js-cookie";
+import auth from "~/api/auth";
 
 export default async function ({ store, redirect, route }) {
-  const currentPath = route.path.toLowerCase()
-  const authRoutes = ['/login', '/signup']
-  const isAuthRoute = authRoutes.includes(currentPath)
+  const currentPath = route.path.toLowerCase();
 
-  const token = Cookies.get('token')
-
-  // Nếu có token → cố gắng restore session
-  if (token) {
-    await store.dispatch('login', { token })
+  // Nếu đang ở trang login hoặc signup thì bỏ qua
+  if (["/login", "/signup"].includes(currentPath)) {
+    return;
   }
 
-  const isLoggedIn = store.state.isAuthenticated
+  const token = Cookies.get("token");
 
-  // 🔥 Nếu đã đăng nhập mà vào /login hoặc /signup → đưa về /
-  if (isLoggedIn && isAuthRoute) {
-    return redirect('/')
-  }
-
-  // 🔥 Nếu route cần login
-  if (!isAuthRoute) {
+  // Nếu có token → restore session (không bắt buộc)
+  if (token && !store.state.isAuthenticated) {
     try {
-      const res = await auth.getMainProfile()
-
-      if (!res.success) {
-        store.dispatch('logout')
-        return redirect('/login')
-      }
-
-      store.commit('setUserData', res.data)
-      store.commit('setIsAuthenticated', true)
+      await store.dispatch("login", { token });
     } catch (err) {
-      console.error('Error fetching profile:', err)
-      store.dispatch('logout')
-      return redirect('/login')
+      console.error("Restore session failed:", err);
+      store.dispatch("logout");
     }
   }
-}
+
+  const isLoggedIn = store.state.isAuthenticated;
+
+  // Nếu có token hoặc đang login, gọi getMainProfile cho mọi trang (trừ login/signup)
+  try {
+    const res = await auth.getMainProfile();
+    if (res.success) {
+      // Chỉ commit nếu gọi đúng, nếu sai hoặc lỗi thì không commit gì
+      store.commit("setUserData", res.data);
+      store.commit("setIsAuthenticated", true);
+    }
+  } catch (err) {
+    console.error("Error fetching profile:", err);
+    // Không commit gì nếu lỗi, chỉ logout nếu muốn bảo mật
+    // store.dispatch("logout");
+  }
+
+  // Nếu chưa login và muốn redirect những trang cần auth thì xử lý ở đây
+  // Ví dụ: nếu muốn redirect tất cả trang ngoại trừ login/signup khi chưa auth
+  // if (!isLoggedIn) return redirect("/login");
+};

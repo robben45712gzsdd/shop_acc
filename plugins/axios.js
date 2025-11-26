@@ -10,13 +10,35 @@ export default ({ app }, inject) => {
   // Tạo request-time theo yyyyMMddHHmmss
   function getRequestTime() {
     const now = new Date();
-    return now.toISOString().replace(/[-:TZ.]/g, "").slice(0, 14);
+    return now
+      .toISOString()
+      .replace(/[-:TZ.]/g, "")
+      .slice(0, 14);
+  }
+  function getQueryParams(obj) {
+   return new URLSearchParams(obj).toString();
   }
 
   // Tính contentMD5 dựa trên body (POST/PUT/PATCH) hoặc rỗng (GET)
   function getContentMD5(config) {
-    if (!config.data || Object.keys(config.data).length === 0) return md5("");
-    return md5(JSON.stringify(config.data));
+    const method = config?.method?.toUpperCase();
+    let body = {};
+
+    if (method === "GET" || method === "DELETE") {
+      // GET/DELETE không có body → dùng params
+      body = config.params ? getQueryParams(config.params) : "";
+    } else {
+      // POST/PUT/PATCH → dùng body
+      body = config.data ? JSON.stringify(config.data) : "";
+    }
+
+    console.log(body);
+    
+    if (!body || body === "") {
+      return md5(""); // rỗng thì hash chuỗi rỗng
+    }
+
+    return md5(body);
   }
 
   // Lấy path của request (không bao gồm baseURL)
@@ -38,15 +60,16 @@ export default ({ app }, inject) => {
     }
 
     const httpMethod = (config.method || "GET").toUpperCase();
-    const path = "/api" + getRequestPath(config.url);    
+    const path = "/api" + getRequestPath(config.url);
     const contentMD5 = getContentMD5(config);
     const requestTime = getRequestTime();
 
-    const stringToSign = `${httpMethod}\n${path}\n${contentMD5}\n${requestTime}\n${API_KEY}`;
+    const stringToSign = `${httpMethod}${path}${contentMD5}${requestTime}${API_KEY}`;
     console.log(stringToSign);
-    
+
     const sign = md5(stringToSign);
 
+    console.log(sign);
     // Gắn headers
     config.headers["Sign"] = sign;
     config.headers["Request-Time"] = requestTime;

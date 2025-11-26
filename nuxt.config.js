@@ -13,7 +13,17 @@ export default {
         content: process.env.npm_package_description || "",
       },
     ],
-    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
+    link: [
+      { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
+      {
+        rel: "stylesheet",
+        href: "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css",
+        integrity:
+          "sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==",
+        crossorigin: "anonymous",
+        referrerpolicy: "no-referrer",
+      },
+    ],
     script: [
       {
         src: "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4",
@@ -23,7 +33,7 @@ export default {
   },
   loading: { color: "#fff" },
   modules: ["@nuxtjs/axios"],
-  plugins: ["~/plugins/axios.js"],
+  plugins: ["~/plugins/axios.js", "~/plugins/toast.js"],
   buildModules: ["@nuxtjs/vuetify"],
   vuetify: {
     customVariables: ["~/assets/styles/variables.scss"],

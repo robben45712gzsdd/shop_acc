@@ -1,4 +1,161 @@
+
 <template>
+  <div class="detail-account-page">
+    <div class="wrarp-detail-account">
+      <!-- THÔNG TIN TÀI KHOẢN -->
+      <div class="account-info" v-if="account">
+        <h2>{{ account.title }}</h2>
+        <p>{{ account.description }}</p>
+
+        <div class="price">
+          <div>
+            <strong>Giá CARD:</strong> {{ formatPrice(account.price) }}
+          </div>
+          <div>
+            <strong>Giá ATM:</strong> {{ formatPrice(account.price * 0.8) }}
+          </div>
+        </div>
+
+        <div class="seller">
+          <strong>Người bán:</strong> {{ account.sellerId }}
+        </div>
+
+        <div class="status">
+          <strong>Trạng thái:</strong>
+          {{ account.status === 0 ? "Chưa bán" : "Đã bán" }}
+        </div>
+      </div>
+
+      <!-- HÌNH ẢNH TÀI KHOẢN -->
+      <div class="account-images" v-if="account?.getListImages?.length">
+        <h3>Hình ảnh tài khoản</h3>
+        <div class="images-grid">
+          <img
+            v-for="(img, index) in account.getListImages"
+            :key="index"
+            :src="img.imageUrl"
+            :alt="'Hình ' + (index + 1)"
+          />
+        </div>
+      </div>
+
+      <!-- LOADING & ERROR -->
+      <div v-if="loading" class="loading">Đang tải...</div>
+      <div v-if="error" class="error">{{ error }}</div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      accountID: "",
+      account: null,
+      loading: false,
+      error: null,
+    };
+  },
+  methods: {
+    formatPrice(price) {
+      if (!price) return "0 đ";
+      return Number(price).toLocaleString("vi-VN") + " đ";
+    },
+    async fetchAccount() {
+      this.loading = true;
+      this.error = null;
+      try {
+        const res = await fetch(`/api/account/${this.accountID}`);
+        const data = await res.json();
+        if (data.success) {
+          this.account = data.data;
+        } else {
+          this.error = data.message || "Lỗi khi lấy thông tin tài khoản";
+        }
+      } catch (err) {
+        console.error(err);
+        this.error = "Không thể kết nối đến server";
+      } finally {
+        this.loading = false;
+      }
+    },
+  },
+  mounted() {
+    this.accountID = this.$route.params.accountID;
+    this.$store.state.darkMode = false;
+    this.fetchAccount();
+  },
+};
+</script>
+
+<style scoped lang="scss">
+.detail-account-page {
+  width: 100%;
+  min-height: 100vh;
+  background: #f8f8f8;
+  padding: 20px;
+
+  .wrarp-detail-account {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+
+    .account-info {
+      margin-bottom: 40px;
+
+      h2 {
+        font-size: 2rem;
+        margin-bottom: 10px;
+      }
+
+      p {
+        margin-bottom: 20px;
+        color: #555;
+      }
+
+      .price,
+      .seller,
+      .status {
+        margin-bottom: 10px;
+      }
+    }
+
+    .account-images {
+      h3 {
+        margin-bottom: 10px;
+      }
+
+      .images-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 10px;
+
+        img {
+          width: 100%;
+          height: 150px;
+          object-fit: cover;
+          border-radius: 5px;
+        }
+      }
+    }
+
+    .loading {
+      text-align: center;
+      color: #555;
+    }
+
+    .error {
+      text-align: center;
+      color: red;
+      font-weight: bold;
+    }
+  }
+}
+</style>
+
+<!-- <template>
   <div class="detail-account-page">
     <div class="wrarp-detail-account">
       <div class="title">
@@ -161,7 +318,7 @@ export default {
   min-height: calc(100% - 74px);
   height: auto;
   background-color: white;
-  margin-top: 74px;
+  margin: 74px auto;
   padding-top: 1px;
 
   .wrarp-detail-account {
@@ -398,4 +555,4 @@ export default {
     }
   }
 }
-</style>
+</style> -->

@@ -35,7 +35,7 @@ export default {
     };
   },
 
-  mounted() {
+  mounted() {    
     this.$store.commit('setIsDarkMode', true);
     if (this.$store.state.user_data?.username) {
       this.$router.push('/');
@@ -56,14 +56,15 @@ export default {
           userName: this.name_account,
           password: this.password,
         });
-        if (res.success === true) {
+        if (res.success === true) {                    
           this.$store.dispatch('login', { token: res.data?.accessToken });
           this.$router.push('/');
         } else {
           this.error = res.message || 'Đăng nhập thất bại!';
         }
       } catch (err) {
-        this.error = err.response?.data || 'Đăng nhập thất bại!';
+        console.error(err);
+        this.error = err.response?.data?.message || 'Đăng nhập thất bại!';
       }
     },
   },
