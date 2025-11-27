@@ -14,5 +14,32 @@ export default {
     });
   },
 
-  
+  // get list transaction
+  getTransactionList(params) {
+    return new Promise((resolve, reject) => {
+      axios
+        .get("/Payment/GetListTransaction", { params })
+        .then((response) => {
+          resolve(response?.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+
+  //get list payment 
+
+  getPaymentList(params) {
+    return new Promise((resolve, reject) => {
+      axios
+        .get("/Payment/GetListPayment", { params })
+        .then((response) => {
+          resolve(response?.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
 };

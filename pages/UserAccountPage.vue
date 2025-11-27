@@ -155,7 +155,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .user-acocunt-page {
   width: 100%;
   min-height: calc(100% - 74px);

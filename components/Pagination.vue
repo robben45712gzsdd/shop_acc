@@ -1,5 +1,5 @@
 <template>
-  <div class="pagination-wrapper">
+  <div class="pagination-wrapper" v-if="totalPages > maxVisible">
     <div class="pagination">
       <button class="page-btn prev-btn" :disabled="currentPage === 1" @click="$emit('update:page', currentPage - 1)">
         <i class="fa-chevron-left fas"></i>
