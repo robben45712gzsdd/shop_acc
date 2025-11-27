@@ -1,5 +1,5 @@
 <template>
-  <div class="transaction-history table-style">
+  <div class="table-style transaction-history">
     <div class="title"><strong>lịch sử nạp thẻ</strong></div>
     <div class="wrap-history">
       <table>
@@ -30,7 +30,7 @@
       <strong
         >Dùng điện thoại <i class="fa fa-mobile" aria-hidden="true"></i>, hãy
         vuốt bảng từ phải qua trái (
-        <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> ) để xem đầy
+        <i class="fa-arrow-circle-left fa" aria-hidden="true"></i> ) để xem đầy
         đủ thông tin!</strong
       >
     </p>

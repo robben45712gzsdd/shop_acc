@@ -186,8 +186,8 @@
                 </div>
 
                 <!-- SUBMIT -->
-                <button @click="handleRecharge" class="btn-submit">
-                  Nạp Tiền
+                <button @click="handleRecharge" class="flex justify-center items-center btn-submit">
+                  <p class="!my-0 uppercase !leading-none">Xác nhận, tôi đã thanh toán</p>
                   <i class="fa-arrow-right fas"></i>
                 </button>
 
@@ -874,7 +874,7 @@ export default {
         .btn-submit {
           width: 100%;
           padding: 14px;
-          background: linear-gradient(135deg, #ff6b35, #ff8c5a);
+          background: linear-gradient(135deg, #05965291, #098d1ba6);
           color: white;
           border: none;
           border-radius: 8px;
@@ -890,7 +890,7 @@ export default {
 
           &:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3);
+            box-shadow: 0 8px 8px rgba(0, 175, 44, 0.3);
           }
 
           &:active {

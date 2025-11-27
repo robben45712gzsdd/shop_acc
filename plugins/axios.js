@@ -32,7 +32,6 @@ export default ({ app }, inject) => {
       body = config.data ? JSON.stringify(config.data) : "";
     }
 
-    console.log(body);
     
     if (!body || body === "") {
       return md5(""); // rỗng thì hash chuỗi rỗng
@@ -65,11 +64,9 @@ export default ({ app }, inject) => {
     const requestTime = getRequestTime();
 
     const stringToSign = `${httpMethod}${path}${contentMD5}${requestTime}${API_KEY}`;
-    console.log(stringToSign);
 
     const sign = md5(stringToSign);
 
-    console.log(sign);
     // Gắn headers
     config.headers["Sign"] = sign;
     config.headers["Request-Time"] = requestTime;

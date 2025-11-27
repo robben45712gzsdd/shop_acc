@@ -1,221 +1,302 @@
 <template>
   <div class="detail-account-page">
-    <div class="container">
-      <div class="account-detail-wrapper">
-        <!-- BREADCRUMB -->
-        <div class="breadcrumb">
-          <nuxt-link to="/">Trang chủ</nuxt-link>
-          <span class="separator">/</span>
-          <span class="current">Chi tiết tài khoản</span>
-        </div>
+    <!-- LOADING STATE -->
+    <div v-if="loading" class="loading-container">
+      <div class="spinner"></div>
+      <p>Đang tải thông tin tài khoản...</p>
+    </div>
 
-        <!-- LOADING STATE -->
-        <div v-if="loading" class="loading-container">
-          <div class="spinner"></div>
-          <p>Đang tải thông tin tài khoản...</p>
-        </div>
+    <!-- ERROR STATE -->
+    <div v-else-if="error" class="error-container">
+      <div class="error-icon">⚠️</div>
+      <h3>Không thể tải thông tin</h3>
+      <p>{{ error }}</p>
+      <button @click="fetchAccount" class="retry-btn">Thử lại</button>
+    </div>
 
-        <!-- ERROR STATE -->
-        <div v-else-if="error" class="error-container">
-          <div class="error-icon">⚠️</div>
-          <h3>Không thể tải thông tin</h3>
-          <p>{{ error }}</p>
-          <button @click="fetchAccount" class="retry-btn">Thử lại</button>
-        </div>
+    <!-- MAIN CONTENT -->
+    <div v-else-if="account" class="page-content">
+      <!-- BREADCRUMB -->
+      <div class="breadcrumb">
+        <nuxt-link to="/">
+          <i class="fas fa-home"></i>
+        </nuxt-link>
+        <span>/</span>
+        <span>{{ pathName }}</span>
+      </div>
 
-        <!-- MAIN CONTENT -->
-        <div v-else-if="account" class="account-content">
-          <!-- LEFT: IMAGE GALLERY -->
-          <div class="gallery-section">
-            <!-- MAIN IMAGE -->
-            <div class="main-image">
-              <div class="image-badge">
-                <span v-if="account.status === 0" class="badge-available">Còn hàng</span>
-                <span v-else class="badge-sold">Đã bán</span>
-              </div>
-              <img 
-                :src="selectedImage || (account.getListImages?.[0]?.imageUrl || '/placeholder.jpg')" 
-                :alt="account.title"
-                @click="openLightbox(selectedImageIndex)"
-              />
-              <button class="zoom-btn" @click="openLightbox(selectedImageIndex)">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <path d="m21 21-4.35-4.35"></path>
-                  <line x1="11" y1="8" x2="11" y2="14"></line>
-                  <line x1="8" y1="11" x2="14" y2="11"></line>
-                </svg>
-                Phóng to
+      <div class="!flex md:flex-row flex-col gap-6 content-wrapper">
+        <!-- LEFT: GALLERY -->
+        <div class="!flex-5 gallery-section">
+          <div class="main-image-container">
+            <div class="status-badge" :class="account.status === 0 ? 'available' : 'sold'">
+              {{ account.status === 0 ? 'Còn hàng' : 'Đã bán' }}
+            </div>
+
+            <div class="image-frame">
+              <img :src="selectedImage || (account.getListImages?.[0]?.imageUrl || '/placeholder.jpg')"
+                :alt="account.title" @click="openLightbox(selectedImageIndex)" />
+              <button class="zoom-button" @click="openLightbox(selectedImageIndex)">
+                <i class="fas fa-search-plus"></i>
               </button>
             </div>
 
-            <!-- THUMBNAIL GRID -->
-            <div class="thumbnail-grid" v-if="account.getListImages?.length > 1">
-              <div 
-                v-for="(img, index) in account.getListImages" 
-                :key="index"
-                class="thumbnail"
-                :class="{ active: selectedImageIndex === index }"
-                @click="selectImage(index)"
-              >
+            <!-- THUMBNAILS -->
+            <div class="thumbnail-container" v-if="account.getListImages?.length > 1">
+              <div v-for="(img, index) in account.getListImages" :key="index" class="thumbnail-item"
+                :class="{ active: selectedImageIndex === index }" @click="selectImage(index)">
                 <img :src="img.imageUrl" :alt="'Ảnh ' + (index + 1)" />
               </div>
             </div>
           </div>
+        </div>
 
-          <!-- RIGHT: ACCOUNT INFO -->
-          <div class="info-section">
-            <!-- TITLE & DESCRIPTION -->
-            <div class="header-info">
-              <h1 class="account-title">{{ account.title }}</h1>
-              <div class="account-id">ID: #{{ accountID }}</div>
+        <!-- RIGHT: INFO -->
+        <div class="!flex-4 info-section">
+          <div class="title-section">
+            <h1 class="account-title">{{ account.title }}</h1>
+            <div class="meta-info">
+              <span class="id-badge">ID: #{{ accountID }}</span>
+              <span class="seller">{{ account.sellerId }}</span>
             </div>
+          </div>
 
-            <p class="account-description">{{ account.description }}</p>
+          <p class="description">{{ account.description }}</p>
 
-            <!-- PRICE BOX -->
-            <div class="price-box">
-              <div class="price-row card-price">
-                <div class="price-label">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-                    <line x1="1" y1="10" x2="23" y2="10"></line>
-                  </svg>
-                  Giá thẻ cào
-                </div>
-                <div class="price-value">{{ formatPrice(account.price) }}</div>
-              </div>
-              <div class="price-row atm-price">
-                <div class="price-label">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="2" y="5" width="20" height="14" rx="2"></rect>
-                    <line x1="2" y1="10" x2="22" y2="10"></line>
-                  </svg>
-                  Giá ATM/Momo
-                </div>
-                <div class="price-value discount">
-                  {{ formatPrice(account.price * 0.8) }}
-                  <span class="discount-badge">-20%</span>
-                </div>
+          <!-- PRICE CARDS -->
+          <div class="price-grid">
+            <div class="price-item atm-price">
+              <span class="price-label">Giá niêm yết</span>
+              <div class="price-row">
+                <span class="font-normal !text-gray-400 !text-sm !line-through price-value">{{
+                  formatPrice(account.price) }}</span>
+                <span class="price-value discount">{{ formatPrice(account.priceSale) }}</span>
+                <span class="badge-discount">-{{ ((account.price - account.priceSale) / account.price) * 100 }}%</span>
               </div>
             </div>
+          </div>
 
-            <!-- SELLER INFO -->
-            <div class="seller-box">
+          <!-- ACCOUNT STATUS -->
+          <div class="status-section">
+            <div class="status-item">
+              <span class="label">Tình Trạng</span>
+              <span class="value">{{ account.status === 0 ? 'Còn hàng' : 'Đã bán' }}</span>
+            </div>
+            <div class="status-item">
+              <span class="label">Mã Tài Khoản</span>
+              <span class="value code">{{ accountID }}</span>
+            </div>
+          </div>
+
+          <!-- BENEFITS -->
+          <div class="benefits">
+            <div class="benefit">
+              <i class="fas fa-check"></i>
+              <span>Bảo hành 100% - Đổi acc nếu sai</span>
+            </div>
+            <div class="benefit">
+              <i class="fas fa-check"></i>
+              <span>Đổi mật khẩu miễn phí</span>
+            </div>
+            <div class="benefit">
+              <i class="fas fa-check"></i>
+              <span>Giao dịch tức thì, an toàn</span>
+            </div>
+          </div>
+
+          <!-- ACTION BUTTONS -->
+          <div class="button-group">
+            <button class="btn-primary" :disabled="account.status !== 0 || loadingBuy" @click="buyNow">
+              <i class="fas fa-shopping-cart"></i>
+              <span v-if="!loadingBuy">{{ account.status === 0 ? 'Mua Ngay' : 'Đã Bán' }}</span>
+              <span v-else>Đang xử lý...</span>
+            </button>
+            <button class="btn-secondary">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+
+          <!-- SELLER INFO -->
+          <div class="seller-info">
+            <div class="seller-left">
               <div class="seller-avatar">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                </svg>
+                <img src="@/assets/images/avt.png" alt=" Seller Avatar" class="rounded" width="40" height="40" />
               </div>
-              <div class="seller-info">
-                <div class="seller-label">Người bán</div>
-                <div class="seller-name">{{ account.sellerId }}</div>
+              <div>
+                <p class="label">Người bán</p>
+                <p class="name">Hoàng Thái Sơn</p>
               </div>
-              <button class="contact-seller">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                </svg>
-                Liên hệ
-              </button>
+            </div>
+            <a class="btn-contact" href="https://zalo.me/chat/join/0x0" target="_blank">
+              <img src="@/assets/images/zalo.webp" alt="Zalo" width="32" height="32" />
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOTTOM SECTIONS -->
+      <div class="bottom-sections">
+        <!-- POLICIES -->
+        <div class="section-card">
+          <h2 class="section-title">
+            <i class="fas fa-file-contract"></i>
+            Chính Sách
+          </h2>
+          <div class="policies-grid">
+            <div class="policy-item">
+              <div class="policy-icon">
+                <i class="fas fa-redo"></i>
+              </div>
+              <h4>Chính sách đổi trả</h4>
+              <p>Đổi tài khoản trong 24h nếu có vấn đề</p>
             </div>
 
-            <!-- ACTION BUTTONS -->
-            <div class="action-buttons">
-              <button class="btn-buy" :disabled="account.status !== 0">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="9" cy="21" r="1"></circle>
-                  <circle cx="20" cy="21" r="1"></circle>
-                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                </svg>
-                {{ account.status === 0 ? 'Mua ngay' : 'Đã bán' }}
-              </button>
-              <button class="btn-favorite">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                </svg>
-              </button>
+            <div class="policy-item">
+              <div class="policy-icon">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+              <h4>Bảo mật 100%</h4>
+              <p>Tài khoản được bảo vệ an toàn tuyệt đối</p>
             </div>
 
-            <!-- FEATURES -->
-            <div class="features-list">
-              <div class="feature-item">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-                Bảo hành đổi acc nếu sai thông tin
+            <div class="policy-item">
+              <div class="policy-icon">
+                <i class="fas fa-lock-open"></i>
               </div>
-              <div class="feature-item">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-                Hỗ trợ đổi mật khẩu miễn phí
+              <h4>Đổi mật khẩu free</h4>
+              <p>Hỗ trợ đổi MK miễn phí trọn đời</p>
+            </div>
+
+            <div class="policy-item">
+              <div class="policy-icon">
+                <i class="fas fa-headset"></i>
               </div>
-              <div class="feature-item">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-                Giao dịch nhanh chóng, an toàn
-              </div>
+              <h4>Hỗ trợ 24/7</h4>
+              <p>Liên hệ hỗ trợ bất cứ lúc nào</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- DETAILED INFO -->
+        <div class="section-card">
+          <h2 class="section-title">
+            <i class="fas fa-info-circle"></i>
+            Thông Tin Chi Tiết
+          </h2>
+          <div class="info-grid">
+            <div class="info-row">
+              <span class="info-label">Loại tài khoản</span>
+              <span class="info-value">{{ account.title }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Người bán</span>
+              <span class="info-value">{{ account.sellerId }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Trạng thái</span>
+              <span class="info-value">
+                <span class="badge" :class="account.status === 0 ? 'success' : 'danger'">
+                  {{ account.status === 0 ? 'Còn hàng' : 'Đã bán' }}
+                </span>
+              </span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Giá gốc</span>
+              <span class="line-through info-value">{{ formatPrice(account.price) }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Giá khuyến mãi</span>
+              <span class="info-value price-discount">{{ formatPrice(account.priceSale) }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Tiết kiệm</span>
+              <span class="info-value price-save">{{ formatPrice(account.price - account.priceSale) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- DESCRIPTION -->
+        <div class="section-card">
+          <h2 class="section-title">
+            <i class="fa-align-left fas"></i>
+            Mô Tả Chi Tiết
+          </h2>
+          <div class="full-description">
+            <p>{{ account.description }}</p>
+            <div class="description-extras">
+              <h4>Thông tin bổ sung</h4>
+              <ul>
+                <li>✓ Tài khoản đã được kiểm tra kỹ lưỡng</li>
+                <li>✓ Không có lịch sử bị khóa hoặc cảnh báo</li>
+                <li>✓ Có thể đổi mật khẩu ngay lập tức</li>
+                <li>✓ Hỗ trợ đăng nhập lại sau khi mua</li>
+                <li>✓ Cam kết 100% tiền hoàn nếu sai thông tin</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQs -->
+        <div class="section-card">
+          <h2 class="section-title">
+            <i class="fas fa-question-circle"></i>
+            Câu Hỏi Thường Gặp
+          </h2>
+          <div class="faq-list">
+            <div class="faq-item">
+              <h4>Làm sao để mua tài khoản?</h4>
+              <p>Nhấn nút "Mua Ngay", chọn phương thức thanh toán và hoàn tất giao dịch. Tài khoản sẽ được gửi ngay lập
+                tức.</p>
+            </div>
+
+            <div class="faq-item">
+              <h4>Có thể đổi mật khẩu được không?</h4>
+              <p>Có, bạn có thể đổi mật khẩu ngay sau khi mua. Chúng tôi hỗ trợ đổi MK hoàn toàn miễn phí.</p>
+            </div>
+
+            <div class="faq-item">
+              <h4>Nếu sai thông tin thì sao?</h4>
+              <p>Chúng tôi cam kết 100% hoàn tiền hoặc đổi tài khoản khác nếu thông tin không đúng với mô tả.</p>
+            </div>
+
+            <div class="faq-item">
+              <h4>Hỗ trợ như thế nào?</h4>
+              <p>Bạn có thể liên hệ qua chat, Zalo hoặc phone. Chúng tôi hỗ trợ 24/7, 7 ngày 1 tuần.</p>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- IMAGE LIGHTBOX OVERLAY -->
+    <!-- LIGHTBOX -->
     <transition name="lightbox-fade">
       <div v-if="showLightbox" class="lightbox-overlay" @click="closeLightbox">
-        <div class="lightbox-container" @click.stop>
+        <div class="lightbox-content" @click.stop>
           <button class="lightbox-close" @click="closeLightbox">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
+            <i class="fas fa-times"></i>
           </button>
 
-          <!-- MAIN IMAGE -->
           <div class="lightbox-main">
-            <button 
-              class="lightbox-prev" 
-              @click="prevImage"
-              v-if="account.getListImages?.length > 1"
-            >
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="15 18 9 12 15 6"></polyline>
-              </svg>
+            <button class="lightbox-prev" @click="prevImage" v-if="account.getListImages?.length > 1">
+              <i class="fa-chevron-left fas"></i>
             </button>
 
-            <img 
-              :src="account.getListImages[lightboxIndex]?.imageUrl" 
-              :alt="'Ảnh ' + (lightboxIndex + 1)"
-            />
+            <img :src="account.getListImages[lightboxIndex]?.imageUrl" :alt="'Ảnh ' + (lightboxIndex + 1)" />
 
-            <button 
-              class="lightbox-next" 
-              @click="nextImage"
-              v-if="account.getListImages?.length > 1"
-            >
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="9 18 15 12 9 6"></polyline>
-              </svg>
+            <button class="lightbox-next" @click="nextImage" v-if="account.getListImages?.length > 1">
+              <i class="fa-chevron-right fas"></i>
             </button>
-          </div>
-
-          <!-- THUMBNAIL STRIP -->
-          <div class="lightbox-thumbnails" v-if="account.getListImages?.length > 1">
-            <div 
-              v-for="(img, index) in account.getListImages" 
-              :key="index"
-              class="lightbox-thumb"
-              :class="{ active: lightboxIndex === index }"
-              @click="lightboxIndex = index"
-            >
-              <img :src="img.imageUrl" :alt="'Ảnh ' + (index + 1)" />
-            </div>
           </div>
 
           <div class="lightbox-counter">
             {{ lightboxIndex + 1 }} / {{ account.getListImages?.length }}
+          </div>
+
+          <div class="lightbox-thumbs" v-if="account.getListImages?.length > 1">
+            <div v-for="(img, index) in account.getListImages" :key="index" class="lightbox-thumb"
+              :class="{ active: lightboxIndex === index }" @click="lightboxIndex = index">
+              <img :src="img.imageUrl" :alt="'Ảnh ' + (index + 1)" />
+            </div>
           </div>
         </div>
       </div>
@@ -225,6 +306,7 @@
 
 <script>
 import account from '~/api/account';
+import order from '~/api/order';
 
 export default {
   data() {
@@ -232,19 +314,26 @@ export default {
       accountID: "",
       account: null,
       loading: false,
+      loadingBuy: false,
       error: null,
       selectedImageIndex: 0,
       selectedImage: null,
       showLightbox: false,
       lightboxIndex: 0,
+      pathName: "",
     };
+  },
+  computed: {
+    userProfile() {
+      return this.$store.state.user_profile;
+    },
   },
   methods: {
     formatPrice(price) {
       if (!price) return "0đ";
       return Number(price).toLocaleString("vi-VN") + "đ";
     },
-    
+
     async fetchAccount() {
       this.loading = true;
       this.error = null;
@@ -268,6 +357,40 @@ export default {
       }
     },
 
+
+    async buyNow() {
+      if (!this.accountID) return;
+      if (!this.account.price > this.userProfile?.balance) {
+        this.$toast.error("Số dư không đủ để thực hiện giao dịch.");
+        return;
+      };
+
+      this.loadingBuy = true;
+      this.error = null;
+      try {
+        const res = await order.createOrder({
+          accountID: this.accountID,
+        });
+        if (res.success) {
+          this.$toast.success(
+            `🎉 Mua tài khoản thành công!\n\n` +
+            `🔑 Tên đăng nhập: ${d.credentials.username}\n` +
+            `🔒 Mật khẩu: ${d.credentials.password}\n\n` +
+            `🧾 Mã đơn hàng: ${d.orderId}\n` +
+            `📦 Tài khoản: ${d.accountTitle}\n` +
+            `💰 Số tiền: ${d.amount.toLocaleString()} VNĐ\n\n` +
+            `ℹ️ ${d.message}`
+          ); this.closeLightbox();
+        }
+      }
+      catch (err) {
+        console.error(err);
+        this.$toast.error("Đã có lỗi xảy ra khi tạo đơn hàng.");
+      } finally {
+        this.loadingBuy = false;
+      }
+    },
+
     selectImage(index) {
       this.selectedImageIndex = index;
       this.selectedImage = this.account.getListImages[index].imageUrl;
@@ -285,8 +408,8 @@ export default {
     },
 
     prevImage() {
-      this.lightboxIndex = this.lightboxIndex > 0 
-        ? this.lightboxIndex - 1 
+      this.lightboxIndex = this.lightboxIndex > 0
+        ? this.lightboxIndex - 1
         : this.account.getListImages.length - 1;
     },
 
@@ -299,10 +422,9 @@ export default {
 
   mounted() {
     this.accountID = this.$route.params.accountID;
-    this.$store.state.darkMode = false;
+    this.pathName = this.$route.query.categoryName || 'Chi tiết tài khoản';
     this.fetchAccount();
 
-    // Keyboard navigation for lightbox
     window.addEventListener('keydown', (e) => {
       if (this.showLightbox) {
         if (e.key === 'Escape') this.closeLightbox();
@@ -319,53 +441,53 @@ export default {
 </script>
 
 <style scoped lang="scss">
+$primary: #ff6b35;
+$primary-dark: #e55a2b;
+$text-main: #1a1a1a;
+$text-sub: #666;
+$text-light: #999;
+$border: #e5e5e5;
+$bg: #ffffff;
+$bg-light: #f9f9f9;
+$success: #10b981;
+$success-bg: #ecfdf5;
+$danger: #ff4757;
+
 .detail-account-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  padding: 20px 0;
-}
-
-.container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.account-detail-wrapper {
-  background: #fff;
-  border-radius: 4px;
+  background: #f5f5f5;
   padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.page-content {
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 // BREADCRUMB
 .breadcrumb {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   margin-bottom: 20px;
   font-size: 12px;
 
   a {
-    color: #FF713C;
+    color: $primary;
     text-decoration: none;
-    transition: color 0.3s;
+    transition: color 0.2s;
 
     &:hover {
-      color: #e65a2b;
+      color: $primary-dark;
     }
   }
 
-  .separator {
-    color: #9ca3af;
-  }
-
-  .current {
-    color: #6b7280;
+  span {
+    color: $text-light;
   }
 }
 
-// LOADING STATE
+// LOADING
 .loading-container {
   display: flex;
   flex-direction: column;
@@ -375,175 +497,198 @@ export default {
   text-align: center;
 
   .spinner {
-    width: 48px;
-    height: 48px;
-    border: 4px solid #e5e7eb;
-    border-top-color: #FF713C;
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(255, 107, 53, 0.2);
+    border-top-color: $primary;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
     margin-bottom: 20px;
   }
 
   p {
-    color: #6b7280;
-    font-size: 16px;
+    color: $text-sub;
+    font-size: 14px;
   }
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-// ERROR STATE
+// ERROR
 .error-container {
   text-align: center;
   padding: 80px 20px;
 
   .error-icon {
     font-size: 64px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
   }
 
   h3 {
-    color: #ef4444;
-    font-size: 24px;
+    color: $danger;
+    font-size: 22px;
     margin-bottom: 10px;
   }
 
   p {
-    color: #6b7280;
-    margin-bottom: 30px;
+    color: $text-sub;
+    margin-bottom: 25px;
+    font-size: 14px;
   }
 
   .retry-btn {
-    padding: 12px 32px;
-    background: #FF713C;
-    color: #fff;
+    padding: 10px 28px;
+    background: $primary;
+    color: white;
     border: none;
     border-radius: 6px;
-    font-size: 16px;
+    font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.2s;
 
     &:hover {
-      background: #e65a2b;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(255, 113, 60, 0.4);
+      background: $primary-dark;
+      transform: translateY(-1px);
     }
   }
 }
 
-// MAIN CONTENT
-.account-content {
+// CONTENT WRAPPER
+.content-wrapper {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
+  grid-template-columns: 380px 1fr;
+  gap: 30px;
+  background: $bg;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 24px;
 }
 
-// GALLERY SECTION
+// GALLERY
 .gallery-section {
-  .main-image {
+  .main-image-container {
     position: relative;
-    border-radius: 4px;
-    overflow: hidden;
-    background: #f9fafb;
-    margin-bottom: 12px;
-    cursor: pointer;
 
-    .image-badge {
+    .status-badge {
       position: absolute;
       top: 12px;
       left: 12px;
-      z-index: 2;
+      padding: 6px 12px;
+      background: white;
+      border: 1.5px solid $success;
+      color: $success;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 4px;
+      z-index: 10;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
 
-      span {
-        display: inline-block;
-        padding: 4px 12px;
-        border-radius: 2px;
-        font-size: 11px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-
-      .badge-available {
-        background: #10b981;
-        color: #fff;
-      }
-
-      .badge-sold {
-        background: #ef4444;
-        color: #fff;
+      &.sold {
+        border-color: $danger;
+        color: $danger;
       }
     }
 
-    img {
-      width: 100%;
-      height: 380px;
-      object-fit: cover;
-      transition: transform 0.3s;
-    }
-
-    &:hover img {
-      transform: scale(1.03);
-    }
-
-    .zoom-btn {
-      position: absolute;
-      bottom: 12px;
-      right: 12px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 14px;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(10px);
-      color: #fff;
-      border: none;
-      border-radius: 2px;
-      font-size: 12px;
-      cursor: pointer;
-      transition: all 0.3s;
-
-      svg {
-        stroke-width: 2;
-        width: 16px;
-        height: 16px;
-      }
-
-      &:hover {
-        background: rgba(0, 0, 0, 0.9);
-        transform: translateY(-1px);
-      }
-    }
-  }
-
-  .thumbnail-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    gap: 8px;
-
-    .thumbnail {
+    .image-frame {
       position: relative;
-      border-radius: 2px;
+      background: white;
+      border: 1px solid $border;
+      border-radius: 6px;
       overflow: hidden;
+      aspect-ratio: 1;
       cursor: pointer;
-      border: 2px solid transparent;
+      margin-bottom: 12px;
       transition: all 0.3s;
-
-      &.active {
-        border-color: #FF713C;
-      }
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
 
       img {
         width: 100%;
-        height: 80px;
-        object-fit: cover;
+        height: 100%;
+        object-fit: contain;
+        object-position: center;
+        background-color: #1a1a1a;
         transition: transform 0.3s;
+        border: 3px solid #FF8552;
       }
 
-      &:hover img {
-        transform: scale(1.08);
+      &:hover {
+        border-color: $primary;
+        box-shadow: 0 4px 12px rgba(255, 107, 53, 0.15);
+
+        img {
+          transform: scale(1.04);
+        }
+      }
+
+      .zoom-button {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, $primary, #ff8c5a);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        box-shadow: 0 2px 8px rgba(255, 107, 53, 0.2);
+
+        &:hover {
+          transform: scale(1.05);
+        }
+      }
+
+      &:hover .zoom-button {
+        opacity: 1;
+      }
+    }
+
+    .thumbnail-container {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+
+      .thumbnail-item {
+        aspect-ratio: 1;
+        border: 2px solid $border;
+        border-radius: 4px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
+          transition: transform 0.2s;
+        }
+
+        &:hover {
+          border-color: $primary;
+
+          img {
+            transform: scale(1.08);
+          }
+        }
+
+        &.active {
+          border-color: $primary;
+          box-shadow: 0 2px 8px rgba(255, 107, 53, 0.2);
+        }
       }
     }
   }
@@ -551,335 +696,588 @@ export default {
 
 // INFO SECTION
 .info-section {
-  .header-info {
-    margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 
+  .title-section {
     .account-title {
-      font-size: 22px;
-      font-weight: 700;
-      color: #111827;
-      margin-bottom: 6px;
+      font-size: 26px;
+      font-weight: 800;
+      color: $text-main;
+      margin: 0 0 8px 0;
       line-height: 1.3;
     }
 
-    .account-id {
-      display: inline-block;
-      padding: 3px 10px;
-      background: #f3f4f6;
-      color: #6b7280;
-      border-radius: 2px;
-      font-size: 11px;
-      font-weight: 500;
+    .meta-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 12px;
+
+      .id-badge {
+        padding: 4px 10px;
+        background: #f0f0f0;
+        color: $text-sub;
+        border-radius: 4px;
+        font-weight: 600;
+      }
+
+      .seller {
+        color: $text-light;
+        font-weight: 500;
+      }
     }
   }
 
-  .account-description {
-    color: #6b7280;
+  .description {
     font-size: 13px;
+    color: $text-sub;
     line-height: 1.6;
-    margin-bottom: 16px;
+    margin: 0;
+    padding: 10px;
+    background: #fafafa;
+    border-left: 2px solid $primary;
+    border-radius: 4px;
   }
 
-  // PRICE BOX
-  .price-box {
-    background: linear-gradient(135deg, #FF713C 0%, #ff5722 100%);
-    border-radius: 4px;
-    padding: 16px;
-    margin-bottom: 16px;
+  // PRICE GRID
+  .price-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
 
-    .price-row {
+    .price-item {
+      padding: 12px;
+      border: 1px solid $border;
+      border-radius: 6px;
+      background: white;
+      transition: all 0.2s;
+
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 0;
+      flex-direction: column;
+      gap: 6px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 
-      &:not(:last-child) {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      &:hover {
+        border-color: $primary;
+        box-shadow: 0 3px 12px rgba(255, 107, 53, 0.1);
+        transform: translateY(-2px);
       }
 
       .price-label {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        color: rgba(255, 255, 255, 0.9);
-        font-size: 13px;
-        font-weight: 500;
-
-        svg {
-          stroke-width: 2;
-          width: 18px;
-          height: 18px;
-        }
+        font-size: 11px;
+        color: $text-light;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
       }
 
       .price-value {
-        font-size: 20px;
-        font-weight: 700;
-        color: #fff;
+        font-size: 18px;
+        font-weight: 800;
+        color: $primary;
 
         &.discount {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          color: #fbbf24;
+          color: $success;
+        }
+      }
 
-          .discount-badge {
-            padding: 3px 8px;
-            background: rgba(251, 191, 36, 0.2);
-            border: 1px solid #fbbf24;
-            border-radius: 2px;
-            font-size: 10px;
-            font-weight: 600;
-          }
+      .price-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .badge-discount {
+          padding: 2px 6px;
+          background: rgba(16, 185, 129, 0.2);
+          color: $success;
+          font-size: 10px;
+          font-weight: 700;
+          border-radius: 3px;
+          text-transform: uppercase;
+          letter-spacing: 0.3px;
+        }
+      }
+
+      &.atm-price {
+        background: $success_bg;
+        border-color: $success;
+
+        &:hover {
+          border-color: $success;
+          box-shadow: 0 3px 12px rgba(16, 185, 129, 0.1);
         }
       }
     }
   }
 
-  // SELLER BOX
-  .seller-box {
-    display: flex;
-    align-items: center;
+  // STATUS SECTION
+  .status-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 12px;
-    padding: 14px;
-    background: #f9fafb;
-    border-radius: 4px;
-    margin-bottom: 16px;
+    padding: 12px;
+    background: $bg-light;
+    border-radius: 6px;
+    border: 1px solid $border;
 
-    .seller-avatar {
-      width: 44px;
-      height: 44px;
-      background: linear-gradient(135deg, #FF713C, #ff5722);
-      border-radius: 50%;
+    .status-item {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      flex-shrink: 0;
+      flex-direction: column;
+      gap: 4px;
 
-      svg {
-        width: 20px;
-        height: 20px;
-      }
-    }
-
-    .seller-info {
-      flex: 1;
-
-      .seller-label {
+      .label {
         font-size: 11px;
-        color: #9ca3af;
-        margin-bottom: 3px;
-      }
-
-      .seller-name {
-        font-size: 14px;
+        color: $text-light;
         font-weight: 600;
-        color: #111827;
-      }
-    }
-
-    .contact-seller {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 14px;
-      background: #fff;
-      border: 2px solid #e5e7eb;
-      border-radius: 2px;
-      color: #FF713C;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-
-      svg {
-        width: 16px;
-        height: 16px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
       }
 
-      &:hover {
-        border-color: #FF713C;
-        background: #fff7f5;
+      .value {
+        font-size: 13px;
+        font-weight: 700;
+        color: $text-main;
+
+        &.code {
+          font-family: 'Courier New', monospace;
+          background: white;
+          padding: 4px 8px;
+          border-radius: 4px;
+          color: $primary;
+        }
       }
     }
   }
 
-  // ACTION BUTTONS
-  .action-buttons {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 10px;
-    margin-bottom: 16px;
+  // BENEFITS
+  .benefits {
+    padding: 12px;
+    background: $success_bg;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 6px;
 
-    .btn-buy {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .benefit {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      color: #047857;
+
+      i {
+        color: $success;
+        font-size: 14px;
+        flex-shrink: 0;
+      }
+    }
+  }
+
+  // BUTTONS
+  .button-group {
+    display: flex;
+    gap: 10px;
+
+    .btn-primary {
+      flex: 1;
+      padding: 12px;
+      background: linear-gradient(135deg, $primary, #ff8c5a);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      padding: 12px;
-      background: linear-gradient(135deg, #FF713C, #ff5722);
-      color: #fff;
-      border: none;
-      border-radius: 2px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-
-      svg {
-        width: 18px;
-        height: 18px;
-      }
+      box-shadow: 0 4px 12px rgba(255, 107, 53, 0.2);
 
       &:hover:not(:disabled) {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(255, 113, 60, 0.4);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(255, 107, 53, 0.3);
       }
 
       &:disabled {
-        background: #9ca3af;
+        background: #ccc;
         cursor: not-allowed;
+        opacity: 0.6;
       }
     }
 
-    .btn-favorite {
+    .btn-secondary {
+      width: 48px;
+      padding: 0;
+      background: white;
+      color: $primary;
+      border: 1.5px solid $border;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 48px;
-      padding: 12px;
-      background: #fff;
-      border: 2px solid #e5e7eb;
-      border-radius: 2px;
-      color: #ef4444;
-      cursor: pointer;
-      transition: all 0.3s;
-
-      svg {
-        width: 18px;
-        height: 18px;
-      }
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 
       &:hover {
-        border-color: #ef4444;
-        background: #fef2f2;
+        border-color: $primary;
+        background: #fff8f5;
+        color: $primary-dark;
+        box-shadow: 0 4px 12px rgba(255, 107, 53, 0.15);
       }
     }
   }
 
-  // FEATURES LIST
-  .features-list {
-    padding: 14px;
-    background: #f0fdf4;
-    border-radius: 4px;
-    border: 1px solid #bbf7d0;
+  // SELLER INFO
+  .seller-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    background: $bg-light;
+    border: 1px solid $border;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 
-    .feature-item {
+    .seller-left {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 6px 0;
-      color: #166534;
-      font-size: 12px;
+      flex: 1;
 
-      svg {
+      .seller-avatar {
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 16px;
         flex-shrink: 0;
-        width: 16px;
-        height: 16px;
+        box-shadow: 0 2px 8px rgba(255, 107, 53, 0.15);
+      }
+
+      .label {
+        font-size: 11px;
+        color: $text-light;
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+      }
+
+      .name {
+        font-size: 13px;
+        color: $text-main;
+        margin: 0;
+        font-weight: 600;
+      }
+    }
+
+    .btn-contact {
+      cursor: pointer;
+    }
+  }
+}
+
+// BOTTOM SECTIONS
+.bottom-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  .section-card {
+    background: $bg;
+    border: 1px solid $border;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.2s;
+
+    &:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: $text-main;
+      margin: 0 0 16px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      i {
+        color: $primary;
+        font-size: 18px;
+      }
+    }
+
+    // POLICIES
+    .policies-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+
+      .policy-item {
+        padding: 16px;
+        background: $bg-light;
+        border: 1px solid $border;
+        border-radius: 6px;
+        text-align: center;
+        transition: all 0.2s;
+
+        &:hover {
+          border-color: $primary;
+          background: #fffbf8;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(255, 107, 53, 0.1);
+        }
+
+        .policy-icon {
+          font-size: 32px;
+          color: $primary;
+          margin-bottom: 10px;
+        }
+
+        h4 {
+          font-size: 13px;
+          font-weight: 700;
+          color: $text-main;
+          margin: 0 0 6px 0;
+        }
+
+        p {
+          font-size: 12px;
+          color: $text-light;
+          margin: 0;
+          line-height: 1.5;
+        }
+      }
+    }
+
+    // INFO GRID
+    .info-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      .info-row {
+        display: grid;
+        grid-template-columns: 140px 1fr;
+        gap: 16px;
+        padding: 10px 0;
+        border-bottom: 1px solid #f0f0f0;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .info-label {
+          font-size: 13px;
+          font-weight: 600;
+          color: $text-light;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        .info-value {
+          font-size: 13px;
+          font-weight: 600;
+          color: $text-main;
+
+          &.price-discount {
+            color: $success;
+          }
+
+          &.price-save {
+            color: $primary;
+          }
+
+          .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+
+            &.success {
+              background: rgba(16, 185, 129, 0.2);
+              color: $success;
+            }
+
+            &.danger {
+              background: rgba(255, 71, 87, 0.2);
+              color: $danger;
+            }
+          }
+        }
+      }
+    }
+
+    // DESCRIPTION
+    .full-description {
+      p {
+        font-size: 13px;
+        color: $text-sub;
+        line-height: 1.7;
+        margin: 0 0 16px 0;
+      }
+
+      .description-extras {
+        h4 {
+          font-size: 13px;
+          font-weight: 700;
+          color: $text-main;
+          margin: 0 0 10px 0;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+
+          li {
+            font-size: 12px;
+            color: $text-sub;
+            padding: 6px 0;
+            line-height: 1.6;
+          }
+        }
+      }
+    }
+
+    // FAQ
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+
+      .faq-item {
+        padding: 12px;
+        background: $bg-light;
+        border: 1px solid $border;
+        border-radius: 6px;
+        transition: all 0.2s;
+
+        &:hover {
+          border-color: $primary;
+          background: #fffbf8;
+        }
+
+        h4 {
+          font-size: 13px;
+          font-weight: 700;
+          color: $text-main;
+          margin: 0 0 6px 0;
+        }
+
+        p {
+          font-size: 12px;
+          color: $text-sub;
+          margin: 0;
+          line-height: 1.6;
+        }
       }
     }
   }
 }
 
-// LIGHTBOX OVERLAY
+// LIGHTBOX
 .lightbox-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.95);
+  background: rgba(0, 0, 0, 0.9);
   z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
 
-  .lightbox-container {
+  .lightbox-content {
     position: relative;
     width: 100%;
-    max-width: 1200px;
-    height: 100%;
-    max-height: 90vh;
+    max-width: 900px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
   }
 
   .lightbox-close {
     position: absolute;
-    top: 0;
+    top: -40px;
     right: 0;
-    width: 48px;
-    height: 48px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
+    width: 40px;
+    height: 40px;
+    background: white;
     border: none;
-    border-radius: 50%;
-    color: #fff;
+    border-radius: 4px;
+    color: #1a1a1a;
+    font-size: 18px;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 10;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: rotate(90deg);
+      transform: scale(1.1);
+      background: #f0f0f0;
     }
   }
 
   .lightbox-main {
     position: relative;
-    flex: 1;
+    width: 100%;
+    height: 65vh;
+    margin-bottom: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    max-height: calc(100% - 120px);
-    margin-bottom: 20px;
 
     img {
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
-      border-radius: 8px;
+      border-radius: 6px;
+      animation: zoomIn 0.3s ease-out;
     }
 
     .lightbox-prev,
     .lightbox-next {
       position: absolute;
-      width: 56px;
-      height: 56px;
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      border: none;
-      border-radius: 50%;
-      color: #fff;
+      width: 44px;
+      height: 44px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid white;
+      border-radius: 4px;
+      color: white;
+      font-size: 18px;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.2s;
       display: flex;
       align-items: center;
       justify-content: center;
 
       &:hover {
-        background: rgba(255, 255, 255, 0.2);
-        transform: scale(1.1);
+        background: white;
+        color: #1a1a1a;
+        transform: scale(1.08);
       }
     }
 
@@ -892,71 +1290,62 @@ export default {
     }
   }
 
-  .lightbox-thumbnails {
+  .lightbox-counter {
+    padding: 6px 16px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid white;
+    border-radius: 4px;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 15px;
+  }
+
+  .lightbox-thumbs {
     display: flex;
-    gap: 12px;
-    padding: 0 60px;
-    overflow-x: auto;
-    max-width: 100%;
-
-    &::-webkit-scrollbar {
-      height: 6px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 3px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.3);
-      border-radius: 3px;
-    }
+    gap: 10px;
+    justify-content: center;
 
     .lightbox-thumb {
-      flex-shrink: 0;
-      width: 80px;
-      height: 80px;
-      border-radius: 6px;
+      width: 70px;
+      height: 70px;
+      border-radius: 4px;
       overflow: hidden;
-      border: 3px solid transparent;
+      border: 2px solid transparent;
       cursor: pointer;
-      opacity: 0.5;
-      transition: all 0.3s;
-
-      &.active {
-        border-color: #FF713C;
-        opacity: 1;
-      }
-
-      &:hover {
-        opacity: 1;
-      }
+      opacity: 0.6;
+      transition: all 0.2s;
 
       img {
         width: 100%;
         height: 100%;
         object-fit: cover;
       }
-    }
-  }
 
-  .lightbox-counter {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 8px 20px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border-radius: 6px;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 500;
+      &:hover {
+        opacity: 1;
+      }
+
+      &.active {
+        border-color: white;
+        opacity: 1;
+      }
+    }
   }
 }
 
-// LIGHTBOX TRANSITIONS
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 .lightbox-fade-enter-active,
 .lightbox-fade-leave-active {
   transition: opacity 0.3s;
@@ -969,130 +1358,156 @@ export default {
 
 // RESPONSIVE
 @media (max-width: 1024px) {
-  .account-content {
+  .content-wrapper {
     grid-template-columns: 1fr;
     gap: 20px;
-  }
-
-  .gallery-section .main-image img {
-    height: 320px;
   }
 }
 
 @media (max-width: 768px) {
-  .account-detail-wrapper {
-    padding: 16px;
+  .detail-account-page {
+    padding: 12px;
   }
 
-  .gallery-section .main-image img {
-    height: 280px;
+  .content-wrapper {
+    padding: 12px;
+    gap: 15px;
   }
 
   .info-section {
-    .header-info .account-title {
-      font-size: 18px;
+    .title-section .account-title {
+      font-size: 20px;
     }
 
-    .price-box .price-row .price-value {
-      font-size: 18px;
-    }
-
-    .seller-box {
-      flex-wrap: wrap;
-      gap: 10px;
-
-      .contact-seller {
-        width: 100%;
-        justify-content: center;
-      }
-    }
-
-    .action-buttons {
+    .price-grid {
       grid-template-columns: 1fr;
+    }
 
-      .btn-favorite {
-        width: 100%;
+    .button-group .btn-secondary {
+      width: 44px;
+    }
+  }
+
+  .bottom-sections {
+    .section-card {
+      padding: 16px;
+
+      .policies-grid {
+        grid-template-columns: 1fr;
       }
     }
   }
 
   .lightbox-overlay {
     .lightbox-main {
-      .lightbox-prev,
-      .lightbox-next {
-        width: 36px;
-        height: 36px;
-
-        svg {
-          width: 20px;
-          height: 20px;
-        }
-      }
-
       .lightbox-prev {
-        left: 8px;
+        left: 10px;
       }
 
       .lightbox-next {
-        right: 8px;
-      }
-    }
-
-    .lightbox-thumbnails {
-      padding: 0 16px;
-
-      .lightbox-thumb {
-        width: 56px;
-        height: 56px;
+        right: 10px;
       }
     }
   }
 }
 
 @media (max-width: 480px) {
-  .account-detail-wrapper {
-    padding: 12px;
+  .detail-account-page {
+    padding: 8px;
   }
 
-  .gallery-section {
-    .main-image img {
-      height: 240px;
-    }
+  .content-wrapper {
+    grid-template-columns: 1fr;
+    padding: 10px;
+    gap: 12px;
+  }
 
-    .thumbnail-grid {
-      grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
-      gap: 6px;
-
-      .thumbnail img {
-        height: 64px;
-      }
+  .gallery-section .main-image-container {
+    .thumbnail-container {
+      grid-template-columns: repeat(3, 1fr);
     }
   }
 
   .info-section {
-    .header-info .account-title {
+    gap: 12px;
+
+    .title-section .account-title {
+      font-size: 18px;
+    }
+
+    .button-group .btn-primary {
+      padding: 10px;
+      font-size: 12px;
+    }
+
+    .seller-info {
+      padding: 10px;
+      flex-direction: column;
+      gap: 10px;
+      align-items: stretch;
+
+      .btn-contact {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }
+
+  .bottom-sections {
+    .section-card {
+      padding: 12px;
+
+      .info-grid .info-row {
+        grid-template-columns: 1fr;
+        gap: 4px;
+
+        .info-label {
+          font-size: 11px;
+        }
+
+        .info-value {
+          font-size: 12px;
+        }
+      }
+    }
+  }
+
+  .lightbox-overlay {
+    .lightbox-close {
+      width: 36px;
+      height: 36px;
       font-size: 16px;
     }
 
-    .price-box {
-      padding: 12px;
+    .lightbox-main {
+      height: 50vh;
 
-      .price-row {
-        padding: 8px 0;
+      .lightbox-prev,
+      .lightbox-next {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
 
-        .price-label {
-          font-size: 12px;
+        &.lightbox-prev {
+          left: 8px;
         }
 
-        .price-value {
-          font-size: 16px;
+        &.lightbox-next {
+          right: 8px;
         }
+      }
+    }
+
+    .lightbox-thumbs {
+      .lightbox-thumb {
+        width: 60px;
+        height: 60px;
       }
     }
   }
 }
 </style>
-  <!-- <template>
+<!-- <template>
     <div class="detail-account-page">
       <div class="wrarp-detail-account">
         <div class="title">
@@ -1243,7 +1658,7 @@ export default {
     },
 
     mounted() {
-      this.$store.state.darkMode = false;
+
       this.accountID = this.$route.params.accountID;
     },
   };

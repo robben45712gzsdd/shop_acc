@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 *,
 *:before,
 *:after {
@@ -35,7 +35,7 @@ html,
   background-image: url("@/assets/images/bg.png");
   background-repeat: no-repeat;
 }
-p{
+p {
   line-height: 1.2;
   margin: 10px 0;
 }
@@ -129,7 +129,7 @@ a {
       .btn-account,
       .btn-logout {
         width: 130px;
-        height: 40px;
+        height: 45px;
         border-radius: 5px;
         display: flex;
         flex-direction: column;
@@ -246,6 +246,7 @@ a {
   position: relative;
   cursor: not-allowed;
   pointer-events: none;
+  opacity: 0.8 !important;
 
   &::before {
     content: "ĐANG PHÁT TRIỂN";
@@ -255,7 +256,7 @@ a {
     transform: translate(-50%, -50%) rotate(-12deg);
     font-size: 2rem;
     font-weight: 700;
-    color: rgba(255, 255, 255, 0.28); /* chữ đỏ nhạt */
+    color: rgba(255, 255, 255, 0.4); /* chữ đỏ nhạt */
     white-space: nowrap;
     z-index: 10;
     pointer-events: none;
@@ -268,7 +269,7 @@ a {
     position: absolute;
     inset: 0;
     background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(1px);    /* hiệu ứng mờ sang */
+    backdrop-filter: blur(1px); /* hiệu ứng mờ sang */
     z-index: 5;
   }
 }

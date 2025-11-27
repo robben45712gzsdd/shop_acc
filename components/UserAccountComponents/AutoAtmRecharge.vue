@@ -10,44 +10,48 @@
         <div class="left">
           <img src="@/assets/images/atm-recharge.png" alt="" />
           <div class="text">
-            <h2>Chuyển khoản qua Vietcombank</h2>
+            <h2>Chuyển khoản</h2>
             <p>Chuyển khoản ngân hàng online.</p>
           </div>
         </div>
+
         <div class="right">
           <div class="view-detail">Chi tiết</div>
         </div>
       </div>
       <div class="detail" v-show="showAtmRecharge">
-        <p class="red-text"><strong>THÔNG TIN TÀI KHOẢN NGÂN HÀNG</strong></p>
-        <p class="red-text"><strong>CHỦ TÀI KHOẢN: TRẦN VIỆT TÙNG</strong></p>
-        <p class="red-text">
-          <strong
-            >VIETCOMBANK:
-            <span ref="bankAcocuntNumber">0451000413951</span></strong
-          >
-        </p>
-        <div class="btn-copy copy-small">
-          <span
-            @click="copyValue('bankAcocuntNumber', 'coppybankAcocuntNumber')"
-            ref="coppybankAcocuntNumber"
-            >Sao chép</span
-          >
+        <div class="flex md:flex-row flex-col gap-4">
+          <div class="flex-1">
+            <p class="red-text"><strong>THÔNG TIN TÀI KHOẢN NGÂN HÀNG</strong></p>
+            <p class="red-text"><strong>CHỦ TÀI KHOẢN: HOANG THAI SON</strong></p>
+            <p class="red-text">
+              <strong>MB BANK:
+                <span ref="bankAcocuntNumber">3513042002</span></strong>
+            </p>
+            <div class="btn-copy copy-small">
+              <span @click="copyValue('bankAcocuntNumber', 'coppybankAcocuntNumber')" ref="coppybankAcocuntNumber">Sao
+                chép</span>
+            </div>
+          </div>
+          <!-- LEFT: QR -->
+          <div class="flex-1">
+            <div class="qr-box">
+              <img :src="`https://img.vietqr.io/image/MB-3513042002-print.png?&addInfo=${transactionId}`"
+                alt="QR Code" />
+            </div>
+          </div>
         </div>
+
         <div class="border-grey"></div>
         <p>Nội dung chuyển khoản của bạn:</p>
         <div class="transfer-content">
           <div class="code">
-            <b class="red-text" ref="bankTransferContent">guitien 745508</b>
+            <b class="red-text" ref="bankTransferContent">{{ transactionId }}</b>
           </div>
           <div class="btn-copy copy-big">
-            <span
-              @click="
-                copyValue('bankTransferContent', 'coppyBankTransferContent')
-              "
-              ref="coppyBankTransferContent"
-              >Sao chép</span
-            >
+            <span @click="
+              copyValue('bankTransferContent', 'coppyBankTransferContent')
+              " ref="coppyBankTransferContent">Sao chép</span>
           </div>
         </div>
         <div class="border-grey"></div>
@@ -56,9 +60,8 @@
         </div>
         <p>
           <b>Lưu ý: </b>Vui lòng ghi đúng nội dung chuyển khoản
-          <b class="red-text border-dashed"
-            ><b class="red-text">guitien 745508</b></b
-          >. Nếu không hệ thống sẽ không thể cộng tiền vào tài khoản của bạn.
+          <b class="border-dashed red-text"><b class="red-text">{{ transactionId }}</b></b>. Nếu không hệ thống sẽ không thể
+          cộng tiền vào tài khoản của bạn.
         </p>
         <p>
           Nên <b class="red-text">chuyển cùng ngân hàng</b> để nhận được tiền
@@ -71,7 +74,7 @@
         </p>
       </div>
     </div>
-    <div class="guide-block momo-recharge">
+    <!-- <div class="guide-block momo-recharge">
       <div class="heading" @click="changeView(2)">
         <div class="left">
           <img src="@/assets/images/momo-recharge.png" alt="" />
@@ -88,16 +91,11 @@
         <p class="red-text"><strong>THÔNG TIN VÍ ĐIỆN TỬ</strong></p>
         <p class="red-text"><strong>CHỦ TÀI KHOẢN: TRẦN VIỆT TÙNG</strong></p>
         <p class="red-text">
-          <strong
-            >VÍ MOMO: <span ref="momoAcountNumber">0398793456</span></strong
-          >
+          <strong>VÍ MOMO: <span ref="momoAcountNumber">0398793456</span></strong>
         </p>
         <div class="btn-copy copy-small">
-          <span
-            @click="copyValue('momoAcountNumber', 'coppyMomoAccountNumber')"
-            ref="coppyMomoAccountNumber"
-            >Sao chép</span
-          >
+          <span @click="copyValue('momoAcountNumber', 'coppyMomoAccountNumber')" ref="coppyMomoAccountNumber">Sao
+            chép</span>
         </div>
         <div class="border-grey"></div>
         <p>Nội dung chuyển khoản của bạn:</p>
@@ -106,13 +104,9 @@
             <b class="red-text" ref="momoTransferContent">guitien 745508</b>
           </div>
           <div class="btn-copy copy-big">
-            <span
-              @click="
-                copyValue('momoTransferContent', 'coppyMomoTransferContent')
-              "
-              ref="coppyMomoTransferContent"
-              >Sao chép</span
-            >
+            <span @click="
+              copyValue('momoTransferContent', 'coppyMomoTransferContent')
+              " ref="coppyMomoTransferContent">Sao chép</span>
           </div>
         </div>
         <div class="border-grey"></div>
@@ -129,9 +123,8 @@
         </div>
         <p>
           <b>Lưu ý: </b>Vui lòng ghi đúng nội dung chuyển khoản
-          <b class="red-text border-dashed"
-            ><b class="red-text">guitien 745508</b></b
-          >. Nếu không hệ thống sẽ không thể cộng tiền vào tài khoản của bạn.
+          <b class="border-dashed red-text"><b class="red-text">guitien 745508</b></b>. Nếu không hệ thống sẽ không thể
+          cộng tiền vào tài khoản của bạn.
         </p>
         <p>
           Nên <b class="red-text">chuyển cùng ngân hàng</b> để nhận được tiền
@@ -143,7 +136,7 @@
           trả về thông báo cho bạn!
         </p>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -155,7 +148,11 @@ export default {
       showMomoRecharge: false,
     };
   },
-
+  computed: {
+    transactionId() {
+      return this.$store.state.user_data?.topUpCode;
+    },
+  },
   methods: {
     changeView(num) {
       if (num == 1) {
@@ -191,6 +188,7 @@ export default {
     padding: 3px 5px;
     border-radius: 3px;
   }
+
   .guide-block {
     margin-top: 20px;
     padding: 5px 10px;
@@ -226,6 +224,7 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
+
         .view-detail {
           font-size: 0.8rem;
           font-weight: 700;
@@ -241,6 +240,7 @@ export default {
       p {
         margin: 10px 0px;
       }
+
       .btn-copy {
         span {
           background-color: var(--grey-text);
@@ -255,25 +255,30 @@ export default {
           background-color: #00c500 !important;
         }
       }
+
       .copy-small {
         span {
           font-size: 0.8rem;
           padding: 3px 5px;
         }
       }
+
       .copy-big {
         span {
           padding: 5px 10px;
         }
       }
+
       .border-grey {
         width: 100%;
         border-bottom: 1px solid var(--grey-border);
         margin: 20px 0px;
       }
+
       .transfer-content {
         display: flex;
         align-items: center;
+
         .code {
           padding: 5px 10px;
           border: 1px var(--red-btn);
@@ -282,9 +287,11 @@ export default {
           margin-right: 10px;
         }
       }
+
       .transfer-confirm-block {
         display: flex;
         margin: 15px 0px;
+
         input {
           outline: none;
           border-radius: 3px;
@@ -294,8 +301,10 @@ export default {
           padding-left: 10px;
         }
       }
+
       .btn-transfer-confirm {
         text-transform: uppercase;
+
         span {
           color: #ffffff;
           padding: 8px 10px;

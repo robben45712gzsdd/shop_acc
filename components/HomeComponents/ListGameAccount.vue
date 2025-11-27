@@ -3,12 +3,9 @@
     <div class="title"><strong>danh mục acc game</strong></div>
 
     <div class="list-type-account">
-      <nuxt-link
-        v-for="category in listCategoryGameAccount"
-        :key="category.categoryId"
+      <nuxt-link v-for="category in listCategoryGameAccount" :key="category.categoryId"
         :to="`/AccountCategories/${category.categoryId}?categoryName=${category.name}`"
-        :class="['type-account', category.disabled ? 'disabled' : '']"
-      >
+        :class="['type-account', category.totalAccount === 0 ? 'disabled' : '']">
         <div class="wrap-type-account">
           <img class="img-type-account" :src="category.banner" :alt="category.name" />
 
@@ -39,7 +36,7 @@ export default {
       listCategoryGameAccount: []
     };
   },
-  
+
   mounted() {
     this.getListCategoryGameAccount();
   },
@@ -51,7 +48,6 @@ export default {
           if (res.success) {
             let data = res.data.map(cat => ({
               ...cat,
-              disabled: cat.blug !== "free-fire" // chỉ free-fire active
             }));
 
             this.listCategoryGameAccount = data;

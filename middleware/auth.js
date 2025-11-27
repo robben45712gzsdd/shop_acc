@@ -1,17 +1,37 @@
 import Cookies from "js-cookie";
 import auth from "~/api/auth";
 
-export default async function ({ store, redirect, route }) {
-  const currentPath = route.path.toLowerCase();
+function generateStrongCode(length = 8) {
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const numbers = "0123456789";
+  const all = letters + numbers;
 
-  // Nếu đang ở trang login hoặc signup thì bỏ qua
-  if (["/login", "/signup"].includes(currentPath)) {
-    return;
+  // bắt buộc 1 chữ và 1 số
+  let result = "";
+  result += letters[Math.floor(Math.random() * letters.length)];
+  result += numbers[Math.floor(Math.random() * numbers.length)];
+
+  // random các ký tự còn lại
+  for (let i = 2; i < length; i++) {
+    result += all[Math.floor(Math.random() * all.length)];
   }
+
+  // shuffle chuỗi
+  return result
+    .split("")
+    .sort(() => Math.random() - 0.5)
+    .join("");
+}
+
+export default async function ({ store, redirect, route }) {
+  const currentPath = (route.path || "").toLowerCase();
+
+  // skip login/signup
+  if (["/login", "/signup"].includes(currentPath)) return;
 
   const token = Cookies.get("token");
 
-  // Nếu có token → restore session (không bắt buộc)
+  // try restore session if token exists but not authenticated yet
   if (token && !store.state.isAuthenticated) {
     try {
       await store.dispatch("login", { token });
@@ -21,23 +41,24 @@ export default async function ({ store, redirect, route }) {
     }
   }
 
-  const isLoggedIn = store.state.isAuthenticated;
-
-  // Nếu có token hoặc đang login, gọi getMainProfile cho mọi trang (trừ login/signup)
   try {
     const res = await auth.getMainProfile();
-    if (res.success) {
-      // Chỉ commit nếu gọi đúng, nếu sai hoặc lỗi thì không commit gì
-      store.commit("setUserData", res.data);
+
+    if (res && res.success) {
+      const userProfile = res.data || {};
+
+      const code =
+        "TopUpCode " + userProfile.topUpCode + " Trans " + generateStrongCode();
+
+      store.commit("setUserData", {
+        ...userProfile,
+        topUpCode: code,
+      });
+
       store.commit("setIsAuthenticated", true);
     }
   } catch (err) {
     console.error("Error fetching profile:", err);
-    // Không commit gì nếu lỗi, chỉ logout nếu muốn bảo mật
-    // store.dispatch("logout");
+    // không commit, không redirect — chỉ log
   }
-
-  // Nếu chưa login và muốn redirect những trang cần auth thì xử lý ở đây
-  // Ví dụ: nếu muốn redirect tất cả trang ngoại trừ login/signup khi chưa auth
-  // if (!isLoggedIn) return redirect("/login");
-};
+}
