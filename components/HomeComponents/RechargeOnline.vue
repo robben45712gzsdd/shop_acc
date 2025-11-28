@@ -146,7 +146,6 @@ export default {
 
     .charge-form,
     .top-charge-form {
-      padding: 0px 15px;
       display: flex;
       justify-content: space-around;
       flex-direction: column;

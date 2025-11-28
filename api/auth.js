@@ -3,7 +3,7 @@ import axios from "axios";
 const login = async (body) => {
   return new Promise((resolve, reject) => {
     axios
-      .post(`/Auth/Login`, body)
+      .post(`/api/Auth/Login`, body)
       .then((response) => {
         resolve(response?.data);
       })
@@ -17,7 +17,7 @@ const login = async (body) => {
 const register = async (body) => {
   return new Promise((resolve, reject) => {
     axios
-      .post(`/Auth/Register`, body)
+      .post(`/api/Auth/Register`, body)
       .then((response) => {
         resolve(response?.data);
       })
@@ -31,7 +31,7 @@ const register = async (body) => {
 const getMainProfile = async () => {
   return new Promise((resolve, reject) => {
     axios
-      .get(`/Auth/GetUserProfile`)
+      .get(`/api/Auth/GetUserProfile`)
       .then((response) => {
         resolve(response?.data);
       })
@@ -45,7 +45,7 @@ const getMainProfile = async () => {
 const changePassword = async (body) => {
   return new Promise((resolve, reject) => {
     axios
-      .post(`/Auth/ChangePassword`, body)
+      .post(`/api/Auth/ChangePassword`, body)
       .then((response) => {
         resolve(response?.data);
       })

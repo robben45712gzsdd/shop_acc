@@ -4,7 +4,7 @@ export default {
   createOrder(body) {
     return new Promise((resolve, reject) => {
       axios
-        .post("/Order/CreateOrder", body )
+        .post("/api/Order/CreateOrder", body )
         .then((response) => {
           resolve(response?.data);
         })
@@ -16,7 +16,7 @@ export default {
   getOrderHistory(params) {
     return new Promise((resolve, reject) => {
       axios
-        .get(`/Order/GetOrderHistory`, { params })
+        .get(`/api/Order/GetOrderHistory`, { params })
         .then((response) => {
           resolve(response?.data);
         })
@@ -29,7 +29,7 @@ export default {
   getOrderDetail(params) {
     return new Promise((resolve, reject) => {
       axios
-        .get(`/Order/GetOrderDetail`, { params })
+        .get(`/api/Order/GetOrderDetail`, { params })
         .then((response) => {
           resolve(response?.data);
         })

@@ -1,122 +1,107 @@
 <template>
-  <div class="account-purchase-history">
-    <div class="header">
-      <div class="header-content">
-        <div class="title-section">
-          <i class="fa fa-history"></i>
-          <h2 class="title">Lịch sử mua vật phẩm</h2>
-        </div>
-        <div class="header-stats">
-          <span class="stat-item">
-            <i class="fa fa-shopping-cart"></i>
-            Tổng: <strong>{{ totalPages }}</strong> đơn
-          </span>
-        </div>
+  <div class="purchase-history">
+    <!-- HEADER -->
+    <div class="history-header">
+      <div class="header-title">
+        <i class="fas fa-shopping-cart"></i>
+        <h2>Lịch Sử Mua Hàng</h2>
+      </div>
+      <div class="header-stats">
+        <span class="stat-badge">
+          <i class="fas fa-box"></i>
+          {{ totalRecords }} đơn hàng
+        </span>
       </div>
     </div>
 
-    <div class="table-container">
+    <!-- TABLE -->
+    <div class="table-section">
       <div class="table-wrapper">
-        <table class="premium-table">
+        <table class="purchase-table">
           <thead>
             <tr>
-              <th width="100">Mã đơn</th>
-              <th width="200">Thông tin</th>
-              <th width="120">Hình ảnh</th>
-              <th width="180">Tài khoản</th>
-              <th width="100">Giá tiền</th>
-              <th width="140">Thời gian</th>
-              <th width="80">Chi tiết</th>
+              <th>Mã Đơn</th>
+              <th>Sản Phẩm</th>
+              <th>Hình Ảnh</th>
+              <th>Tài Khoản</th>
+              <th>Giá</th>
+              <th>Thời Gian</th>
+              <th>Thao Tác</th>
             </tr>
           </thead>
-
           <tbody>
-            <tr v-for="item in history" :key="item.orderId" class="table-row">
-              <!-- Mã đơn -->
-              <td>
-                <div class="order-id">
-                  <span class="id-text">#{{ item.orderId }}</span>
+            <tr v-for="item in history" :key="item.orderId" class="order-row">
+              <!-- MÃ ĐƠN -->
+              <td class="cell-id">
+                <span class="order-id">{{ item.orderId }}</span>
+              </td>
+
+              <!-- SẢN PHẨM -->
+              <td class="cell-product">
+                <div class="product-info">
+                  <span class="product-category">{{ item.accountTitle }}</span>
+                  <span class="product-desc">{{ item.description }}</span>
                 </div>
               </td>
 
-              <!-- Thông tin game -->
-              <td>
-                <div class="game-info">
-                  <div class="game-category">
-                    <span class="category-badge">{{ item.accountTitle }}</span>
+              <!-- HÌNH ẢNH -->
+              <td class="cell-image">
+                <div v-if="item.credentials?.additionalInfo" class="image-thumb" @click="openImageModal(item.credentials.additionalInfo)">
+                  <img :src="item.credentials.additionalInfo" :alt="item.description" />
+                  <div class="image-overlay">
+                    <i class="fas fa-search-plus"></i>
                   </div>
-                  <div class="game-name">{{ item.description }}</div>
+                </div>
+                <div v-else class="no-image">
+                  <i class="fas fa-image"></i>
                 </div>
               </td>
 
-              <!-- Hình ảnh -->
-              <td>
-                <div class="image-cell">
-                  <div v-if="item.credentials?.additionalInfo" class="thumbnail-wrapper"
-                    @click="openImageModal(item.credentials.additionalInfo)">
-                    <img :src="item.credentials.additionalInfo" alt="Ảnh tài khoản" class="thumbnail-image" />
-                    <div class="image-overlay">
-                      <i class="fa fa-search-plus"></i>
-                    </div>
-                  </div>
-                  <div v-else class="no-image">
-                    <i class="fa fa-image"></i>
-                    <span>Không có</span>
-                  </div>
-                </div>
-              </td>
-
-              <!-- Tài khoản -->
-              <td>
-                <div class="credentials-preview">
-                  <div class="cred-item">
-                    <i class="fa fa-user icon-user"></i>
-                    <span class="cred-value" :class="{ 'blur': !visibleItems[item.orderId] }">
+              <!-- TÀI KHOẢN -->
+              <td class="cell-cred">
+                <div class="cred-preview">
+                  <div class="cred-line">
+                    <i class="fas fa-user"></i>
+                    <span class="cred-text" :class="{ blur: !visibleItems[item.orderId] }">
                       {{ item.credentials?.username || 'N/A' }}
                     </span>
                   </div>
-                  <div class="cred-item">
-                    <i class="fa fa-lock icon-lock"></i>
-                    <span class="cred-value" :class="{ 'blur': !visibleItems[item.orderId] }">
+                  <div class="cred-line">
+                    <i class="fas fa-lock"></i>
+                    <span class="cred-text" :class="{ blur: !visibleItems[item.orderId] }">
                       {{ item.credentials?.password || 'N/A' }}
                     </span>
                   </div>
                 </div>
               </td>
 
-              <!-- Giá tiền -->
-              <td>
-                <div class="price-cell">
-                  <span class="price-amount">{{ formatPrice(item.amount) }}</span>
-                </div>
+              <!-- GIÁ -->
+              <td class="cell-price">
+                <span class="price-badge">{{ formatPrice(item.amount) }}</span>
               </td>
 
-              <!-- Thời gian -->
-              <td>
-                <div class="datetime-cell">
+              <!-- THỜI GIAN -->
+              <td class="cell-time">
+                <div class="time-info">
                   <div class="date">{{ formatDateOnly(item.createdAt) }}</div>
                   <div class="time">{{ formatTimeOnly(item.createdAt) }}</div>
                 </div>
               </td>
 
-              <!-- Chi tiết -->
-              <td>
-                <div class="action-cell">
-                  <button @click="openDetailModal(item)" class="detail-btn" title="Xem chi tiết">
-                    <i class="fa fa-info-circle"></i>
-                  </button>
-                </div>
+              <!-- THAO TÁC -->
+              <td class="cell-action">
+                <button class="btn-detail" @click="openDetailModal(item)" title="Chi tiết">
+                  <i class="fas fa-info-circle"></i>
+                </button>
               </td>
             </tr>
 
-            <tr v-if="history.length === 0">
-              <td colspan="7" class="empty-state">
-                <div class="empty-content">
-                  <div class="empty-icon">
-                    <i class="fa fa-inbox"></i>
-                  </div>
-                  <p class="empty-text">Chưa có lịch sử mua hàng</p>
-                  <p class="empty-subtext">Các giao dịch của bạn sẽ hiển thị tại đây</p>
+            <!-- EMPTY STATE -->
+            <tr v-if="history.length === 0" class="empty-row">
+              <td colspan="7">
+                <div class="empty-state">
+                  <i class="fas fa-inbox"></i>
+                  <p>Chưa có đơn hàng nào</p>
                 </div>
               </td>
             </tr>
@@ -125,138 +110,189 @@
       </div>
     </div>
 
-    <!-- Pagination -->
-    <div class="pagination-wrapper">
-      <Pagination :currentPage="page" :totalPages="totalPages" @update:page="changePage" />
+    <!-- PAGINATION -->
+    <div class="pagination-section" v-if="totalPages > 1">
+      <div class="pagination">
+        <button 
+          class="page-btn prev"
+          :disabled="page === 1"
+          @click="changePage(page - 1)"
+        >
+          <i class="fa-chevron-left fas"></i>
+        </button>
+
+        <div class="page-numbers">
+          <button
+            v-for="p in visiblePages"
+            :key="p"
+            class="page-btn number"
+            :class="{ active: page === p }"
+            @click="changePage(p)"
+          >
+            {{ p }}
+          </button>
+        </div>
+
+        <button 
+          class="page-btn next"
+          :disabled="page === totalPages"
+          @click="changePage(page + 1)"
+        >
+          <i class="fa-chevron-right fas"></i>
+        </button>
+      </div>
+
+      <div class="page-info">
+        Trang {{ page }} / {{ totalPages }}
+      </div>
     </div>
 
-    <!-- Modal Chi tiết đơn hàng -->
-    <transition name="modal-fade">
+    <!-- INFO -->
+    <div class="info-box">
+      <i class="fas fa-info-circle"></i>
+      <span>Trên điện thoại, vuốt bảng từ phải sang trái để xem thêm thông tin</span>
+    </div>
+
+    <!-- DETAIL MODAL -->
+    <transition name="modal">
       <div v-if="showDetailModal" class="modal-overlay" @click="closeDetailModal">
-        <div class="modal-container detail-modal" @click.stop>
+        <div class="modal" @click.stop>
           <div class="modal-header">
             <h3 class="modal-title">
-              <i class="fa fa-file-text"></i>
-              Chi tiết đơn hàng
+              <i class="fas fa-receipt"></i>
+              Chi Tiết Đơn Hàng
             </h3>
-            <button class="close-modal-btn" @click="closeDetailModal">
-              <i class="fa fa-times"></i>
+            <button class="btn-close" @click="closeDetailModal">
+              <i class="fas fa-times"></i>
             </button>
           </div>
 
           <div class="modal-body" v-if="selectedItem">
-            <div class="detail-section">
-              <div class="section-title">Thông tin đơn hàng</div>
-              <div class="detail-grid">
-                <div class="detail-item">
-                  <span class="detail-label">Mã đơn hàng:</span>
-                  <span class="detail-value id-value">{{ selectedItem.orderId }}</span>
+            <!-- ORDER INFO -->
+            <div class="modal-section">
+              <h4 class="section-title">Thông Tin Đơn Hàng</h4>
+              <div class="info-rows">
+                <div class="info-row">
+                  <span class="info-label">Mã đơn:</span>
+                  <span class="info-value code">{{ selectedItem.orderId }}</span>
                 </div>
-                <div class="detail-item">
-                  <span class="detail-label">Danh mục:</span>
-                  <span class="detail-value">{{ selectedItem.accountTitle }}</span>
+                <div class="info-row">
+                  <span class="info-label">Danh mục:</span>
+                  <span class="info-value">{{ selectedItem.accountTitle }}</span>
                 </div>
-                <div class="detail-item">
-                  <span class="detail-label">Tên game:</span>
-                  <span class="detail-value">{{ selectedItem.description }}</span>
+                <div class="info-row">
+                  <span class="info-label">Mô tả:</span>
+                  <span class="info-value">{{ selectedItem.description }}</span>
                 </div>
-                <div class="detail-item">
-                  <span class="detail-label">Giá tiền:</span>
-                  <span class="detail-value price-highlight">{{ formatPrice(selectedItem.amount) }}</span>
+                <div class="info-row">
+                  <span class="info-label">Giá:</span>
+                  <span class="info-value price">{{ formatPrice(selectedItem.amount) }}</span>
                 </div>
-                <div class="detail-item">
-                  <span class="detail-label">Thời gian mua:</span>
-                  <span class="detail-value">{{ formatDate(selectedItem.createdAt) }}</span>
+                <div class="info-row">
+                  <span class="info-label">Thời gian:</span>
+                  <span class="info-value">{{ formatDate(selectedItem.createdAt) }}</span>
                 </div>
               </div>
             </div>
 
-            <div class="detail-section credentials-section">
-              <div class="section-title-with-action">
-                <div class="section-title">Thông tin tài khoản</div>
-                <div class="credential-actions">
-                  <button @click="toggleModalVisibility" class="action-icon-btn"
-                    :title="visibleItems[selectedItem.orderId] ? 'Ẩn thông tin' : 'Hiện thông tin'">
-                    <i :class="visibleItems[selectedItem.orderId] ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
+            <!-- CREDENTIALS -->
+            <div class="modal-section">
+              <div class="section-header">
+                <h4 class="section-title">Thông Tin Tài Khoản</h4>
+                <div class="actions">
+                  <button class="action-btn" @click="toggleVisibility" :title="visibleItems[selectedItem.orderId] ? 'Ẩn' : 'Hiện'">
+                    <i :class="visibleItems[selectedItem.orderId] ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
                   </button>
-                  <button @click="copyCredentials(selectedItem)" class="action-icon-btn" title="Sao chép">
-                    <i class="fa fa-copy"></i>
+                  <button class="action-btn" @click="copyCredentials(selectedItem)" title="Sao chép">
+                    <i class="fas fa-copy"></i>
                   </button>
                 </div>
               </div>
-              <div class="credentials-box">
-                <div class="cred-row">
-                  <div class="cred-label">
-                    <i class="fa fa-user"></i>
-                    Tài khoản
-                  </div>
-                  <div class="cred-content" :class="{ 'blur': !visibleItems[selectedItem.orderId] }">
+              <div class="cred-box">
+                <div class="cred-item">
+                  <label class="cred-label">
+                    <i class="fas fa-user"></i>
+                    Tài Khoản
+                  </label>
+                  <div class="cred-value" :class="{ blur: !visibleItems[selectedItem.orderId] }">
                     {{ selectedItem.credentials?.username || 'N/A' }}
                   </div>
                 </div>
-                <div class="cred-row">
-                  <div class="cred-label">
-                    <i class="fa fa-lock"></i>
-                    Mật khẩu
-                  </div>
-                  <div class="cred-content" :class="{ 'blur': !visibleItems[selectedItem.orderId] }">
+                <div class="cred-item">
+                  <label class="cred-label">
+                    <i class="fas fa-lock"></i>
+                    Mật Khẩu
+                  </label>
+                  <div class="cred-value" :class="{ blur: !visibleItems[selectedItem.orderId] }">
                     {{ selectedItem.credentials?.password || 'N/A' }}
                   </div>
                 </div>
               </div>
             </div>
 
-            <div class="detail-section" v-if="selectedItem.credentials?.additionalInfo">
-              <div class="section-title">Hình ảnh đính kèm</div>
-              <div class="detail-image-wrapper">
-                <img :src="selectedItem.credentials.additionalInfo" alt="Ảnh đính kèm" class="detail-image"
-                  @click="openImageModal(selectedItem.credentials.additionalInfo)" />
+            <!-- IMAGE -->
+            <div v-if="selectedItem.credentials?.additionalInfo" class="modal-section">
+              <h4 class="section-title">Hình Ảnh</h4>
+              <div class="image-box" @click="openImageModal(selectedItem.credentials.additionalInfo)">
+                <img :src="selectedItem.credentials.additionalInfo" :alt="selectedItem.description" />
               </div>
             </div>
           </div>
         </div>
       </div>
-      <p class="description">
-        <strong>Dùng điện thoại <i class="fa fa-mobile" aria-hidden="true"></i>, hãy
-          vuốt bảng từ phải qua trái (
-          <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> ) để xem đầy
-          đủ thông tin!</strong>
-      </p>
     </transition>
 
-    <!-- Modal Xem ảnh full -->
+    <!-- IMAGE MODAL -->
     <transition name="fade">
-      <div v-if="showImageModal" class="modal-overlay image-modal-overlay" @click="closeImageModal">
-        <div class="image-modal-content" @click.stop>
-          <button class="image-close-btn" @click="closeImageModal">
-            <i class="fa fa-times"></i>
-          </button>
-          <img :src="currentImage" alt="Ảnh đính kèm" class="full-image" />
-        </div>
+      <div v-if="showImageModal" class="image-overlay" @click="closeImageModal">
+        <button class="img-close" @click="closeImageModal">
+          <i class="fas fa-times"></i>
+        </button>
+        <img :src="currentImage" :alt="'Image'" class="fullscreen-image" @click.stop />
       </div>
     </transition>
   </div>
 </template>
 
 <script>
-import Pagination from "@/components/Pagination.vue";
 import order from "~/api/order";
 
 export default {
-  components: { Pagination },
-
   data() {
     return {
       history: [],
       page: 1,
       limit: 10,
-      totalPages: 0,
+      totalRecords: 0,
       showDetailModal: false,
       showImageModal: false,
       selectedItem: null,
       currentImage: null,
       visibleItems: {},
     };
+  },
+
+  computed: {
+    totalPages() {
+      return Math.ceil(this.totalRecords / this.limit);
+    },
+
+    visiblePages() {
+      const pages = [];
+      const maxVisible = 5;
+      let start = Math.max(1, this.page - Math.floor(maxVisible / 2));
+      let end = Math.min(this.totalPages, start + maxVisible - 1);
+
+      if (end - start < maxVisible - 1) {
+        start = Math.max(1, end - maxVisible + 1);
+      }
+
+      for (let i = start; i <= end; i++) {
+        pages.push(i);
+      }
+
+      return pages;
+    },
   },
 
   mounted() {
@@ -271,9 +307,8 @@ export default {
           recordPerPage: this.limit
         });
 
-        this.history = res.data;
-        this.totalPages = Math.ceil(res.totalRecords / this.limit);
-
+        this.history = res.data || [];
+        this.totalRecords = res.totalRecords || 0;
         this.initVisibleItems();
       } catch (err) {
         console.error("Fetch history error:", err);
@@ -289,6 +324,14 @@ export default {
       this.visibleItems = visible;
     },
 
+    changePage(newPage) {
+      if (newPage >= 1 && newPage <= this.totalPages) {
+        this.page = newPage;
+        this.fetchHistory();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    },
+
     openDetailModal(item) {
       this.selectedItem = item;
       this.showDetailModal = true;
@@ -301,7 +344,7 @@ export default {
       document.body.style.overflow = '';
     },
 
-    toggleModalVisibility() {
+    toggleVisibility() {
       if (this.selectedItem) {
         this.$set(this.visibleItems, this.selectedItem.orderId, !this.visibleItems[this.selectedItem.orderId]);
       }
@@ -322,7 +365,7 @@ export default {
 
       if (navigator.clipboard) {
         navigator.clipboard.writeText(text).then(() => {
-          this.$toast?.success?.("Đã sao chép thông tin!");
+          this.$toast?.success?.("Đã sao chép!");
         });
       } else {
         const textarea = document.createElement('textarea');
@@ -331,14 +374,12 @@ export default {
         textarea.select();
         document.execCommand('copy');
         document.body.removeChild(textarea);
-        this.$toast?.success?.("Đã sao chép thông tin!");
+        this.$toast?.success?.("Đã sao chép!");
       }
     },
 
-    changePage(newPage) {
-      this.page = newPage;
-      this.fetchHistory();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    formatPrice(num) {
+      return (num || 0).toLocaleString("vi-VN") + "đ";
     },
 
     formatDate(date) {
@@ -359,213 +400,212 @@ export default {
       const hours = String(d.getHours()).padStart(2, '0');
       const minutes = String(d.getMinutes()).padStart(2, '0');
       return `${hours}:${minutes}`;
-    },
-
-    formatPrice(num) {
-      return num?.toLocaleString("vi-VN") + "đ" || "0đ";
     }
   }
 };
 </script>
 
-<style lang="scss" scoped>
-$primary-color: #FF723D;
-$primary-dark: #e55a28;
-$primary-light: #ff8f5f;
-$text-dark: #1a1a1a;
-$text-gray: #6b7280;
-$border-color: #e5e7eb;
-$bg-light: #f9fafb;
+<style scoped lang="scss">
+$primary: #ff6b35;
+$primary-dark: #e55a2b;
+$text-main: #1a1a1a;
+$text-sub: #666;
+$text-light: #999;
+$border: #e8e8e8;
+$bg: #ffffff;
+$bg-light: #f9f9f9;
 
-.account-purchase-history {
-  width: 100%;
+$success: #10b981;
+$success-light: #ecfdf5;
+
+.purchase-history {
+  background: $bg;
+  border-radius: 8px;
   overflow: hidden;
-  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
 
-  // Header
-  .header {
-    background: linear-gradient(135deg, $primary-color 0%, $primary-dark 100%);
-    padding: 12px 15px;
-    color: white;
+// ============================================
+// HEADER
+// ============================================
 
-    .header-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
+.history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, rgba(255, 107, 53, 0.08), rgba(255, 107, 53, 0.03));
+
+  .header-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    i {
+      font-size: 20px;
+      color: $primary;
     }
 
-    .title-section {
-      display: flex;
+    h2 {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+
+  .header-stats {
+    .stat-badge {
+      display: inline-flex;
       align-items: center;
-      gap: 12px;
+      gap: 8px;
+      padding: 8px 14px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      backdrop-filter: blur(10px);
+      border: 1px solid $primary;
+      color: $primary;
 
       i {
-        font-size: 1.5rem;
-      }
-
-      .title {
-        font-size: 1.25rem;
-        font-weight: 700;
-        margin: 0;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-    }
-
-    .header-stats {
-      .stat-item {
-        background: rgba(255, 255, 255, 0.2);
-        padding: 8px 16px;
-        border-radius: 20px;
-        font-size: 0.875rem;
-
-        i {
-          margin-right: 6px;
-        }
-
-        strong {
-          font-weight: 700;
-        }
+        font-size: 14px;
+        color: $primary;
       }
     }
   }
+}
 
-  .table-wrapper {
-    overflow-x: auto;
-    border-radius: 8px;
-    border: 1px solid $border-color;
+// ============================================
+// TABLE
+// ============================================
 
-    &::-webkit-scrollbar {
-      height: 8px;
+.table-section {
+  overflow-x: auto;
+  border-top: 1px solid $border;
+
+  &::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $bg-light;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 107, 53, 0.3);
+    border-radius: 3px;
+
+    &:hover {
+      background: rgba(255, 107, 53, 0.5);
     }
+  }
+}
 
-    &::-webkit-scrollbar-track {
-      background: $bg-light;
+.table-wrapper {
+  min-width: 1000px;
+}
+
+.purchase-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+
+  thead {
+    background: $bg-light;
+    border-bottom: 2px solid $primary;
+
+    th {
+      padding: 12px 14px;
+      text-align: left;
+      font-weight: 700;
+      color: $text-main;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
     }
+  }
 
-    &::-webkit-scrollbar-thumb {
-      background: lighten($primary-color, 20%);
-      border-radius: 4px;
+  tbody {
+    .order-row {
+      border-bottom: 1px solid $border;
+      transition: all 0.2s;
 
       &:hover {
-        background: $primary-color;
+        background: rgba(255, 107, 53, 0.03);
       }
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    td {
+      padding: 14px;
+      vertical-align: middle;
     }
   }
 
-  .premium-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.875rem;
-    min-width: 1000px;
-
-    thead {
-      background: $bg-light;
-      border-bottom: 2px solid $primary-color;
-
-      th {
-        padding: 14px 12px;
-        text-align: left;
-        font-weight: 600;
-        color: $text-dark;
-        text-transform: uppercase;
-        font-size: 0.75rem;
-        letter-spacing: 0.5px;
-        white-space: nowrap;
-      }
-    }
-
-    tbody {
-      .table-row {
-        border-bottom: 1px solid $border-color;
-        transition: all 0.2s ease;
-
-        &:hover {
-          background: lighten($primary-color, 45%);
-          transform: translateY(-1px);
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        &:last-child {
-          border-bottom: none;
-        }
-      }
-
-      td {
-        padding: 14px 12px;
-        vertical-align: middle;
-      }
-    }
-  }
-
-  // Order ID
-  .order-id {
-    .id-text {
+  // CELLS
+  .cell-id {
+    .order-id {
       display: inline-block;
-      padding: 6px 10px;
-      background: linear-gradient(135deg, lighten($primary-color, 35%) 0%, lighten($primary-color, 40%) 100%);
-      color: $primary-dark;
-      border-radius: 6px;
-      font-size: 0.75rem;
-      font-weight: 700;
+      padding: 4px 8px;
+      background: #f3f4f6;
+      color: $text-sub;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
       font-family: 'Courier New', monospace;
-      border: 1px solid lighten($primary-color, 30%);
+      letter-spacing: 0.3px;
     }
   }
 
-  // Game Info
-  .game-info {
-    .game-category {
-      margin-bottom: 6px;
+  .cell-product {
+    .product-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
 
-      .category-badge {
+      .product-category {
         display: inline-block;
+        width: fit-content;
         padding: 4px 10px;
-        background: $primary-color;
+        background: $primary;
         color: white;
         border-radius: 4px;
-        font-size: 0.7rem;
-        font-weight: 600;
+        font-size: 10px;
+        font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.3px;
       }
-    }
 
-    .game-name {
-      color: $text-gray;
-      font-size: 0.813rem;
-      line-height: 1.4;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
+      .product-desc {
+        font-size: 12px;
+        color: $text-sub;
+        line-height: 1.4;
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
     }
   }
 
-  // Image Cell
-  .image-cell {
-    .thumbnail-wrapper {
+  .cell-image {
+    .image-thumb {
       position: relative;
-      width: 80px;
-      height: 80px;
-      border-radius: 8px;
+      width: 60px;
+      height: 60px;
+      border-radius: 6px;
       overflow: hidden;
       cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease;
+      border: 1px solid $border;
+      transition: all 0.2s;
 
-      &:hover {
-        transform: scale(1.05);
-        box-shadow: 0 4px 12px rgba($primary-color, 0.3);
-
-        .image-overlay {
-          opacity: 1;
-        }
-      }
-
-      .thumbnail-image {
+      img {
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -582,418 +622,66 @@ $bg-light: #f9fafb;
         align-items: center;
         justify-content: center;
         opacity: 0;
-        transition: opacity 0.3s ease;
+        transition: opacity 0.2s;
 
         i {
           color: white;
-          font-size: 1.5rem;
+          font-size: 16px;
+        }
+      }
+
+      &:hover {
+        border-color: $primary;
+        box-shadow: 0 4px 12px rgba(255, 107, 53, 0.2);
+
+        .image-overlay {
+          opacity: 1;
         }
       }
     }
 
     .no-image {
-      width: 80px;
-      height: 80px;
-      border-radius: 8px;
-      border: 2px dashed $border-color;
+      width: 60px;
+      height: 60px;
+      border: 2px dashed $border;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $text-light;
+      font-size: 20px;
+    }
+  }
+
+  .cell-cred {
+    .cred-preview {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
       gap: 6px;
-      color: $text-gray;
 
-      i {
-        font-size: 1.5rem;
-        opacity: 0.5;
-      }
-
-      span {
-        font-size: 0.7rem;
-      }
-    }
-  }
-
-  // Credentials Preview
-  .credentials-preview {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-
-    .cred-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 10px;
-      background: $bg-light;
-      border-radius: 6px;
-      font-size: 0.813rem;
-
-      i {
-        font-size: 0.75rem;
-        width: 14px;
-
-        &.icon-user {
-          color: #3b82f6;
-        }
-
-        &.icon-lock {
-          color: #8b5cf6;
-        }
-      }
-
-      .cred-value {
-        flex: 1;
-        font-family: 'Courier New', monospace;
-        color: $text-dark;
-        transition: all 0.3s ease;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-
-        &.blur {
-          filter: blur(4px);
-          user-select: none;
-        }
-      }
-    }
-  }
-
-  // Price
-  .price-cell {
-    .price-amount {
-      display: inline-block;
-      padding: 8px 14px;
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      color: white;
-      border-radius: 6px;
-      font-weight: 700;
-      font-size: 0.875rem;
-      white-space: nowrap;
-      box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
-    }
-  }
-
-  // DateTime
-  .datetime-cell {
-    .date {
-      font-weight: 600;
-      color: $text-dark;
-      font-size: 0.813rem;
-      margin-bottom: 4px;
-    }
-
-    .time {
-      color: $text-gray;
-      font-size: 0.75rem;
-    }
-  }
-
-  // Action Cell
-  .action-cell {
-    text-align: center;
-
-    .detail-btn {
-      width: 40px;
-      height: 40px;
-      border: none;
-      border-radius: 8px;
-      background: $primary-color;
-      color: white;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 4px rgba($primary-color, 0.2);
-
-      &:hover {
-        background: $primary-dark;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba($primary-color, 0.3);
-      }
-
-      &:active {
-        transform: translateY(0);
-      }
-
-      i {
-        font-size: 1.125rem;
-      }
-    }
-  }
-
-  // Empty State
-  .empty-state {
-    .empty-content {
-      padding: 80px 20px;
-      text-align: center;
-
-      .empty-icon {
-        margin-bottom: 20px;
+      .cred-line {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11px;
 
         i {
-          font-size: 4rem;
-          color: lighten($text-gray, 20%);
-          opacity: 0.5;
+          color: $primary;
+          font-size: 11px;
+          flex-shrink: 0;
         }
-      }
 
-      .empty-text {
-        font-size: 1rem;
-        font-weight: 600;
-        color: $text-gray;
-        margin-bottom: 8px;
-      }
-
-      .empty-subtext {
-        font-size: 0.875rem;
-        color: lighten($text-gray, 10%);
-      }
-    }
-  }
-}
-
-// Modal Overlay
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  padding: 20px;
-  backdrop-filter: blur(4px);
-}
-
-// Detail Modal
-.modal-container {
-  background: white;
-  border-radius: 12px;
-  width: 100%;
-  max-width: 700px;
-  max-height: 90vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
-  animation: slideUp 0.3s ease;
-
-  .modal-header {
-    padding: 20px 24px;
-    background: linear-gradient(135deg, $primary-color 0%, $primary-dark 100%);
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    .modal-title {
-      font-size: 1.125rem;
-      font-weight: 700;
-      margin: 0;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-
-      i {
-        font-size: 1.25rem;
-      }
-    }
-
-    .close-modal-btn {
-      width: 36px;
-      height: 36px;
-      border: none;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
-
-      &:hover {
-        background: rgba(255, 255, 255, 0.3);
-        transform: rotate(90deg);
-      }
-
-      i {
-        font-size: 1.125rem;
-      }
-    }
-  }
-
-  .modal-body {
-    padding: 24px;
-    overflow-y: auto;
-    flex: 1;
-
-    &::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: $bg-light;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: lighten($primary-color, 20%);
-      border-radius: 3px;
-
-      &:hover {
-        background: $primary-color;
-      }
-    }
-  }
-
-  .detail-section {
-    margin-bottom: 24px;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-
-    .section-title {
-      font-size: 0.875rem;
-      font-weight: 700;
-      color: $text-dark;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 16px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid $primary-color;
-    }
-
-    .section-title-with-action {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-
-      .section-title {
-        margin-bottom: 0;
-        padding-bottom: 0;
-        border-bottom: none;
-      }
-
-      .credential-actions {
-        display: flex;
-        gap: 8px;
-
-        .action-icon-btn {
-          width: 36px;
-          height: 36px;
-          border: none;
-          border-radius: 6px;
-          background: $bg-light;
-          color: $text-dark;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: all 0.2s ease;
-
-          &:hover {
-            background: $primary-color;
-            color: white;
-          }
-
-          i {
-            font-size: 0.875rem;
-          }
-        }
-      }
-    }
-  }
-
-  .detail-grid {
-    display: grid;
-    gap: 16px;
-
-    .detail-item {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-
-      .detail-label {
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: $text-gray;
-        text-transform: uppercase;
-        letter-spacing: 0.3px;
-      }
-
-      .detail-value {
-        font-size: 0.938rem;
-        color: $text-dark;
-        padding: 10px 14px;
-        background: $bg-light;
-        border-radius: 6px;
-        word-break: break-all;
-
-        &.id-value {
+        .cred-text {
           font-family: 'Courier New', monospace;
-          font-size: 0.813rem;
-        }
-
-        &.price-highlight {
-          background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-          color: white;
-          font-weight: 700;
-        }
-      }
-    }
-  }
-
-  .credentials-section {
-    .credentials-box {
-      background: $bg-light;
-      border-radius: 8px;
-      padding: 16px;
-      border: 1px solid $border-color;
-
-      .cred-row {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        padding: 12px 0;
-
-        &:not(:last-child) {
-          border-bottom: 1px solid darken($bg-light, 5%);
-        }
-
-        .cred-label {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          font-size: 0.75rem;
-          font-weight: 600;
-          color: $text-gray;
-          text-transform: uppercase;
-
-          i {
-            font-size: 0.875rem;
-            color: $primary-color;
-          }
-        }
-
-        .cred-content {
-          font-family: 'Courier New', monospace;
-          font-size: 1rem;
-          color: $text-dark;
-          padding: 10px 14px;
-          background: white;
-          border-radius: 6px;
-          transition: all 0.3s ease;
-          word-break: break-all;
+          color: $text-sub;
+          max-width: 120px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          transition: all 0.2s;
 
           &.blur {
-            filter: blur(5px);
+            filter: blur(3px);
             user-select: none;
           }
         }
@@ -1001,118 +689,495 @@ $bg-light: #f9fafb;
     }
   }
 
-  .detail-image-wrapper {
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid $border-color;
+  .cell-price {
+    .price-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      background: linear-gradient(135deg, $success, darken($success, 10%));
+      color: white;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+  }
 
-    .detail-image {
-      width: 100%;
-      height: auto;
-      display: block;
+  .cell-time {
+    .time-info {
+      .date {
+        font-weight: 700;
+        color: $text-main;
+        font-size: 12px;
+        margin-bottom: 2px;
+      }
+
+      .time {
+        color: $text-light;
+        font-size: 11px;
+      }
+    }
+  }
+
+  .cell-action {
+    .btn-detail {
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: $primary;
+      color: white;
+      border-radius: 4px;
+      font-size: 14px;
       cursor: pointer;
-      transition: transform 0.3s ease;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       &:hover {
-        transform: scale(1.02);
+        background: $primary-dark;
+        transform: translateY(-1px);
       }
     }
   }
 }
 
-// Image Modal
-.image-modal-overlay {
-  background: rgba(0, 0, 0, 0.9);
-  backdrop-filter: blur(8px);
-}
+// EMPTY STATE
+.empty-row {
+  border: none;
 
-.image-modal-content {
-  position: relative;
-  max-width: 95%;
-  max-height: 95%;
-  animation: zoomIn 0.3s ease;
-
-  .image-close-btn {
-    position: absolute;
-    top: -50px;
-    right: 0;
-    width: 44px;
-    height: 44px;
-    border: none;
-    border-radius: 50%;
-    background: $primary-color;
-    color: white;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-
-    &:hover {
-      background: $primary-dark;
-      transform: rotate(90deg) scale(1.1);
-    }
+  .empty-state {
+    padding: 60px 20px;
+    text-align: center;
+    color: $text-light;
 
     i {
-      font-size: 1.25rem;
+      font-size: 48px;
+      opacity: 0.3;
+      display: block;
+      margin-bottom: 12px;
     }
-  }
 
-  .full-image {
-    max-width: 100%;
-    max-height: 85vh;
-    border-radius: 8px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    p {
+      margin: 0;
+      font-size: 14px;
+      color: $text-sub;
+    }
   }
 }
 
-// Animations
+// ============================================
+// PAGINATION
+// ============================================
+
+.pagination-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-top: 1px solid $border;
+  background: $bg-light;
+  gap: 20px;
+
+  .pagination {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    .page-btn {
+      width: 36px;
+      height: 36px;
+      border: 1px solid $border;
+      background: white;
+      color: $text-main;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover:not(:disabled) {
+        border-color: $primary;
+        color: $primary;
+        transform: translateY(-1px);
+      }
+
+      &.active {
+        background: linear-gradient(135deg, $primary, $primary-dark);
+        color: white;
+        border-color: $primary;
+      }
+
+      &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      i {
+        font-size: 14px;
+      }
+    }
+
+    .page-numbers {
+      display: flex;
+      gap: 6px;
+    }
+  }
+
+  .page-info {
+    font-size: 12px;
+    color: $text-sub;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+}
+
+// ============================================
+// INFO BOX
+// ============================================
+
+.info-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  background: #eff6ff;
+  border-top: 1px solid rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+  font-size: 12px;
+
+  i {
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  span {
+    line-height: 1.5;
+  }
+}
+
+// ============================================
+// MODAL
+// ============================================
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  backdrop-filter: blur(4px);
+
+  .modal {
+    background: $bg;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 700px;
+    max-height: 85vh;
+    overflow-y: auto;
+    position: relative;
+    animation: slideUp 0.3s ease;
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      background: linear-gradient(135deg, $primary, $primary-dark);
+      color: white;
+      border-bottom: 1px solid $border;
+
+      .modal-title {
+        font-size: 16px;
+        font-weight: 700;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        i {
+          font-size: 18px;
+        }
+      }
+
+      .btn-close {
+        width: 36px;
+        height: 36px;
+        border: none;
+        background: none;
+        color: white;
+        cursor: pointer;
+        font-size: 18px;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+          transform: rotate(90deg);
+        }
+      }
+    }
+
+    .modal-body {
+      padding: 20px;
+
+      .modal-section {
+        margin-bottom: 20px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .section-title {
+          font-size: 13px;
+          font-weight: 700;
+          color: $text-main;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          margin-bottom: 12px;
+          padding-bottom: 8px;
+          border-bottom: 2px solid $primary;
+        }
+
+        .section-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 12px;
+
+          .section-title {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+          }
+
+          .actions {
+            display: flex;
+            gap: 8px;
+
+            .action-btn {
+              width: 32px;
+              height: 32px;
+              border: 1px solid $border;
+              background: white;
+              color: $text-main;
+              border-radius: 4px;
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              transition: all 0.2s;
+              font-size: 14px;
+
+              &:hover {
+                border-color: $primary;
+                color: $primary;
+                background: #fff8f5;
+              }
+            }
+          }
+        }
+
+        .info-rows {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+
+          .info-row {
+            display: flex;
+            gap: 12px;
+
+            .info-label {
+              font-size: 12px;
+              font-weight: 600;
+              color: $text-light;
+              text-transform: uppercase;
+              letter-spacing: 0.3px;
+              min-width: 90px;
+              flex-shrink: 0;
+            }
+
+            .info-value {
+              font-size: 13px;
+              color: $text-main;
+              flex: 1;
+              word-break: break-all;
+
+              &.code {
+                font-family: 'Courier New', monospace;
+                font-size: 12px;
+              }
+
+              &.price {
+                color: $success;
+                font-weight: 700;
+              }
+            }
+          }
+        }
+
+        .cred-box {
+          background: $bg-light;
+          border: 1px solid $border;
+          border-radius: 6px;
+          padding: 12px;
+
+          .cred-item {
+            padding: 10px 0;
+
+            &:not(:last-child) {
+              border-bottom: 1px solid #e5e5e5;
+            }
+
+            .cred-label {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              font-size: 11px;
+              font-weight: 600;
+              color: $text-light;
+              text-transform: uppercase;
+              margin-bottom: 6px;
+
+              i {
+                font-size: 12px;
+                color: $primary;
+              }
+            }
+
+            .cred-value {
+              padding: 8px 10px;
+              background: white;
+              border-radius: 4px;
+              font-family: 'Courier New', monospace;
+              font-size: 13px;
+              color: $text-main;
+              word-break: break-all;
+              transition: all 0.2s;
+
+              &.blur {
+                filter: blur(4px);
+                user-select: none;
+              }
+            }
+          }
+        }
+
+        .image-box {
+          border-radius: 6px;
+          overflow: hidden;
+          border: 1px solid $border;
+          cursor: pointer;
+          transition: all 0.2s;
+
+          img {
+            width: 100%;
+            height: auto;
+            display: block;
+          }
+
+          &:hover {
+            border-color: $primary;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.15);
+          }
+        }
+      }
+    }
+  }
+}
+
 @keyframes slideUp {
   from {
     opacity: 0;
     transform: translateY(30px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.3s;
+}
+
+.modal-enter,
+.modal-leave-to {
+  opacity: 0;
+}
+
+// ============================================
+// IMAGE MODAL
+// ============================================
+
+.image-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+
+  .img-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    border: none;
+    background: white;
+    color: $text-main;
+    border-radius: 4px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      transform: scale(1.1);
+      background: #f0f0f0;
+    }
+  }
+
+  .fullscreen-image {
+    max-width: 100%;
+    max-height: 85vh;
+    border-radius: 6px;
+    animation: zoomIn 0.3s ease;
+  }
+}
+
 @keyframes zoomIn {
   from {
     opacity: 0;
-    transform: scale(0.8);
+    transform: scale(0.9);
   }
-
   to {
     opacity: 1;
     transform: scale(1);
   }
 }
 
-.modal-fade-enter-active,
-.modal-fade-leave-active {
-  transition: opacity 0.3s ease;
-
-  .modal-container {
-    transition: transform 0.3s ease;
-  }
-}
-
-.modal-fade-enter,
-.modal-fade-leave-to {
-  opacity: 0;
-
-  .modal-container {
-    transform: translateY(30px);
-  }
-}
-
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s;
 }
 
 .fade-enter,
@@ -1120,64 +1185,101 @@ $bg-light: #f9fafb;
   opacity: 0;
 }
 
-// Responsive
+// ============================================
+// RESPONSIVE
+// ============================================
+
 @media (max-width: 768px) {
-  .account-purchase-history {
-    border-radius: 0;
+  .history-header {
+    padding: 12px 16px;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
 
-    .header {
-      padding: 16px 20px;
+    .header-title h2 {
+      font-size: 16px;
+    }
+  }
 
-      .header-content {
-        flex-direction: column;
-        align-items: flex-start;
-      }
+  .table-wrapper {
+    min-width: auto;
+  }
 
-      .title-section {
-        .title {
-          font-size: 1.125rem;
-        }
-      }
+  .purchase-table {
+    font-size: 12px;
+
+    thead th {
+      padding: 10px;
+      font-size: 10px;
     }
 
-
-    .premium-table {
-      font-size: 0.813rem;
-
-      thead th {
-        padding: 12px 10px;
-        font-size: 0.7rem;
-      }
-
-      tbody td {
-        padding: 12px 10px;
-      }
+    tbody td {
+      padding: 10px;
     }
 
-    .image-cell {
-
-      .thumbnail-wrapper,
+    .cell-image {
+      .image-thumb,
       .no-image {
-        width: 60px;
-        height: 60px;
+        width: 50px;
+        height: 50px;
       }
     }
   }
 
-  .modal-container {
+  .pagination-section {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+
+    .pagination {
+      justify-content: center;
+    }
+
+    .page-info {
+      text-align: center;
+    }
+  }
+
+  .info-box {
+    padding: 10px 14px;
+    font-size: 11px;
+  }
+
+  .modal {
     max-width: 95%;
-    max-height: 95vh;
+  }
+}
 
-    .modal-header {
-      padding: 16px 20px;
+@media (max-width: 480px) {
+  .history-header {
+    padding: 10px 12px;
 
-      .modal-title {
-        font-size: 1rem;
+    .header-title {
+      h2 {
+        font-size: 14px;
+      }
+
+      i {
+        font-size: 16px;
       }
     }
 
-    .modal-body {
-      padding: 20px;
+    .stat-badge {
+      font-size: 11px;
+      padding: 6px 10px;
+    }
+  }
+
+  .purchase-table {
+    font-size: 11px;
+
+    thead th {
+      padding: 8px;
+      font-size: 9px;
+    }
+
+    tbody td {
+      padding: 8px;
     }
   }
 }

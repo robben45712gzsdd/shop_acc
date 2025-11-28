@@ -16,7 +16,8 @@
     "js-cookie": "^3.0.5",
     "md5": "^2.3.0",
     "nuxt": "^2.0.0",
-    "vue-toastification": "^1.7.14"
+    "vue-toastification": "^1.7.14",
+    "ws": "^8.18.3"
   },
   "devDependencies": {
     "@nuxtjs/vuetify": "^1.0.0"

@@ -4,7 +4,7 @@ export default {
   checkPayment(body) {
     return new Promise((resolve, reject) => {
       axios
-        .post("/Payment/CheckPayment", body)
+        .post("/api/Payment/CheckPayment", body)
         .then((response) => {
           resolve(response?.data);
         })
@@ -18,7 +18,7 @@ export default {
   getTransactionList(params) {
     return new Promise((resolve, reject) => {
       axios
-        .get("/Payment/GetListTransaction", { params })
+        .get("/api/Payment/GetListTransaction", { params })
         .then((response) => {
           resolve(response?.data);
         })
@@ -33,7 +33,35 @@ export default {
   getPaymentList(params) {
     return new Promise((resolve, reject) => {
       axios
-        .get("/Payment/GetListPayment", { params })
+        .get("/api/Payment/GetListPayment", { params })
+        .then((response) => {
+          resolve(response?.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+
+  // payment card 
+  // paymentCard(body) { 
+  //   return new Promise((resolve, reject) => {
+  //     axios
+  //       .post("/api/Payment/GetHistoryTopUpCard", body)
+  //       .then((response) => {
+  //         resolve(response?.data);
+  //       })
+  //       .catch((error) => {
+  //         reject(error);
+  //       });
+  //   });
+  // },
+
+  // payment card 
+  getPaymentCard(params) { 
+    return new Promise((resolve, reject) => {
+      axios
+        .get("/api/Payment/GetHistoryTopUpCard", { params })
         .then((response) => {
           resolve(response?.data);
         })

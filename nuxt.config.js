@@ -2,8 +2,8 @@ export default {
   ssr: false,
   components: true,
   head: {
-    titleTemplate: "%s - " + process.env.npm_package_name,
-    title: process.env.npm_package_name || "",
+    titleTemplate: "%s - ShopThaiSon",
+    title: "ShopThaiSon - Shop bán tài khoan game uy tín hàng đầu Việt Nam",
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
@@ -33,7 +33,11 @@ export default {
   },
   loading: { color: "#fff" },
   modules: ["@nuxtjs/axios"],
-  plugins: ["~/plugins/axios.js", "~/plugins/toast.js"],
+  plugins: [
+    "~/plugins/axios.js",
+    "~/plugins/toast.js",
+    { src: "~/plugins/ws.client.js", mode: "client" },
+  ],
   buildModules: ["@nuxtjs/vuetify"],
   vuetify: {
     customVariables: ["~/assets/styles/variables.scss"],
@@ -44,5 +48,9 @@ export default {
   },
   build: {
     extend(config, ctx) {},
+  },
+  server: {
+    host: "0.0.0.0",
+    port: process.env.PORT,
   },
 };

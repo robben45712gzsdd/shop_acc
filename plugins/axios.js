@@ -16,7 +16,7 @@ export default ({ app }, inject) => {
       .slice(0, 14);
   }
   function getQueryParams(obj) {
-   return new URLSearchParams(obj).toString();
+    return new URLSearchParams(obj).toString();
   }
 
   // Tính contentMD5 dựa trên body (POST/PUT/PATCH) hoặc rỗng (GET)
@@ -32,7 +32,6 @@ export default ({ app }, inject) => {
       body = config.data ? JSON.stringify(config.data) : "";
     }
 
-    
     if (!body || body === "") {
       return md5(""); // rỗng thì hash chuỗi rỗng
     }
@@ -59,7 +58,7 @@ export default ({ app }, inject) => {
     }
 
     const httpMethod = (config.method || "GET").toUpperCase();
-    const path = "/api" + getRequestPath(config.url);
+    const path = getRequestPath(config.url);
     const contentMD5 = getContentMD5(config);
     const requestTime = getRequestTime();
 

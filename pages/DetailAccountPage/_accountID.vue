@@ -360,6 +360,11 @@ export default {
 
     async buyNow() {
       if (!this.accountID) return;
+      
+      if (!this.userProfile) {
+        this.$toast.error("Vui lòng đăng nhập để thực hiện giao dịch.");
+        return;
+      }
       if (!this.account.price > this.userProfile?.balance) {
         this.$toast.error("Số dư không đủ để thực hiện giao dịch.");
         return;
@@ -372,12 +377,10 @@ export default {
           accountID: this.accountID,
         });
         if (res.success) {
+          const d = res.data;
           this.$toast.success(
             `🎉 Mua tài khoản thành công!\n\n` +
-            `🔑 Tên đăng nhập: ${d.credentials.username}\n` +
-            `🔒 Mật khẩu: ${d.credentials.password}\n\n` +
             `🧾 Mã đơn hàng: ${d.orderId}\n` +
-            `📦 Tài khoản: ${d.accountTitle}\n` +
             `💰 Số tiền: ${d.amount.toLocaleString()} VNĐ\n\n` +
             `ℹ️ ${d.message}`
           ); this.closeLightbox();
