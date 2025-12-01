@@ -42,7 +42,10 @@ export default {
   vuetify: {
     customVariables: ["~/assets/styles/variables.scss"],
   },
-  css: ["~/assets/styles/main.scss"],
+  css: [
+    "~/assets/styles/main.scss",
+    "~/assets/styles/toast.scss",
+  ],
   router: {
     middleware: ["auth"],
   },

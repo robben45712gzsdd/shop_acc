@@ -321,11 +321,12 @@ export default {
       showLightbox: false,
       lightboxIndex: 0,
       pathName: "",
+      userProfile: null,
     };
   },
   computed: {
     userProfile() {
-      return this.$store.state.user_profile;
+      return this.userProfile;
     },
   },
   methods: {
@@ -360,7 +361,7 @@ export default {
 
     async buyNow() {
       if (!this.accountID) return;
-      
+
       if (!this.userProfile) {
         this.$toast.error("Vui lòng đăng nhập để thực hiện giao dịch.");
         return;
@@ -381,9 +382,11 @@ export default {
           this.$toast.success(
             `🎉 Mua tài khoản thành công!\n\n` +
             `🧾 Mã đơn hàng: ${d.orderId}\n` +
-            `💰 Số tiền: ${d.amount.toLocaleString()} VNĐ\n\n` +
-            `ℹ️ ${d.message}`
-          ); this.closeLightbox();
+            `Vui lòng kiểm tra lịch sử giao dịch để nhận thông tin tài khoản.`
+          );
+          setTimeout(() => {
+            window.location.href = "/UserAccountPage?tab=accountPurchaseHistory";
+          }, 3000);
         }
       }
       catch (err) {
@@ -426,6 +429,7 @@ export default {
   mounted() {
     this.accountID = this.$route.params.accountID;
     this.pathName = this.$route.query.categoryName || 'Chi tiết tài khoản';
+    this.userProfile = this.$store.state.user_data;
     this.fetchAccount();
 
     window.addEventListener('keydown', (e) => {
@@ -844,7 +848,7 @@ $danger: #ff4757;
         color: $text-main;
 
         &.code {
-          font-family: 'Courier New', monospace;
+
           background: white;
           padding: 4px 8px;
           border-radius: 4px;

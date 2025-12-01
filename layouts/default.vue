@@ -86,7 +86,7 @@
             <p>Email: <a href="mailto:support@thaisonshop.com">support@thaisonshop.com</a></p>
             <p>Hotline: <a href="tel:0123456789">0123 456 789</a></p>
             <p>Mạng xã hội:
-            <div class="flex items-center gap-4 mt-2">
+            <div class="flex justify-center md:!justify-start items-center gap-4 mx-auto md:mx-0 mt-2">
               <a href="#" target="_blank">
                 <img src="~/assets/images/zalo.webp" alt="Zalo" style="width: 30px; height: 30px;"></img>
               </a>
@@ -1091,7 +1091,7 @@ export default {
               border-radius: 8px;
               color: #fff;
               font-size: 13px;
-              font-family: 'Courier New', monospace;
+              
               transition: all 0.3s;
 
               &:focus {
@@ -1255,6 +1255,190 @@ export default {
           grid-template-columns: repeat(4, 1fr);
         }
       }
+    }
+  }
+}
+
+#nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: white;
+  border-bottom: 1px solid #e0e0e0;
+  z-index: 1000;
+
+  &.dark-mode {
+    background: #1a1a1a;
+    border-bottom-color: #333;
+
+    a { color: #f5f5f5 !important; }
+  }
+
+  .wrap-nav {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 16px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* LEFT AREA */
+  .nav-left {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+
+    .logo img {
+      height: 40px;
+      transition: 0.3s ease;
+    }
+  }
+
+  /* MENU DESKTOP */
+  .menu {
+    display: flex;
+    gap: 26px;
+    list-style: none;
+
+    li a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 600;
+      font-size: 14px;
+      transition: 0.3s ease;
+
+      &:hover {
+        color: #ff6b35;
+      }
+    }
+  }
+
+  /* MOBILE MENU BUTTON */
+  .mobile-menu-bar {
+    display: none;
+    cursor: pointer;
+    font-size: 26px;
+    color: #333;
+    padding: 8px;
+  }
+
+  /* RIGHT ACCOUNT AREA */
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .btn-account,
+    .btn-logout {
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: 0.25s ease;
+    }
+
+    .btn-account {
+      border: 2px solid #ff6b35;
+      color: #ff6b35;
+
+      &:hover {
+        background: #ff6b35;
+        color: #fff;
+      }
+    }
+
+    .btn-logout {
+      background: linear-gradient(135deg, #ff6b35, #ff8b57);
+      color: #fff;
+
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+      }
+    }
+  }
+
+  /* =============================
+        MOBILE RESPONSIVE
+     ============================= */
+  @media (max-width: 768px) {
+    .wrap-nav {
+      padding: 0 12px;
+    }
+
+    .nav-left {
+      gap: 12px;
+    }
+
+    .mobile-menu-bar {
+      display: block;
+    }
+
+    /* Hide desktop menu */
+    .menu {
+      position: fixed;
+      top: 70px;
+      left: 0;
+      right: 0;
+      background: white;
+      flex-direction: column;
+      padding: 0;
+      gap: 0;
+      overflow: hidden;
+
+      max-height: 0;
+      border-bottom: 1px solid transparent;
+      transition: max-height 0.35s ease, border-color 0.3s ease;
+
+      &.active {
+        max-height: 260px;
+        border-bottom-color: #e0e0e0;
+      }
+
+      li {
+        padding: 16px 20px;
+        border-bottom: 1px solid #eee;
+        text-align: center;
+
+        a {
+          font-size: 15px;
+          font-weight: 600;
+        }
+      }
+    }
+
+    /* RIGHT SECTION shrink */
+    .nav-right {
+      gap: 6px;
+
+      .btn-account,
+      .btn-logout {
+        padding: 6px 10px;
+        font-size: 12px;
+      }
+    }
+  }
+
+  /* Mobile small screens (≤480px) */
+  @media (max-width: 480px) {
+    .logo img {
+      height: 32px;
+    }
+
+    .nav-right .btn-account,
+    .nav-right .btn-logout {
+      padding: 6px 8px;
+      font-size: 11px;
+    }
+
+    .menu.active {
+      max-height: 230px;
     }
   }
 }

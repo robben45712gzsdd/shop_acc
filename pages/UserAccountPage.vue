@@ -129,16 +129,37 @@ export default {
 
   methods: {
     navigateTo(target) {
-      Object.keys(this.nav).forEach((key) => {
+
+      // update nav state
+      Object.keys(this.nav).forEach(key => {
         this.nav[key] = key === target;
       });
+
+      // update URL
+      this.$router.push({
+        query: { tab: target }
+      });
+
       window.scrollTo({ top: 0, behavior: 'smooth' });
     },
   },
 
   mounted() {
     this.$store.commit("setIsDarkMode", false);
+
+    const tab = this.$route.query.tab;
+    if (tab && this.nav[tab] !== undefined) {
+      this.navigateTo(tab);
+    }
   },
+  watch: {
+    '$route.query.tab'(newTab) {
+      if (newTab && this.nav[newTab] !== undefined) {
+        this.navigateTo(newTab);
+      }
+    }
+  }
+
 };
 </script>
 

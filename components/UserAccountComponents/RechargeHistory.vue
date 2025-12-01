@@ -828,7 +828,7 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
         border-radius: 4px;
         font-size: 10px;
         font-weight: 600;
-        font-family: 'Courier New', monospace;
+        
       }
     }
 
@@ -929,7 +929,7 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
         border-radius: 4px;
         font-size: 10px;
         font-weight: 600;
-        font-family: 'Courier New', monospace;
+        
       }
 
       .btn-copy-mini {
@@ -1354,7 +1354,7 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
               color: $text-main;
 
               &.code {
-                font-family: 'Courier New', monospace;
+                
                 font-size: 12px;
               }
 
@@ -1406,7 +1406,7 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
 
               .code-text {
                 flex: 1;
-                font-family: 'Courier New', monospace;
+                
                 font-size: 12px;
                 color: $text-main;
                 font-weight: 600;

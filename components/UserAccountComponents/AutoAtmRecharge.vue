@@ -538,7 +538,7 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
                   background: linear-gradient(135deg, $primary, $primary-dark);
                   color: white;
                   border-radius: 6px;
-                  font-family: 'Courier New', monospace;
+                  
                   font-size: 13px;
                   font-weight: 700;
                   word-break: break-all;

@@ -67,10 +67,12 @@
         <div class="card-body">
           <div class="balance-display">
             <span class="balance-amount">{{ formatPrice(user.balance) }}</span>
-            <button class="btn-recharge" @click="$emit('recharge')">
-              <i class="fas fa-plus"></i>
-              Nạp tiền
-            </button>
+            <nuxt-link to="/UserAccountPage?tab=autoRechargeCard">
+              <button class="btn-recharge">
+                <i class="fas fa-plus"></i>
+                Nạp tiền
+              </button>
+            </nuxt-link>
           </div>
         </div>
       </div>
@@ -371,13 +373,12 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
 
         .info-value-badge {
           display: inline-block;
-          padding: 8px 14px;
+          padding: 8px;
           background: linear-gradient(135deg, $primary, $primary-dark);
           color: white;
           border-radius: 6px;
-          font-size: 14px;
+          font-size: 12px;
           font-weight: 700;
-          font-family: 'Courier New', monospace;
           letter-spacing: 0.2px;
           flex: 1;
         }
@@ -392,7 +393,6 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
             font-size: 20px;
             font-weight: 800;
             color: $green;
-            font-family: 'Courier New', monospace;
           }
 
           .btn-recharge {
@@ -636,6 +636,7 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

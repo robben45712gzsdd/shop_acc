@@ -376,7 +376,7 @@ $info-light: #eff6ff;
       border-radius: 4px;
       font-size: 11px;
       font-weight: 600;
-      font-family: 'Courier New', monospace;
+      
       letter-spacing: 0.3px;
     }
   }

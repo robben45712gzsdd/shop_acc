@@ -559,7 +559,7 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
         border-radius: 4px;
         font-size: 11px;
         font-weight: 600;
-        font-family: 'Courier New', monospace;
+        
       }
     }
 
@@ -998,7 +998,7 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
               color: $text-main;
 
               &.code {
-                font-family: 'Courier New', monospace;
+                
                 font-size: 12px;
               }
 

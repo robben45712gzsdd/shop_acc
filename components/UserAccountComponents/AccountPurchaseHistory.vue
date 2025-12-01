@@ -558,7 +558,7 @@ $success-light: #ecfdf5;
       border-radius: 4px;
       font-size: 11px;
       font-weight: 600;
-      font-family: 'Courier New', monospace;
+      
       letter-spacing: 0.3px;
     }
   }
@@ -672,7 +672,7 @@ $success-light: #ecfdf5;
         }
 
         .cred-text {
-          font-family: 'Courier New', monospace;
+          
           color: $text-sub;
           max-width: 120px;
           overflow: hidden;
@@ -1013,7 +1013,7 @@ $success-light: #ecfdf5;
               word-break: break-all;
 
               &.code {
-                font-family: 'Courier New', monospace;
+                
                 font-size: 12px;
               }
 
@@ -1058,7 +1058,7 @@ $success-light: #ecfdf5;
               padding: 8px 10px;
               background: white;
               border-radius: 4px;
-              font-family: 'Courier New', monospace;
+              
               font-size: 13px;
               color: $text-main;
               word-break: break-all;
