@@ -66,6 +66,7 @@
 <script>
 import payment from '~/api/payment';
 import Pagination from '~/components/Pagination';
+import { telcom } from '~/constants/telcom';
 
 export default {
   name: 'RechargeHistory',
@@ -102,7 +103,10 @@ export default {
           recordPerPage: this.recordPerPage,
         });
         if (response.success) {
-          this.recharges = response.data || [];
+          this.recharges = response.data?.map(item => ({
+            ...item,
+            provider: telcom[item.provider] || item.provider,
+          })) || [];
           this.totalRecords = response.totalRecords || 0;
         } else {
           this.$toast.error('Lỗi tải dữ liệu');

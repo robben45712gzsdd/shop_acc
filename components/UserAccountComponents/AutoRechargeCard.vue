@@ -167,7 +167,7 @@
 
 <script>
 import payment from '~/api/payment';
-
+import { telcom } from '~/constants/telcom';
 export default {
   name: 'AutoRechargeCard',
   data() {
@@ -180,12 +180,7 @@ export default {
       isLoading: false,
       error: null,
       carriers: [
-        { id: 'VT', name: 'Viettel' },
-        { id: 'VNP', name: 'Vinaphone' },
-        { id: 'MBF', name: 'Mobifone' },
-        { id: 'VNM', name: 'Vietnamobile' },
-        { id: 'GM', name: 'Gmobile' },
-        { id: 'ZING', name: 'Zing' }
+
       ],
 
       denominations: [
@@ -226,16 +221,6 @@ export default {
       if (!this.selectedCarrier || !this.selectedDenomination) {
         return;
       }
-
-      if (this.serialNumber && this.serialNumber?.length > 0) {
-        this.error = 'Số seri không được bỏ trống và phải có 13 chữ số';
-        return;
-      }
-
-      if (this.pinCode && this.pinCode?.length > 0) {
-        this.error = 'Mã PIN không được bỏ trống và phải có 16 chữ số';
-        return;
-      }
     },
 
     async handleRecharge() {
@@ -254,13 +239,14 @@ export default {
           telco: this.selectedCarrier,
           code: this.pinCode.trim(),
           serial: this.serialNumber.trim(),
-          amount: Math.round(this.selectedDenomination * 0.8),
+          amount:this.selectedDenomination,
         });
         if (response?.success) {
           this.$toast.success(
             `Nạp thẻ ${this.selectedCarrier.toUpperCase()} ${this.formatPrice(Math.round(this.selectedDenomination * 0.8))} thành công!`
           );
           this.resetForm();
+          this.$router.push('/UserAccountPage?tab=rechargeHistory');
         } else {
           this.$toast.error(response?.message);
         }
@@ -285,6 +271,15 @@ export default {
     formatPrice(num) {
       return (num || 0).toLocaleString('vi-VN') + 'đ';
     },
+  },
+
+  mounted() {
+    // Load carriers from constants
+    this.carriers = Object.entries(telcom).map(([key, value]) => ({
+      id: key,
+      name: value
+    }));
+
   },
 };
 </script>
