@@ -6,7 +6,7 @@
         <i class="fas fa-sim-card"></i>
         <h2>Nạp Thẻ Cào Tự Động</h2>
       </div>
-      <p class="header-subtitle">Nạp thẻ cào 24/24, nhận 100% giá trị thẻ</p>
+      <p class="header-subtitle">Nạp thẻ cào 24/24, uy tín và an toàn.</p>
     </div>
 
     <!-- INFO BANNER -->
@@ -24,11 +24,7 @@
           Nhà Mạng
           <span class="required">*</span>
         </label>
-        <select
-          v-model="selectedCarrier"
-          class="form-control"
-          @change="validateForm"
-        >
+        <select v-model="selectedCarrier" class="form-control" @change="validateForm">
           <option value="">-- Chọn nhà mạng --</option>
           <option v-for="carrier in carriers" :key="carrier.id" :value="carrier.id">
             {{ carrier.name }}
@@ -43,24 +39,25 @@
           Mệnh Giá
           <span class="required">*</span>
         </label>
-        <select
-          v-model="selectedDenomination"
-          class="form-control"
-          @change="validateForm"
-        >
+        <select v-model="selectedDenomination" class="form-control" @change="validateForm">
           <option value="">-- Chọn mệnh giá --</option>
-          <option
-            v-for="denom in denominations"
-            :key="denom.value"
-            :value="denom.value"
-          >
-            {{ denom.label }}
+          <option v-for="denom in denominations" :key="denom.value" :value="denom.value">
+            {{ formatPrice(denom.value) }} (-20% chiết khấu)
           </option>
         </select>
         <div v-if="selectedDenomination" class="denomination-info">
+          <span class="price-comparison">
+            <span class="original-price">
+              <i class="fas fa-tag"></i>
+              Giá gốc: {{ formatPrice(selectedDenomination) }}
+            </span>
+            <span class="discount-badge">
+              -20%
+            </span>
+          </span>
           <span class="receive-badge">
             <i class="fas fa-check-circle"></i>
-            Bạn sẽ nhận: {{ formatPrice(selectedDenomination) }}
+            Bạn sẽ nhận: {{ formatPrice(Math.round(selectedDenomination * 0.8)) }}
           </span>
         </div>
       </div>
@@ -72,14 +69,8 @@
           Số Seri
           <span class="required">*</span>
         </label>
-        <input
-          v-model="serialNumber"
-          type="text"
-          class="form-control"
-          placeholder="Ví dụ: 1234567890123"
-          @input="validateForm"
-          :disabled="isLoading"
-        />
+        <input v-model="serialNumber" type="text" class="form-control" placeholder="Ví dụ: 1234567890123"
+          @input="validateForm" :disabled="isLoading" />
         <p class="form-hint">Số seri nằm phía trước của thẻ cào</p>
       </div>
 
@@ -91,20 +82,9 @@
           <span class="required">*</span>
         </label>
         <div class="input-wrapper">
-          <input
-            v-model="pinCode"
-            :type="showPin ? 'text' : 'password'"
-            class="form-control"
-            placeholder="Ví dụ: 1234567890123456"
-            @input="validateForm"
-            :disabled="isLoading"
-          />
-          <button
-            type="button"
-            class="toggle-pin"
-            @click="togglePin"
-            :disabled="isLoading"
-          >
+          <input v-model="pinCode" :type="showPin ? 'text' : 'password'" class="form-control"
+            placeholder="Ví dụ: 1234567890123456" @input="validateForm" :disabled="isLoading" />
+          <button type="button" class="toggle-pin" @click="togglePin" :disabled="isLoading">
             <i :class="showPin ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
           </button>
         </div>
@@ -113,20 +93,11 @@
 
       <!-- FORM ACTIONS -->
       <div class="form-actions">
-        <button
-          type="submit"
-          class="btn btn-primary"
-          :disabled="!isFormValid || isLoading"
-        >
+        <button type="submit" class="btn btn-primary" :disabled="!isFormValid || isLoading">
           <i class="fas fa-paper-plane"></i>
           {{ isLoading ? 'Đang xử lý...' : 'Nạp Thẻ' }}
         </button>
-        <button
-          type="button"
-          class="btn btn-secondary"
-          @click="resetForm"
-          :disabled="isLoading"
-        >
+        <button type="button" class="btn btn-secondary" @click="resetForm" :disabled="isLoading">
           <i class="fas fa-redo"></i>
           Hủy
         </button>
@@ -168,7 +139,7 @@
         <ul class="benefits-list">
           <li>
             <i class="fas fa-check"></i>
-            <span>Nạp 100%, không mất phí gì cả</span>
+            <span>Chiết khấu 20% cho mỗi giao dịch</span>
           </li>
           <li>
             <i class="fas fa-check"></i>
@@ -176,7 +147,7 @@
           </li>
           <li>
             <i class="fas fa-check"></i>
-            <span>Hỗ trợ Viettel, Vinaphone, Mobifone</span>
+            <span>Hỗ trợ 14+ nhà mạng & nền tảng thanh toán</span>
           </li>
           <li>
             <i class="fas fa-check"></i>
@@ -191,18 +162,12 @@
       <i class="fas fa-mobile-alt"></i>
       <span>Trên điện thoại, vuốt bảng từ phải sang trái để xem đầy đủ thông tin</span>
     </div>
-
-    <!-- TOAST NOTIFICATION -->
-    <transition name="toast">
-      <div v-if="showToast" class="toast-notification" :class="toastType">
-        <i :class="toastIcon"></i>
-        <span>{{ toastMessage }}</span>
-      </div>
-    </transition>
   </div>
 </template>
 
 <script>
+import payment from '~/api/payment';
+
 export default {
   name: 'AutoRechargeCard',
   data() {
@@ -214,25 +179,25 @@ export default {
       showPin: false,
       isLoading: false,
       error: null,
-      showToast: false,
-      toastMessage: '',
-      toastType: 'success',
-      toastIcon: 'fas fa-check-circle',
       carriers: [
-        { id: 'viettel', name: 'Viettel' },
-        { id: 'vinaphone', name: 'Vinaphone' },
-        { id: 'mobifone', name: 'Mobifone' },
+        { id: 'VT', name: 'Viettel' },
+        { id: 'VNP', name: 'Vinaphone' },
+        { id: 'MBF', name: 'Mobifone' },
+        { id: 'VNM', name: 'Vietnamobile' },
+        { id: 'GM', name: 'Gmobile' },
+        { id: 'ZING', name: 'Zing' }
       ],
+
       denominations: [
-        { value: 10000, label: '10.000 VNĐ - (nhận 100%)' },
-        { value: 20000, label: '20.000 VNĐ - (nhận 100%)' },
-        { value: 30000, label: '30.000 VNĐ - (nhận 100%)' },
-        { value: 50000, label: '50.000 VNĐ - (nhận 100%)' },
-        { value: 100000, label: '100.000 VNĐ - (nhận 100%)' },
-        { value: 200000, label: '200.000 VNĐ - (nhận 100%)' },
-        { value: 300000, label: '300.000 VNĐ - (nhận 100%)' },
-        { value: 500000, label: '500.000 VNĐ - (nhận 100%)' },
-        { value: 1000000, label: '1.000.000 VNĐ - (nhận 100%)' },
+        { value: 10000 },
+        { value: 20000 },
+        { value: 30000 },
+        { value: 50000 },
+        { value: 100000 },
+        { value: 200000 },
+        { value: 300000 },
+        { value: 500000 },
+        { value: 1000000 },
       ],
     };
   },
@@ -242,8 +207,10 @@ export default {
       return (
         this.selectedCarrier &&
         this.selectedDenomination &&
-        this.serialNumber.length === 13 &&
-        this.pinCode.length === 16
+        this.serialNumber &&
+        this.serialNumber?.length > 0 &&
+        this.pinCode &&
+        this.pinCode?.length > 0
       );
     },
   },
@@ -260,18 +227,21 @@ export default {
         return;
       }
 
-      if (this.serialNumber && this.serialNumber.length !== 13) {
-        this.error = 'Số seri phải có 13 chữ số';
+      if (this.serialNumber && this.serialNumber?.length > 0) {
+        this.error = 'Số seri không được bỏ trống và phải có 13 chữ số';
+        return;
       }
 
-      if (this.pinCode && this.pinCode.length !== 16) {
-        this.error = 'Mã PIN phải có 16 chữ số';
+      if (this.pinCode && this.pinCode?.length > 0) {
+        this.error = 'Mã PIN không được bỏ trống và phải có 16 chữ số';
+        return;
       }
     },
 
     async handleRecharge() {
       if (!this.isFormValid) {
         this.error = 'Vui lòng điền đầy đủ thông tin chính xác';
+        this.$toast.error(this.error);
         return;
       }
 
@@ -279,19 +249,25 @@ export default {
       this.error = null;
 
       try {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 2000));
-
-        // Success
-        this.showToastMessage(
-          `Nạp thẻ ${this.selectedCarrier.toUpperCase()} ${this.formatPrice(this.selectedDenomination)} thành công!`,
-          'success',
-          'fas fa-check-circle'
-        );
-        this.resetForm();
+        // Call API with correct payload format
+        const response = await payment.paymentCard({
+          telco: this.selectedCarrier,
+          code: this.pinCode.trim(),
+          serial: this.serialNumber.trim(),
+          amount: Math.round(this.selectedDenomination * 0.8),
+        });
+        if (response?.success) {
+          this.$toast.success(
+            `Nạp thẻ ${this.selectedCarrier.toUpperCase()} ${this.formatPrice(Math.round(this.selectedDenomination * 0.8))} thành công!`
+          );
+          this.resetForm();
+        } else {
+          this.$toast.error(response?.message);
+        }
       } catch (err) {
         this.error = 'Nạp thẻ thất bại. Vui lòng thử lại';
-        this.showToastMessage(this.error, 'error', 'fas fa-times-circle');
+        this.$toast.error(this.error);
+        console.error(err);
       } finally {
         this.isLoading = false;
       }
@@ -308,17 +284,6 @@ export default {
 
     formatPrice(num) {
       return (num || 0).toLocaleString('vi-VN') + 'đ';
-    },
-
-    showToastMessage(message, type = 'success', icon = 'fas fa-check-circle') {
-      this.toastMessage = message;
-      this.toastType = type;
-      this.toastIcon = icon;
-      this.showToast = true;
-
-      setTimeout(() => {
-        this.showToast = false;
-      }, 3000);
     },
   },
 };
@@ -485,17 +450,54 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
 
     .denomination-info {
       margin-top: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      .price-comparison {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 12px;
+        background: $yellow-light;
+        color: darken($yellow, 10%);
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 600;
+        border-left: 3px solid $yellow;
+
+        .original-price {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+
+          i {
+            font-size: 12px;
+          }
+        }
+
+        .discount-badge {
+          margin-left: auto;
+          background: $red;
+          color: white;
+          padding: 2px 8px;
+          border-radius: 4px;
+          font-weight: 700;
+          font-size: 12px;
+        }
+      }
 
       .receive-badge {
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        padding: 8px 12px;
+        padding: 10px 12px;
         background: $green-light;
         color: $green;
         border-radius: 6px;
-        font-size: 12px;
-        font-weight: 600;
+        font-size: 13px;
+        font-weight: 700;
+        border-left: 3px solid $green;
 
         i {
           font-size: 13px;
@@ -745,39 +747,6 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
       display: flex;
     }
   }
-
-  // TOAST NOTIFICATION
-  .toast-notification {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px 20px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    box-shadow: $shadow-lg;
-    z-index: 1000;
-    animation: slideInUp 0.3s ease;
-
-    i {
-      font-size: 16px;
-    }
-
-    &.success {
-      background: $green-light;
-      color: $green;
-      border: 1px solid rgba($green, 0.2);
-    }
-
-    &.error {
-      background: $red-light;
-      color: $red;
-      border: 1px solid rgba($red, 0.2);
-    }
-  }
 }
 
 // ANIMATIONS
@@ -786,6 +755,7 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -801,17 +771,6 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
 .slide-leave-to {
   opacity: 0;
   transform: translateY(-10px);
-}
-
-.toast-enter-active,
-.toast-leave-active {
-  transition: all 0.3s ease;
-}
-
-.toast-enter,
-.toast-leave-to {
-  opacity: 0;
-  transform: translateY(20px);
 }
 
 // RESPONSIVE

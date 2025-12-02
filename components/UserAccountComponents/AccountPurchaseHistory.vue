@@ -834,29 +834,6 @@ $success-light: #ecfdf5;
   }
 }
 
-// ============================================
-// INFO BOX
-// ============================================
-
-.info-box {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 20px;
-  background: #eff6ff;
-  border-top: 1px solid rgba(59, 130, 246, 0.2);
-  color: #3b82f6;
-  font-size: 12px;
-
-  i {
-    font-size: 14px;
-    flex-shrink: 0;
-  }
-
-  span {
-    line-height: 1.5;
-  }
-}
 
 // ============================================
 // MODAL

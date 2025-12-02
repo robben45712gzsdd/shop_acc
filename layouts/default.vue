@@ -14,7 +14,7 @@
             <li><nuxt-link to="/">TRANG CHỦ</nuxt-link></li>
 
             <li>
-              <nuxt-link :to="{ name: 'RechargeOnline' }">NẠP THẺ</nuxt-link>
+              <nuxt-link to="/UserAccountPage?tab=autoRechargeCard">NẠP THẺ</nuxt-link>
             </li>
 
             <li>
@@ -127,7 +127,7 @@
     </div>
     <div>
       <!-- MODAL RECHARGE -->
-      <transition v-if="is_login" name="modal">
+      <transition name="modal">
         <div v-if="showRechargeModal" class="modal-backdrop" @click="closeRechargeModal">
           <div class="modal-container" @click.stop>
             <button class="modal-close" @click="closeRechargeModal">
@@ -151,7 +151,7 @@
 
                   <!-- SUCCESS CONTENT -->
                   <div v-else key="success" class="success-content">
-                
+
                     <!-- Success circle animation -->
                     <div class="success-wrapper">
                       <div class="success-circle">
@@ -184,14 +184,16 @@
                     <label>Số Tiền Nạp (VNĐ)</label>
                     <div class="input-amount">
                       <span>₫</span>
-                      <input type="text" :value="rechargeAmountText" placeholder="10.000" @input="handleInputRecharge" />
+                      <input type="text" :value="rechargeAmountText" placeholder="10.000"
+                        @input="handleInputRecharge" />
                     </div>
                     <small>Tối thiểu 10.000 VNĐ - Tối đa 100.000.000 VNĐ</small>
                   </div>
                   <!-- QUICK BUTTONS -->
                   <div class="quick-amounts">
                     <button v-for="amt in quickAmounts" :key="amt" type="button"
-                      @click="handleInputRecharge({ target: { value: (rechargeAmount + amt).toLocaleString('vi-VN') } })" class="quick-btn">
+                      @click="handleInputRecharge({ target: { value: (rechargeAmount + amt).toLocaleString('vi-VN') } })"
+                      class="quick-btn">
                       +{{ (amt / 1000).toLocaleString() }}K
                     </button>
                   </div>
@@ -206,8 +208,8 @@
                           width="24px" fill="#e3e3e3">
                           <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z" />
                         </svg>
-                        <svg v-else xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                          fill="#e3e3e3">
+                        <svg v-else xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                          width="24px" fill="#e3e3e3">
                           <path
                             d="M360-240q-33 0-56.5-23.5T280-320v-480q0-33 23.5-56.5T360-880h360q33 0 56.5 23.5T800-800v480q0 33-23.5 56.5T720-240H360Zm0-80h360v-480H360v480ZM200-80q-33 0-56.5-23.5T120-160v-560h80v560h440v80H200Zm160-240v-480 480Z" />
                         </svg>
@@ -241,7 +243,8 @@
 
                     <div class="info-item">
                       <i class="fas fa-exclamation-triangle"></i>
-                      <span>Không chịu trách nhiệm với mọi trường hợp chuyển sai nội dung, sai số tiền, hoặc sai tài khoản
+                      <span>Không chịu trách nhiệm với mọi trường hợp chuyển sai nội dung, sai số tiền, hoặc sai tài
+                        khoản
                         nhận.</span>
                     </div>
 
@@ -252,7 +255,8 @@
 
                     <div class="info-item">
                       <i class="fas fa-user-check"></i>
-                      <span>Bằng cách nạp tiền, bạn đồng ý với mọi điều khoản & xác nhận rằng thông tin cung cấp là chính
+                      <span>Bằng cách nạp tiền, bạn đồng ý với mọi điều khoản & xác nhận rằng thông tin cung cấp là
+                        chính
                         xác.</span>
                     </div>
 
@@ -325,6 +329,10 @@ export default {
     },
 
     openRechargeModal() {
+      if (!this.$store.state.isAuthenticated) {
+        this.$router.push('/login');
+        return;
+      };
       this.showRechargeModal = true;
       this.rechargeAmount = 10000;
       this.rechargeAmountText = '10.000';
@@ -383,7 +391,7 @@ export default {
           this.playSuccessSound();
 
           if (this.$store.state.user_data) {
-            this.$store.state.user_data.balance = 
+            this.$store.state.user_data.balance =
               (this.$store.state.user_data.balance || 0) + Price;
           }
 
@@ -434,10 +442,10 @@ export default {
 
     formatPaymentTime(date) {
       if (!date) return '';
-      return date.toLocaleTimeString('vi-VN', { 
-        hour: '2-digit', 
-        minute: '2-digit', 
-        second: '2-digit' 
+      return date.toLocaleTimeString('vi-VN', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
       });
     },
 
@@ -450,10 +458,8 @@ export default {
     },
 
     async user_logout() {
-      if (confirm('Bạn chắc chắn muốn đăng xuất?')) {
-        this.$store.dispatch('logout');
-        this.$router.push('/login');
-      }
+      this.$store.dispatch('logout');
+      this.$router.push('/login');
     },
   },
 };
@@ -479,6 +485,7 @@ export default {
     border-bottom-color: #333;
 
     .wrap-nav {
+
       .nav-left .menu li a,
       .nav-left .menu li nuxt-link {
         color: #f5f5f5;
@@ -772,6 +779,7 @@ export default {
         opacity: 0;
         transform: translateY(30px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -861,6 +869,7 @@ export default {
                   transform: translateY(-20px) rotate(0deg);
                   opacity: 1;
                 }
+
                 100% {
                   transform: translateY(400px) rotate(720deg);
                   opacity: 0;
@@ -900,9 +909,11 @@ export default {
                   box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
                   transform: scale(0.95);
                 }
+
                 50% {
                   box-shadow: 0 0 0 25px rgba(76, 175, 80, 0);
                 }
+
                 100% {
                   box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
                   transform: scale(1);
@@ -918,9 +929,11 @@ export default {
                   0% {
                     transform: scale(0);
                   }
+
                   50% {
                     transform: scale(1.2);
                   }
+
                   100% {
                     transform: scale(1);
                   }
@@ -937,6 +950,7 @@ export default {
                     0% {
                       stroke-dashoffset: 166;
                     }
+
                     100% {
                       stroke-dashoffset: 0;
                     }
@@ -955,6 +969,7 @@ export default {
                     0% {
                       stroke-dashoffset: 48;
                     }
+
                     100% {
                       stroke-dashoffset: 0;
                     }
@@ -973,6 +988,7 @@ export default {
                 opacity: 0;
                 transform: translateY(10px);
               }
+
               to {
                 opacity: 1;
                 transform: translateY(0);
@@ -1091,7 +1107,7 @@ export default {
               border-radius: 8px;
               color: #fff;
               font-size: 13px;
-              
+
               transition: all 0.3s;
 
               &:focus {
@@ -1273,7 +1289,9 @@ export default {
     background: #1a1a1a;
     border-bottom-color: #333;
 
-    a { color: #f5f5f5 !important; }
+    a {
+      color: #f5f5f5 !important;
+    }
   }
 
   .wrap-nav {

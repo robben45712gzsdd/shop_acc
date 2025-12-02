@@ -49,23 +49,21 @@
           </tr>
         </tbody>
       </table>
-      <!-- INFO -->
-      <div class="info-box">
-        <i class="fas fa-info-circle"></i>
-        <span>Trên điện thoại, vuốt bảng từ phải sang trái để xem thêm thông tin</span>
-      </div>
-
     </div>
 
     <!-- PAGINATION -->
-    <Pagination v-if="!isLoading && recharges.length > 0" :currentPage="currentPage" :totalPages="totalPages"
-      @update:page="handlePageChange" />
+    <Pagination 
+      v-if="!isLoading && recharges.length > 0"
+      :currentPage="currentPage"
+      :totalPages="totalPages"
+      @update:page="handlePageChange"
+    />
   </div>
 </template>
 
 <script>
 import payment from '~/api/payment';
-import Pagination from '~/components/Pagination';
+import Pagination from '~/components/Pagination.vue';
 
 export default {
   name: 'RechargeHistory',
@@ -77,7 +75,7 @@ export default {
       recharges: [],
       isLoading: false,
       currentPage: 1,
-      recordPerPage: 5,
+      recordPerPage: 10,
       totalRecords: 0,
     };
   },
@@ -96,8 +94,7 @@ export default {
     async fetchData() {
       this.isLoading = true;
       try {
-        // Uncomment khi có API thực
-        const response = await payment.getPaymentCard({
+        const response = await payment.getRechargeHistory({
           currentPage: this.currentPage,
           recordPerPage: this.recordPerPage,
         });
@@ -107,7 +104,6 @@ export default {
         } else {
           this.$toast.error('Lỗi tải dữ liệu');
         }
-
       } catch (err) {
         this.$toast.error('Lỗi: ' + err.message);
         console.error(err);
@@ -380,7 +376,6 @@ $yellow: #f59e0b;
   from {
     transform: rotate(0deg);
   }
-
   to {
     transform: rotate(360deg);
   }

@@ -44,18 +44,18 @@ export default {
   },
 
   // payment card 
-  // paymentCard(body) { 
-  //   return new Promise((resolve, reject) => {
-  //     axios
-  //       .post("/api/Payment/GetHistoryTopUpCard", body)
-  //       .then((response) => {
-  //         resolve(response?.data);
-  //       })
-  //       .catch((error) => {
-  //         reject(error);
-  //       });
-  //   });
-  // },
+  paymentCard(body) { 
+    return new Promise((resolve, reject) => {
+      axios
+        .post("/api/Payment/ToUpCard", body)
+        .then((response) => {
+          resolve(response?.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
 
   // payment card 
   getPaymentCard(params) { 

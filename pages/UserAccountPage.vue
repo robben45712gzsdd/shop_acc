@@ -69,6 +69,7 @@
 
 <script>
 export default {
+
   components: {
     AccountInformations: () =>
       import("@/components/UserAccountComponents/AccountInformations"),
@@ -115,12 +116,7 @@ export default {
 
   computed: {
     user() {
-      return this.$store.state?.user_data || {
-        name: 'User',
-        userId: '12345',
-        email: 'user@example.com',
-        avatarUrl: 'https://via.placeholder.com/128'
-      };
+      return this.$store.state?.user_data;
     },
     activeTab() {
       return Object.keys(this.nav).find(key => this.nav[key]);
@@ -146,6 +142,11 @@ export default {
 
   mounted() {
     this.$store.commit("setIsDarkMode", false);
+    // 🚨 Check nếu không có user thì về trang login      
+    if (!this.$store.state.isAuthenticated) {
+      this.$router.push('/login');
+      return;
+    }
 
     const tab = this.$route.query.tab;
     if (tab && this.nav[tab] !== undefined) {
