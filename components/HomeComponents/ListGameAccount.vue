@@ -69,6 +69,7 @@ export default {
   display: flex;
   flex-direction: column;
 
+
   .title {
     text-transform: uppercase;
     font-size: 1.9rem;
@@ -82,6 +83,8 @@ export default {
     grid-template-columns: repeat(12, 1fr);
     grid-gap: 10px;
     padding: 0 10px;
+    max-width: 100vw;
+    overflow-x: hidden;
 
     .type-account {
       grid-column: span 3;

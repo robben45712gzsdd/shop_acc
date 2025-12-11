@@ -239,7 +239,7 @@ export default {
           telco: this.selectedCarrier,
           code: this.pinCode.trim(),
           serial: this.serialNumber.trim(),
-          amount:this.selectedDenomination,
+          amount: this.selectedDenomination,
         });
         if (response?.success) {
           this.$toast.success(

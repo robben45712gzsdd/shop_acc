@@ -1,0 +1,531 @@
+NEW HEADER DESIGN WITH #F16838
+================================
+
+Due to file complexity, I'll provide the complete redesigned header code here.
+Please replace the entire <template> section and CSS for #nav in your default.vue file.
+
+TEMPLATE SECTION (Replace from <template> to before <script>):
+================================================================
+
+<template>
+  <div id="app">
+    <!-- MODERN NAVBAR -->
+    <div id="nav" :class="{ 'dark-mode': darkMode }">
+      <div class="nav-container">
+        <div class="wrap-nav">
+
+          <!-- LOGO -->
+          <div class="nav-logo">
+            <nuxt-link to="/">
+              <img src="@/assets/images/logo.png" alt="Logo" />
+            </nuxt-link>
+          </div>
+
+          <!-- DESKTOP MENU -->
+          <nav class="nav-menu desktop-only">
+            <nuxt-link to="/" class="nav-link">
+              <i class="fas fa-home"></i>
+              <span>Trang Chủ</span>
+            </nuxt-link>
+            <nuxt-link to="/UserAccountPage?tab=autoRechargeCard" class="nav-link">
+              <i class="fas fa-credit-card"></i>
+              <span>Nạp Thẻ</span>
+            </nuxt-link>
+            <a href="#" @click.prevent="openRechargeModal" class="nav-link">
+              <i class="fas fa-wallet"></i>
+              <span>ATM/Momo</span>
+            </a>
+          </nav>
+
+          <!-- DESKTOP BUTTONS -->
+          <div class="nav-actions desktop-only">
+            <!-- Not logged in -->
+            <template v-if="!is_login">
+              <nuxt-link :to="{ name: 'Login' }" class="btn-primary">
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Đăng Nhập</span>
+              </nuxt-link>
+              <nuxt-link :to="{ name: 'Register' }" class="btn-secondary">
+                <i class="fas fa-user-plus"></i>
+                <span>Đăng Ký</span>
+              </nuxt-link>
+            </template>
+            
+            <!-- Logged in -->
+            <template v-if="is_login">
+              <nuxt-link to="/UserAccountPage" class="btn-wallet">
+                <i class="fas fa-wallet"></i>
+                <div class="wallet-info">
+                  <span class="wallet-label">Ví của bạn</span>
+                  <span class="wallet-balance">{{ user.balance?.toLocaleString() || 0 }} đ</span>
+                </div>
+              </nuxt-link>
+              <button @click="user_logout" class="btn-logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Đăng Xuất</span>
+              </button>
+            </template>
+          </div>
+
+          <!-- MOBILE TOGGLE -->
+          <button class="mobile-menu-toggle mobile-only" @click="toggleMenuMobile">
+            <span class="hamburger" :class="{ active: showMenuMobile }">
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+          </button>
+
+        </div>
+      </div>
+
+      <!-- MOBILE MENU -->
+      <div class="mobile-menu" :class="{ active: showMenuMobile }">
+        <div class="mobile-menu-content">
+          <!-- Nav Links -->
+          <div class="mobile-nav-links">
+            <nuxt-link to="/" class="mobile-nav-link" @click.native="toggleMenuMobile">
+              <i class="fas fa-home"></i>
+              <span>Trang Chủ</span>
+              <i class="fas fa-chevron-right"></i>
+            </nuxt-link>
+            <nuxt-link to="/UserAccountPage?tab=autoRechargeCard" class="mobile-nav-link" @click.native="toggleMenuMobile">
+              <i class="fas fa-credit-card"></i>
+              <span>Nạp Thẻ</span>
+              <i class="fas fa-chevron-right"></i>
+            </nuxt-link>
+            <a href="#" @click.prevent="openRechargeModal(); toggleMenuMobile()" class="mobile-nav-link">
+              <i class="fas fa-wallet"></i>
+              <span>Nạp ATM/Momo</span>
+              <i class="fas fa-chevron-right"></i>
+            </a>
+          </div>
+
+          <!-- Account Section -->
+          <div class="mobile-account-section">
+            <template v-if="is_login">
+              <nuxt-link to="/UserAccountPage" class="mobile-wallet-card" @click.native="toggleMenuMobile">
+                <div class="wallet-icon">
+                  <i class="fas fa-wallet"></i>
+                </div>
+                <div class="wallet-details">
+                  <span class="wallet-title">Số dư ví</span>
+                  <span class="wallet-amount">{{ user.balance?.toLocaleString() || 0 }} VNĐ</span>
+                </div>
+                <i class="fas fa-chevron-right"></i>
+              </nuxt-link>
+              <button @click="user_logout" class="mobile-logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Đăng Xuất</span>
+              </button>
+            </template>
+            
+            <template v-if="!is_login">
+              <nuxt-link :to="{ name: 'Login' }" class="mobile-auth-btn primary" @click.native="toggleMenuMobile">
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Đăng Nhập</span>
+              </nuxt-link>
+              <nuxt-link :to="{ name: 'Register' }" class="mobile-auth-btn secondary" @click.native="toggleMenuMobile">
+                <i class="fas fa-user-plus"></i>
+                <span>Đăng Ký Tài Khoản</span>
+              </nuxt-link>
+            </template>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="!mt-[75px] min-h-[calc(100vh-75px)]" :class="{ 'dark-mode': darkMode }" id="main">
+      <Nuxt />
+    </div>
+
+    <!-- Keep your existing footer, modals, etc. below -->
+
+
+CSS SECTION (Replace entire #nav section in <style>):
+======================================================
+
+$primary: #F16838;
+$primary-dark: #d95730;
+$primary-light: #ff7d52;
+
+#nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(241, 104, 56, 0.15);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+}
+
+.nav-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.wrap-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 75px;
+  gap: 40px;
+}
+
+/* LOGO */
+.nav-logo a {
+  display: block;
+}
+
+.nav-logo img {
+  height: 48px;
+  transition: all 0.3s;
+  filter: drop-shadow(0 2px 8px rgba(241, 104, 56, 0.25));
+}
+
+.nav-logo a:hover img {
+  transform: scale(1.05);
+  filter: drop-shadow(0 4px 14px rgba(241, 104, 56, 0.4));
+}
+
+/* DESKTOP MENU */
+.nav-menu {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 18px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: #1a1a1a;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+.nav-link i {
+  color: $primary;
+  font-size: 16px;
+}
+
+.nav-link:hover,
+.nav-link.nuxt-link-active {
+  background: rgba(241, 104, 56, 0.1);
+  color: $primary;
+  transform: translateY(-2px);
+}
+
+/* DESKTOP ACTIONS */
+.nav-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-wallet,
+.btn-logout {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 13px;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, $primary, $primary-light);
+  color: white;
+  box-shadow: 0 4px 14px rgba(241, 104, 56, 0.35);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(241, 104, 56, 0.5);
+}
+
+.btn-secondary {
+  background: white;
+  color: $primary;
+  border: 2px solid $primary;
+}
+
+.btn-secondary:hover {
+  background: $primary;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.btn-wallet {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+}
+
+.btn-wallet:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+}
+
+.wallet-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.wallet-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+
+.wallet-balance {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.btn-logout {
+  background: white;
+  color: #ef4444;
+  border: 2px solid #ef4444;
+}
+
+.btn-logout:hover {
+  background: #ef4444;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* MOBILE TOGGLE */
+.mobile-menu-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.hamburger {
+  width: 28px;
+  height: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.hamburger span {
+  width: 100%;
+  height: 3px;
+  background: $primary;
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: translateY(8.5px) rotate(45deg);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: translateY(-8.5px) rotate(-45deg);
+}
+
+/* MOBILE MENU */
+.mobile-menu {
+  position: fixed;
+  top: 75px;
+  left: 0;
+  right: 0;
+  background: white;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.mobile-menu.active {
+  max-height: calc(100vh - 75px);
+  overflow-y: auto;
+}
+
+.mobile-menu-content {
+  padding: 20px;
+}
+
+.mobile-nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #f3f4f6;
+}
+
+.mobile-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 12px;
+  text-decoration: none;
+  color: #1a1a1a;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.mobile-nav-link i:first-child {
+  width: 24px;
+  color: $primary;
+  font-size: 18px;
+}
+
+.mobile-nav-link span {
+  flex: 1;
+}
+
+.mobile-nav-link i:last-child {
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.mobile-account-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mobile-wallet-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  border-radius: 16px;
+  text-decoration: none;
+  color: white;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+}
+
+.wallet-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+}
+
+.wallet-icon i {
+  font-size: 22px;
+}
+
+.wallet-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.wallet-title {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+
+.wallet-amount {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.mobile-logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px;
+  background: white;
+  border: 2px solid #ef4444;
+  border-radius: 12px;
+  color: #ef4444;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.mobile-auth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.mobile-auth-btn.primary {
+  background: linear-gradient(135deg, $primary, $primary-light);
+  color: white;
+  box-shadow: 0 4px 14px rgba(241, 104, 56, 0.35);
+}
+
+.mobile-auth-btn.secondary {
+  background: white;
+  color: $primary;
+  border: 2px solid $primary;
+}
+
+/* RESPONSIVE */
+.desktop-only {
+  display: flex;
+}
+
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none !important;
+  }
+  
+  .mobile-only {
+    display: flex;
+  }
+  
+  .wrap-nav {
+    height: 65px;
+  }
+  
+  .nav-logo img {
+    height: 40px;
+  }
+  
+  .mobile-menu {
+    top: 65px;
+  }
+  
+  .mobile-menu.active {
+    max-height: calc(100vh - 65px);
+  }
+}

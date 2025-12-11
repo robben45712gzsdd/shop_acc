@@ -30,7 +30,7 @@
               :class="{ active: nav[item.id] }" class="nav-link">
               <i :class="item.icon"></i>
               <span>{{ item.label }}</span>
-              <span v-if="item.badge" class="badge">{{ item.badge }}</span>
+              <span v-if="item.badge" class="badge" :class="item?.color">{{ item.badge }}</span>
             </button>
           </div>
 
@@ -44,6 +44,13 @@
               <i :class="item.icon"></i>
               <span>{{ item.label }}</span>
               <span v-if="item.badge" class="badge">{{ item.badge }}</span>
+            </button>
+          </div>
+
+          <div class="nav-group">
+            <button @click="user_logout" class="hover:bg-red-50 text-red-600 hover:text-red-800 nav-link">
+              <i class="!text-red-600 fas fa-sign-out-alt"></i>
+              <span class="text-red-600">Đăng xuất</span>
             </button>
           </div>
         </aside>
@@ -137,6 +144,10 @@ export default {
       });
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+    async user_logout() {
+      this.$store.dispatch('logout');
+      this.$router.push('/login');
     },
   },
 

@@ -37,4 +37,46 @@ export default {
         });
     });
   },
+
+  // api get top 5 recharge history
+  getTop5RechargeHistory() {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(`/api/Payment/GetTop5ToUp`)
+        .then((response) => {
+          resolve(response?.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+
+  // get top account sale
+  getTopAccountSale() {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(`/api/Payment/GetTopSale`)
+        .then((response) => {
+          resolve(response?.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+
+  // add heart to account
+  addHeart(params) {
+    return new Promise((resolve, reject) => {
+      axios
+        .post(`/api/Account/AddHeart`, params)
+        .then((response) => {
+          resolve(response?.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
 };

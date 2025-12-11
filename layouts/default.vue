@@ -1,16 +1,19 @@
 <template>
-  <div id="app">
+  <div id="app" @click="handleOutsideClick">
     <div id="nav" :class="{ 'dark-mode': darkMode, 'light-mode': !darkMode }">
-      <div class="wrap-nav">
-
+      <div class="flex w-full wrap-nav">
+        <!-- MOBILE MENU ICON -->
+        <div class="flex-1 mobile-menu-bar" @click.stop="toggleMenuMobile">
+          <i class="fa fa-bars"></i>
+        </div>
         <!-- LEFT / MENU -->
-        <div class="nav-left">
+        <div class="nav-left flex-1" @click.stop>
           <div class="logo">
             <nuxt-link to="/">
               <img src="@/assets/images/logo.png" alt="" />
             </nuxt-link>
           </div>
-          <ul class="menu" :class="{ active: showMenuMobile }">
+          <ul class="menu" :class="{ active: showMenuMobile }" @click.stop="closeMenuOnClick">
             <li><nuxt-link to="/">TRANG CHỦ</nuxt-link></li>
 
             <li>
@@ -25,13 +28,10 @@
           </ul>
         </div>
 
-        <!-- MOBILE MENU ICON -->
-        <div class="mobile-menu-bar" @click="toggleMenuMobile">
-          <i class="fa fa-bars"></i>
-        </div>
+
 
         <!-- RIGHT / ACCOUNT -->
-        <div class="nav-right">
+        <div class="nav-right !flex flex-1 justify-end items-center">
 
           <!-- Nếu chưa login -->
           <nuxt-link v-if="!is_login" :to="{ name: 'Login' }">
@@ -42,9 +42,9 @@
 
           <!-- Nếu đã login -->
           <nuxt-link v-if="is_login" to="/UserAccountPage">
-            <div class="flex font-normal btn-account">
-              <span class="text-sm">TÀI KHOẢN</span>
-              <span class="text-sm">Ví: {{ user.balance?.toLocaleString() || 0 }} VNĐ</span>
+            <div class="flex !flex-col !items-center !px-2 !py-0 font-normal btn-account">
+              <span class="!text-[12px]">TÀI KHOẢN</span>
+              <span class="!text-[12px]">Ví: {{ user.balance?.toLocaleString() || 0 }} VNĐ</span>
             </div>
           </nuxt-link>
 
@@ -53,11 +53,9 @@
             <div class="btn-logout"><strong>ĐĂNG KÝ</strong></div>
           </nuxt-link>
 
-          <div v-if="is_login" class="btn-logout" @click="user_logout">
-            <strong>ĐĂNG XUẤT</strong>
-          </div>
-
+         
         </div>
+
       </div>
     </div>
 
@@ -71,7 +69,7 @@
         <div class="footer-top">
           <!-- Logo & Giới thiệu -->
           <div class="footer-brand">
-            <nuxt-link to="/">
+            <nuxt-link to="/" class="flex !justify-center md:!justify-start">
               <img src="@/assets/images/logo.png" alt="ThaiSonShop Logo" class="footer-logo" />
             </nuxt-link>
             <p>
@@ -457,10 +455,21 @@ export default {
       }, 2000);
     },
 
-    async user_logout() {
-      this.$store.dispatch('logout');
-      this.$router.push('/login');
+    closeMenuOnClick(e) {
+      // Close menu when clicking on any link inside the menu
+      if (e.target.tagName === 'A' || e.target.closest('a')) {
+        this.showMenuMobile = false;
+      }
     },
+
+    handleOutsideClick() {
+      // Close menu when clicking anywhere outside
+      if (this.showMenuMobile) {
+        this.showMenuMobile = false;
+      }
+    },
+
+  
   },
 };
 </script>
@@ -476,7 +485,7 @@ export default {
   left: 0;
   right: 0;
   height: 70px;
-  background: white;
+  background: black;
   border-bottom: 1px solid #e0e0e0;
   z-index: 1000;
 
@@ -494,6 +503,12 @@ export default {
       .nav-right .btn-account,
       .nav-right .btn-logout {
         color: #f5f5f5;
+      }
+    }
+
+    ul {
+      li{
+        background: #1a1a1a;
       }
     }
   }
@@ -566,7 +581,7 @@ export default {
     display: none;
     cursor: pointer;
     font-size: 24px;
-    color: #333;
+    color: #bdbdbd;
 
     @media (max-width: 768px) {
       display: block;
@@ -576,7 +591,7 @@ export default {
   .nav-right {
     display: flex;
     gap: 12px;
-    align-items: center;
+    align-items: stretch;
 
     .btn-account,
     .btn-logout {
@@ -604,6 +619,8 @@ export default {
     .btn-logout {
       background: linear-gradient(135deg, #ff6b35, #ff8c5a);
       color: white;
+      display: flex;
+      align-items: center;
 
       &:hover {
         transform: translateY(-2px);
@@ -1289,9 +1306,7 @@ export default {
     background: #1a1a1a;
     border-bottom-color: #333;
 
-    a {
-      color: #f5f5f5 !important;
-    }
+   
   }
 
   .wrap-nav {
@@ -1340,7 +1355,7 @@ export default {
     display: none;
     cursor: pointer;
     font-size: 26px;
-    color: #333;
+    color: #bdbdbd;
     padding: 8px;
   }
 
