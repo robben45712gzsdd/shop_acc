@@ -56,7 +56,7 @@
           <div class="title-section">
             <h1 class="account-title">{{ account.title }}</h1>
             <div class="meta-info">
-              <span class="id-badge">ID: #{{ accountID }}</span>
+              <span class="id-badge">ID: {{ account?.accountCode }}</span>
               <span class="seller">{{ account.sellerId }}</span>
             </div>
           </div>
