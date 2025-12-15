@@ -61,6 +61,7 @@
             <div :key="activeTab">
               <AccountInformations v-if="nav.accountInfor" />
               <ChangePassword v-if="nav.changePassword" />
+              <ListFavorites v-if="nav.listFavorites" />
               <RechargeHistory v-if="nav.rechargeHistory" />
               <TransactionHistory v-if="nav.transactionHistory" />
               <AccountPurchaseHistory v-if="nav.accountPurchaseHistory" />
@@ -75,6 +76,7 @@
 </template>
 
 <script>
+
 export default {
 
   components: {
@@ -92,6 +94,8 @@ export default {
       import("@/components/UserAccountComponents/AutoRechargeCard"),
     AutoAtmRecharge: () =>
       import("@/components/UserAccountComponents/AutoAtmRecharge"),
+    ListFavorites: () =>
+      import("@/components/UserAccountComponents/ListFavorites"),
   },
 
   data() {
@@ -100,6 +104,7 @@ export default {
         accountInfor: true,
         changePassword: false,
         rechargeHistory: false,
+        listFavorites: false,
         transactionHistory: false,
         accountPurchaseHistory: false,
         autoRechargeCard: false,
@@ -111,6 +116,7 @@ export default {
           { id: 'changePassword', label: 'Đổi mật khẩu', icon: 'fas fa-key' },
         ],
         transaction: [
+          { id: 'listFavorites', label: 'Danh sách yêu thích', icon: 'fas fa-heart' },
           { id: 'autoRechargeCard', label: 'Nạp thẻ cào tự động', icon: 'fas fa-sim-card' },
           { id: 'autoAtmRecharge', label: 'Nạp ATM/MOMO tự động', icon: 'fas fa-credit-card' },
           { id: 'rechargeHistory', label: 'Lịch sử nạp thẻ', icon: 'fas fa-history' },

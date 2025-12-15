@@ -111,8 +111,8 @@
               <span v-if="!loadingBuy">{{ account.status === 0 ? 'Mua Ngay' : 'Đã Bán' }}</span>
               <span v-else>Đang xử lý...</span>
             </button>
-            <button class="btn-secondary">
-              <i class="fas fa-heart"></i>
+            <button class="btn-secondary" :class="{ 'is-favorite': isFavorite }" :disabled="loadingFavorite" @click="toggleFavorite">
+              <i class="fas fa-heart" :class="{ 'fa-solid': isFavorite, 'fa-regular': !isFavorite }"></i>
             </button>
           </div>
 
@@ -307,6 +307,7 @@
 <script>
 import account from '~/api/account';
 import order from '~/api/order';
+import favoriteApi from '~/api/favorite';
 
 export default {
   data() {
@@ -315,6 +316,8 @@ export default {
       account: null,
       loading: false,
       loadingBuy: false,
+      loadingFavorite: false,
+      isFavorite: false,
       error: null,
       selectedImageIndex: 0,
       selectedImage: null,
@@ -358,6 +361,59 @@ export default {
       }
     },
 
+    async checkFavoriteStatus() {
+      if (!this.accountID || !this.userProfile) return;
+      
+      try {
+        const res = await favoriteApi.checkIsFavorite({
+          accountId: this.accountID,
+        });
+        if (res.success) {
+          this.isFavorite = res.data?.isFavorite || false;
+        }
+      } catch (err) {
+        console.error('Error checking favorite status:', err);
+      }
+    },
+
+    async toggleFavorite() {
+      if (!this.userProfile) {
+        this.$toast.error('Vui lòng đăng nhập để thêm vào yêu thích');
+        return;
+      }
+
+      if (this.loadingFavorite) return;
+
+      this.loadingFavorite = true;
+      try {
+        if (this.isFavorite) {
+          const res = await favoriteApi.removeFavorite({
+            accountId: this.accountID,
+          });
+          if (res.success) {
+            this.isFavorite = false;
+            this.$toast.success('Đã xóa khỏi danh sách yêu thích');
+          } else {
+            this.$toast.error(res.message || 'Không thể xóa khỏi yêu thích');
+          }
+        } else {
+          const res = await favoriteApi.addFavorite({
+            accountId: this.accountID,
+          });
+          if (res.success) {
+            this.isFavorite = true;
+            this.$toast.success('Đã thêm vào danh sách yêu thích');
+          } else {
+            this.$toast.error(res.message || 'Không thể thêm vào yêu thích');
+          }
+        }
+      } catch (err) {
+        console.error('Error toggling favorite:', err);
+        this.$toast.error('Có lỗi xảy ra khi cập nhật yêu thích');
+      } finally {
+        this.loadingFavorite = false;
+      }
+    },
 
     async buyNow() {
       if (!this.accountID) return;
@@ -431,6 +487,7 @@ export default {
     this.pathName = this.$route.query.categoryName || 'Chi tiết tài khoản';
     this.userProfile = this.$store.state.user_data;
     this.fetchAccount();
+    this.checkFavoriteStatus();
 
     window.addEventListener('keydown', (e) => {
       if (this.showLightbox) {
@@ -935,11 +992,35 @@ $danger: #ff4757;
       justify-content: center;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 
-      &:hover {
+      &:hover:not(:disabled) {
         border-color: $primary;
         background: #fff8f5;
         color: $primary-dark;
         box-shadow: 0 4px 12px rgba(255, 107, 53, 0.15);
+      }
+
+      &.is-favorite {
+        background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+        border-color: #ff6b6b;
+        color: white;
+        
+        &:hover:not(:disabled) {
+          background: linear-gradient(135deg, #ff5252, #e04855);
+          box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+        }
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      i {
+        transition: transform 0.2s;
+      }
+
+      &:hover:not(:disabled) i {
+        transform: scale(1.1);
       }
     }
   }

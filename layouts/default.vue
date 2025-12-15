@@ -109,7 +109,7 @@
 
         <!-- BOTTOM: bản quyền -->
         <div class="footer-bottom">
-          <p>© 2025 ThaiSonShop. All rights reserved.</p>
+          <p>© 2025 ShopAccGame24h. All rights reserved.</p>
         </div>
       </div>
     </footer>

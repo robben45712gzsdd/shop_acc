@@ -135,6 +135,7 @@
 
 <script>
 import account from "@/api/account";
+import favorite from "~/api/favorite";
 
 export default {
   data() {
@@ -242,7 +243,7 @@ export default {
         this.$set(acc, 'totalFavorite', previousState ? previousCount - 1 : previousCount + 1);
 
         // Call API
-        const res = await account.addHeart({ accountId: acc.accountId });
+        const res = await favorite.addFavorite({ accountId: acc.accountId });
         
         if (res.success) {
           this.$toast.success(previousState ? "Đã bỏ yêu thích!" : "Đã thêm vào yêu thích!");

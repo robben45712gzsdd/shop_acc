@@ -66,17 +66,7 @@ export default {
     });
   },
 
-  // add heart to account
-  addHeart(params) {
-    return new Promise((resolve, reject) => {
-      axios
-        .post(`/api/Account/AddHeart`, params)
-        .then((response) => {
-          resolve(response?.data);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-  },
+  // get hot deals
+
+
 };

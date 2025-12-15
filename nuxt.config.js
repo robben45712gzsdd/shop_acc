@@ -2,8 +2,8 @@ export default {
   ssr: false,
   components: true,
   head: {
-    titleTemplate: "%s - ShopThaiSon",
-    title: "ShopThaiSon - Shop bán tài khoan game uy tín hàng đầu Việt Nam",
+    titleTemplate: "%s - ShopAccGame24h ",
+    title: "ShopAccGame24h  - Shop bán tài khoan game uy tín hàng đầu Việt Nam",
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },

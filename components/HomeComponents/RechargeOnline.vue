@@ -49,36 +49,58 @@
       </div>
 
       <!-- Tab Ưu Đãi Hot -->
-      <div class="p-3 deals-form fade-in" v-show="activeTab === 'deals'">
+      <div class="deals-form fade-in" v-show="activeTab === 'deals'">
         <div v-if="!isLoadingDeals">
-          <div v-if="hotDeals && hotDeals.length > 0">
+          <div v-if="hotDeals && hotDeals.length > 0" class="deals-container">
             <div 
-              class="scale-in deal-card" 
+              class="hot-deal-card" 
               v-for="(deal, index) in hotDeals" 
               :key="deal.id"
-              :style="{ animationDelay: `${index * 0.15}s` }"
+              :style="{ animationDelay: `${index * 0.1}s` }"
+              @click="viewDeal(deal)"
             >
-              <div class="deal-badge shine">
-                <i class="fa fa-bolt"></i>
-                <span>-{{ deal.discount }}%</span>
-              </div>
-              <div class="deal-content">
-                <h4 class="deal-title">{{ deal.title }}</h4>
-                <div class="deal-price">
-                  <span class="old-price">{{ deal.originalPrice?.toLocaleString() }}đ</span>
-                  <span class="new-price">{{ deal.currentPrice?.toLocaleString() }}đ</span>
+              <!-- Discount Badge -->
+              <div class="discount-badge">
+                <div class="discount-icon">
+                  <i class="fas fa-fire"></i>
                 </div>
-                <div class="deal-footer">
-                  <div class="deal-meta">
-                    <span><i class="fa fa-eye"></i> {{ deal.views }}</span>
-                    <span><i class="fa fa-heart"></i> {{ deal.likes }}</span>
+                <div class="discount-text">
+                  <span class="percent">{{ deal.discount }}%</span>
+                  <span class="label">GIẢM</span>
+                </div>
+                <div class="badge-shine"></div>
+                <div class="badge-glow"></div>
+              </div>
+
+              <!-- Card Content -->
+              <div class="card-body">
+                <h3 class="deal-title">{{ deal.title }}</h3>
+                
+                <div class="price-section">
+                  <div class="price-row">
+                    <span class="price-label">Giá gốc:</span>
+                    <span class="original-price">{{ formatPrice(deal.originalPrice) }}</span>
                   </div>
-                  <button class="btn-view">
-                    <i class="fa-arrow-right fa"></i>
-                  </button>
+                  <div class="price-row highlighted">
+                    <span class="price-label">Giá sale:</span>
+                    <span class="sale-price">{{ formatPrice(deal.currentPrice) }}</span>
+                  </div>
+                  <div class="savings">
+                    <i class="fas fa-piggy-bank"></i>
+                    <span>Tiết kiệm: {{ formatPrice(deal.originalPrice - deal.currentPrice) }}</span>
+                  </div>
                 </div>
+
+                <button class="view-btn">
+                  <span>Mua ngay</span>
+                  <i class="fa-arrow-right fas"></i>
+                </button>
               </div>
-              <div class="glow-effect"></div>
+
+              <!-- Decorative Elements -->
+              <div class="card-shine"></div>
+              <div class="top-left corner-accent"></div>
+              <div class="bottom-right corner-accent"></div>
             </div>
           </div>
           <div v-else class="empty-state">
@@ -110,49 +132,16 @@ export default {
       isLoadingDeals: false,
       error: null,
       topRechargeHistory: [],
-      hotDeals: [
-        // Dữ liệu mẫu - thay bằng API thực tế
-        {
-          id: 1,
-          title: 'Acc Liên Quân VIP',
-          originalPrice: 500000,
-          currentPrice: 250000,
-          discount: 50,
-          views: 1234,
-          likes: 89
-        },
-        {
-          id: 2,
-          title: 'Acc PUBG Mobile',
-          originalPrice: 800000,
-          currentPrice: 480000,
-          discount: 40,
-          views: 2341,
-          likes: 156
-        },
-        {
-          id: 3,
-          title: 'Acc Free Fire Diamond',
-          originalPrice: 300000,
-          currentPrice: 180000,
-          discount: 40,
-          views: 987,
-          likes: 67
-        },
-        {
-          id: 4,
-          title: 'Acc Tốc Chiến Rank Cao',
-          originalPrice: 1000000,
-          currentPrice: 600000,
-          discount: 40,
-          views: 3456,
-          likes: 234
-        }
-      ],
+      hotDeals: [],
     };
   },
 
   methods: {
+    formatPrice(price) {
+      if (!price) return '0đ';
+      return price.toLocaleString('vi-VN') + 'đ';
+    },
+
     switchTab(tab) {
       this.activeTab = tab;
       
@@ -185,13 +174,36 @@ export default {
     },
 
     async getHotDeals() {
-      // TODO: Thay bằng API thực tế
       this.isLoadingDeals = true;
-      
-      setTimeout(() => {
-        // Giả lập load API
+      this.error = null;
+
+      try {
+        const response = await account.getTopAccountSale();
+        if (response?.success) {
+          this.hotDeals = response?.data?.map(item => ({
+            id: item.accountId,
+            title: item.title,
+            originalPrice: item.priceSell,
+            currentPrice: item.priceSale,
+            discount: item.percentSale,
+            accountId: item.accountId
+          })) || [];
+        } else {
+          this.error = response?.message;
+        }
+      } catch (err) {
+        this.error = 'Lấy danh sách ưu đãi thất bại. Vui lòng thử lại';
+        this.$toast.error(this.error);
+        console.error(err);
+      } finally {
         this.isLoadingDeals = false;
-      }, 500);
+      }
+    },
+
+    viewDeal(deal) {
+      if (deal.accountId) {
+        this.$router.push(`/DetailAccountPage/${deal.accountId}`);
+      }
     },
   },
 
@@ -470,164 +482,301 @@ export default {
     }
 
     .deals-form {
-      .deal-card {
-        position: relative;
-        background: linear-gradient(135deg, rgba(30, 30, 30, 0.95), rgba(20, 20, 20, 0.95));
-        border-radius: 10px;
-        padding: 12px;
-        margin-bottom: 10px;
-        border: 1.5px solid rgba(245, 158, 11, 0.25);
-        overflow: hidden;
-        transition: all 0.3s ease;
-        cursor: pointer;
+      padding: 12px;
+      max-height: 600px;
+      overflow-y: auto;
+
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 3px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: rgba(245, 158, 11, 0.5);
+        border-radius: 3px;
 
         &:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 6px 18px rgba(245, 158, 11, 0.35);
+          background: rgba(245, 158, 11, 0.7);
+        }
+      }
+
+      .deals-container {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .hot-deal-card {
+        position: relative;
+        background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+        border-radius: 12px;
+        padding: 0;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 2px solid rgba(245, 158, 11, 0.2);
+        animation: slideInUp 0.5s ease-out forwards;
+        opacity: 0;
+
+        &:hover {
+          transform: translateY(-4px) scale(1.02);
           border-color: rgba(245, 158, 11, 0.5);
+          box-shadow: 0 8px 24px rgba(245, 158, 11, 0.3);
 
-          .glow-effect {
+          .discount-badge {
+            transform: scale(1.1) rotate(-3deg);
+          }
+
+          .view-btn {
+            background: linear-gradient(135deg, #f59e0b, #ff6b00);
+            transform: translateX(3px);
+
+            i {
+              transform: translateX(3px);
+            }
+          }
+
+          .card-shine {
             opacity: 1;
-          }
-
-          .deal-badge {
-            transform: scale(1.05);
-          }
-
-          .btn-view {
-            background: var(--yellow-active);
-            transform: translateX(2px);
+            transform: translateX(100%);
           }
         }
 
-        .glow-effect {
+        .discount-badge {
           position: absolute;
-          top: -50%;
-          left: -50%;
-          width: 200%;
-          height: 200%;
-          background: radial-gradient(circle, rgba(245, 158, 11, 0.08) 0%, transparent 70%);
-          opacity: 0;
-          transition: opacity 0.3s ease;
-          pointer-events: none;
-        }
-
-        .deal-badge {
-          position: absolute;
-          top: 8px;
-          right: 8px;
-          background: linear-gradient(135deg, #ff0000, #ff6b00);
-          color: white;
-          padding: 5px 10px;
-          border-radius: 6px;
-          font-weight: bold;
-          font-size: 0.85rem;
-          box-shadow: 0 3px 8px rgba(255, 0, 0, 0.4);
-          transition: all 0.3s ease;
-          z-index: 2;
+          top: 10px;
+          right: 12px;
+          z-index: 10;
           display: flex;
           align-items: center;
-          gap: 4px;
+          gap: 8px;
+          background: linear-gradient(135deg, #ff3b3b, #ff6b00);
+          padding: 5px 10px;
+          border-radius: 12px;
+          box-shadow: 0 4px 12px rgba(255, 59, 59, 0.5), 0 0 30px rgba(255, 59, 59, 0.3);
+          transition: all 0.3s ease;
+          animation: badgePulse 2s ease-in-out infinite;
+          overflow: hidden;
+          font-size: 16px;
 
-          i {
-            font-size: 0.9rem;
-            animation: boltFlash 1.5s infinite;
-          }
-
-          span {
-            position: relative;
-            z-index: 1;
-          }
-
-          &.shine::before {
+          &::before {
             content: '';
             position: absolute;
             top: -50%;
-            left: -100%;
-            width: 100%;
+            left: -50%;
+            width: 200%;
             height: 200%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
-            animation: shine 3s infinite;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+            animation: badgeRotate 3s linear infinite;
+          }
+
+          .badge-shine {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+            animation: badgeShine 3s ease-in-out infinite;
+            transform: skewX(-20deg);
+          }
+
+          .badge-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(255, 107, 0, 0.4) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            animation: badgeGlow 2s ease-in-out infinite alternate;
+            pointer-events: none;
+          }
+
+          .discount-icon {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 50%;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            
+            i {
+              color: #fff;
+              font-size: 14px;
+              animation: fireFlicker 1.5s infinite, fireBounce 0.8s ease-in-out infinite;
+              filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.8));
+            }
+          }
+
+          .discount-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.1;
+            position: relative;
+            z-index: 2;
+
+            .percent {
+              color: #fff;
+              font-size: 18px;
+              font-weight: 800;
+              text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 10px rgba(255, 255, 255, 0.5);
+              animation: percentZoom 1.5s ease-in-out infinite;
+            }
+
+            .label {
+              color: rgba(255, 255, 255, 0.95);
+              font-size: 9px;
+              font-weight: 600;
+              letter-spacing: 1px;
+              text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            }
           }
         }
 
-        .deal-content {
-          position: relative;
-          z-index: 1;
+        .card-body {
+          padding: 16px;
+          padding-top: 20px;
 
           .deal-title {
-            color: #ffffff;
-            font-size: 1.05rem;
-            margin-bottom: 8px;
-            font-weight: 600;
-            line-height: 1.3;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
 
-          .deal-price {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 10px;
+          .price-section {
+            background: rgba(245, 158, 11, 0.08);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(245, 158, 11, 0.15);
 
-            .old-price {
-              color: rgba(255, 255, 255, 0.4);
-              text-decoration: line-through;
-              font-size: 0.85rem;
-            }
-
-            .new-price {
-              color: var(--yellow-active);
-              font-size: 1.2rem;
-              font-weight: bold;
-              text-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
-            }
-          }
-
-          .deal-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            .deal-meta {
+            .price-row {
               display: flex;
-              gap: 12px;
-              color: rgba(255, 255, 255, 0.55);
-              font-size: 0.8rem;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 6px;
 
-              span {
-                display: flex;
-                align-items: center;
-                gap: 4px;
+              &:last-of-type {
+                margin-bottom: 8px;
+              }
 
-                i {
-                  color: var(--yellow-text);
-                  font-size: 0.75rem;
-                }
+              .price-label {
+                color: rgba(255, 255, 255, 0.6);
+                font-size: 11px;
+                font-weight: 500;
+              }
+
+              .original-price {
+                color: rgba(255, 255, 255, 0.4);
+                font-size: 13px;
+                text-decoration: line-through;
+                font-weight: 500;
+              }
+
+              .sale-price {
+                color: #f59e0b;
+                font-size: 18px;
+                font-weight: 800;
+                text-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+              }
+
+              &.highlighted {
+                padding: 6px 8px;
+                background: rgba(245, 158, 11, 0.12);
+                border-radius: 6px;
+                margin: 0 -4px 8px -4px;
               }
             }
 
-            .btn-view {
-              background: rgba(245, 158, 11, 0.2);
-              border: 1px solid rgba(245, 158, 11, 0.4);
-              color: var(--yellow-active);
-              width: 28px;
-              height: 28px;
-              border-radius: 50%;
+            .savings {
               display: flex;
               align-items: center;
-              justify-content: center;
-              cursor: pointer;
-              transition: all 0.3s ease;
-              font-size: 0.85rem;
+              gap: 6px;
+              padding-top: 6px;
+              border-top: 1px dashed rgba(245, 158, 11, 0.25);
+              color: #10b981;
+              font-size: 12px;
+              font-weight: 600;
 
               i {
-                transition: transform 0.3s ease;
-              }
-
-              &:hover i {
-                transform: translateX(2px);
+                font-size: 13px;
               }
             }
+          }
+
+          .view-btn {
+            width: 100%;
+            padding: 10px 16px;
+            background: rgba(245, 158, 11, 0.15);
+            border: 2px solid rgba(245, 158, 11, 0.4);
+            border-radius: 8px;
+            color: #f59e0b;
+            font-size: 13px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+
+            i {
+              font-size: 12px;
+              transition: transform 0.3s ease;
+            }
+          }
+        }
+
+        .card-shine {
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 50%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+          opacity: 0;
+          transition: all 0.6s ease;
+          pointer-events: none;
+        }
+
+        .corner-accent {
+          position: absolute;
+          width: 30px;
+          height: 30px;
+          border: 2px solid rgba(245, 158, 11, 0.3);
+          
+          &.top-left {
+            top: 8px;
+            left: 8px;
+            border-right: none;
+            border-bottom: none;
+            border-radius: 4px 0 0 0;
+          }
+
+          &.bottom-right {
+            bottom: 8px;
+            right: 8px;
+            border-left: none;
+            border-top: none;
+            border-radius: 0 0 4px 0;
           }
         }
       }
@@ -701,6 +850,86 @@ export default {
   50% {
     opacity: 0.6;
     transform: scale(1.1);
+  }
+}
+
+@keyframes fireFlicker {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes fireBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes badgePulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4px 12px rgba(255, 59, 59, 0.5), 0 0 30px rgba(255, 59, 59, 0.3);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(255, 59, 59, 0.7), 0 0 40px rgba(255, 59, 59, 0.5);
+  }
+}
+
+@keyframes badgeRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes badgeShine {
+  0% {
+    left: -100%;
+  }
+  50%, 100% {
+    left: 200%;
+  }
+}
+
+@keyframes badgeGlow {
+  0% {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+}
+
+@keyframes percentZoom {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
