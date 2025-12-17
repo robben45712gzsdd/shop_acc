@@ -71,7 +71,7 @@
                 <span class="font-normal !text-gray-400 !text-sm !line-through price-value">{{
                   formatPrice(account.price) }}</span>
                 <span class="price-value discount">{{ formatPrice(account.priceSale) }}</span>
-                <span class="badge-discount">-{{ ((account.price - account.priceSale) / account.price) * 100 }}%</span>
+                <span class="!text-red-400 badge-discount">-{{ (((account.price - account.priceSale) / account.price) * 100).toFixed(0) }}%</span>
               </div>
             </div>
           </div>
@@ -854,9 +854,9 @@ $danger: #ff4757;
 
         .badge-discount {
           padding: 2px 6px;
-          background: rgba(16, 185, 129, 0.2);
+          background: rgba(239, 68, 68, 0.2);
           color: $success;
-          font-size: 10px;
+          font-size: 14px;
           font-weight: 700;
           border-radius: 3px;
           text-transform: uppercase;

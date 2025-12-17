@@ -42,7 +42,7 @@ const removeFavorite = async (body) => {
 const checkIsFavorite = async (body) => {
   return new Promise((resolve, reject) => {
     axios
-      .post(`/api/Favorite/CheckIsFavorite`, body)
+      .get(`/api/Favorite/CheckIsFavorite`, body)
       .then((response) => {
         resolve(response?.data);
       })

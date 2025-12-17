@@ -7,7 +7,11 @@ export default ({ store }, inject) => {
 
   const connect = () => {
     const rawToken = getToken();
-    const token = rawToken ? encodeURIComponent(rawToken) : "";
+    if (!rawToken) {
+      console.log("No token available. Skipping WS connection.");
+      return;
+    }
+    const token = encodeURIComponent(rawToken);
     let reconnectTimeout = null;
     const url =
       "wss://" +

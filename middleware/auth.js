@@ -26,8 +26,9 @@ function generateStrongCode(length = 8) {
 export default async function ({ store, redirect, route }) {
   const currentPath = (route.path || "").toLowerCase();
 
+  console.log(["/login", "/signup", '/accountcategories', '/', '/detailaccountpage'].includes(currentPath));
   // skip login/signup
-  if (["/login", "/signup"].includes(currentPath)) return;
+  if (["/login", "/signup", '/accountcategories', '/', '/detailaccountpage'].includes(currentPath)) return;
 
   const token = Cookies.get("token");
 
