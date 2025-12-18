@@ -14,9 +14,6 @@
       </div>
       <div @click="user_login" class="btn-login">Đăng nhập</div>
       <div class="hr"></div>
-      <div class="btn-login-facebook">
-        <i class="fa fa-facebook-official" aria-hidden="true"></i> Đăng nhập qua Facebook
-      </div>
       <nuxt-link class="btn-create-new" :to="{ name: 'Register' }">
         <i class="fa fa-user-plus" aria-hidden="true"></i> Tạo tài khoản
       </nuxt-link>

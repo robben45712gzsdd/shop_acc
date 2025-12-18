@@ -105,7 +105,7 @@
           </div>
 
           <!-- ACTION BUTTONS -->
-          <div class="button-group">
+          <div class="button-group" v-if="isAuthenticated">
             <button class="btn-primary" :disabled="account.status !== 0 || loadingBuy" @click="buyNow">
               <i class="fas fa-shopping-cart"></i>
               <span v-if="!loadingBuy">{{ account.status === 0 ? 'Mua Ngay' : 'Đã Bán' }}</span>
@@ -331,6 +331,9 @@ export default {
     userProfile() {
       return this.userProfile;
     },
+    isAuthenticated() {
+      return this.$store.state.isAuthenticated;
+    },
   },
   methods: {
     formatPrice(price) {
@@ -362,7 +365,8 @@ export default {
     },
 
     async checkFavoriteStatus() {
-      if (!this.accountID || !this.userProfile) return;
+      
+      if (!this.accountID || !this.isAuthenticated) return;
       
       try {
         const res = await favoriteApi.checkIsFavorite({
@@ -505,21 +509,29 @@ export default {
 </script>
 
 <style scoped lang="scss">
-$primary: #ff6b35;
-$primary-dark: #e55a2b;
-$text-main: #1a1a1a;
-$text-sub: #666;
-$text-light: #999;
-$border: #e5e5e5;
-$bg: #ffffff;
-$bg-light: #f9f9f9;
-$success: #10b981;
-$success-bg: #ecfdf5;
-$danger: #ff4757;
+// ============================================
+// GAMING DARK THEME VARIABLES
+// ============================================
+$primary: #ff4655;
+$primary-dark: #d63845;
+$secondary: #00d9ff;
+$accent: #ffb800;
+$dark: #0a0a0a;
+$dark-card: #121212;
+$dark-light: #1a1a1a;
+$dark-border: #2a2a2a;
+$text-white: #ffffff;
+$text-light: #bbbbbb;
+$text-main: #dddddd;
+$text-sub: #bbbbbb;
+$text-gray: #888888;
+$text-muted: #666666;
+$success: #00ff88;
+$danger: #ff4655;
 
 .detail-account-page {
   min-height: 100vh;
-  background: #f5f5f5;
+  background: $dark;
   padding: 20px;
 }
 
@@ -542,12 +554,12 @@ $danger: #ff4757;
     transition: color 0.2s;
 
     &:hover {
-      color: $primary-dark;
+      color: $secondary;
     }
   }
 
   span {
-    color: $text-light;
+    color: $text-gray;
   }
 }
 
@@ -563,7 +575,7 @@ $danger: #ff4757;
   .spinner {
     width: 50px;
     height: 50px;
-    border: 3px solid rgba(255, 107, 53, 0.2);
+    border: 3px solid $dark-border;
     border-top-color: $primary;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
@@ -571,7 +583,7 @@ $danger: #ff4757;
   }
 
   p {
-    color: $text-sub;
+    color: $text-gray;
     font-size: 14px;
   }
 }
@@ -586,6 +598,8 @@ $danger: #ff4757;
 .error-container {
   text-align: center;
   padding: 80px 20px;
+  background: $dark-card;
+  border: 1px solid $dark-border;
 
   .error-icon {
     font-size: 64px;
@@ -599,25 +613,25 @@ $danger: #ff4757;
   }
 
   p {
-    color: $text-sub;
+    color: $text-gray;
     margin-bottom: 25px;
     font-size: 14px;
   }
 
   .retry-btn {
-    padding: 10px 28px;
+    padding: 12px 28px;
     background: $primary;
-    color: white;
+    color: $text-white;
     border: none;
-    border-radius: 6px;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 
     &:hover {
       background: $primary-dark;
-      transform: translateY(-1px);
     }
   }
 }
@@ -625,12 +639,11 @@ $danger: #ff4757;
 // CONTENT WRAPPER
 .content-wrapper {
   display: grid;
-  grid-template-columns: 380px 1fr;
+  grid-template-columns: 400px 1fr;
   gap: 30px;
-  background: $bg;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: $dark-card;
+  border: 1px solid $dark-border;
+  padding: 24px;
   margin-bottom: 24px;
 }
 
@@ -643,16 +656,15 @@ $danger: #ff4757;
       position: absolute;
       top: 12px;
       left: 12px;
-      padding: 6px 12px;
-      background: white;
-      border: 1.5px solid $success;
+      padding: 8px 16px;
+      background: $dark;
+      border: 2px solid $success;
       color: $success;
       font-size: 11px;
       font-weight: 700;
-      border-radius: 4px;
       z-index: 10;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
 
       &.sold {
         border-color: $danger;
@@ -662,45 +674,41 @@ $danger: #ff4757;
 
     .image-frame {
       position: relative;
-      background: white;
-      border: 1px solid $border;
-      border-radius: 6px;
+      background: $dark-light;
+      border: 1px solid $dark-border;
       overflow: hidden;
       aspect-ratio: 1;
       cursor: pointer;
       margin-bottom: 12px;
-      transition: all 0.3s;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+      transition: all 0.2s;
 
       img {
         width: 100%;
         height: 100%;
         object-fit: contain;
         object-position: center;
-        background-color: #1a1a1a;
+        background-color: $dark;
         transition: transform 0.3s;
-        border: 3px solid #FF8552;
+        border: 3px solid $primary;
       }
 
       &:hover {
         border-color: $primary;
-        box-shadow: 0 4px 12px rgba(255, 107, 53, 0.15);
 
         img {
-          transform: scale(1.04);
+          transform: scale(1.02);
         }
       }
 
       .zoom-button {
         position: absolute;
-        bottom: 10px;
-        right: 10px;
-        width: 40px;
-        height: 40px;
-        background: linear-gradient(135deg, $primary, #ff8c5a);
-        color: white;
+        bottom: 12px;
+        right: 12px;
+        width: 44px;
+        height: 44px;
+        background: $primary;
+        color: $text-white;
         border: none;
-        border-radius: 4px;
         font-size: 16px;
         cursor: pointer;
         transition: all 0.2s;
@@ -708,10 +716,9 @@ $danger: #ff4757;
         align-items: center;
         justify-content: center;
         opacity: 0;
-        box-shadow: 0 2px 8px rgba(255, 107, 53, 0.2);
 
         &:hover {
-          transform: scale(1.05);
+          background: $primary-dark;
         }
       }
 
@@ -727,8 +734,7 @@ $danger: #ff4757;
 
       .thumbnail-item {
         aspect-ratio: 1;
-        border: 2px solid $border;
-        border-radius: 4px;
+        border: 2px solid $dark-border;
         overflow: hidden;
         cursor: pointer;
         transition: all 0.2s;
@@ -742,16 +748,15 @@ $danger: #ff4757;
         }
 
         &:hover {
-          border-color: $primary;
+          border-color: $text-gray;
 
           img {
-            transform: scale(1.08);
+            transform: scale(1.05);
           }
         }
 
         &.active {
           border-color: $primary;
-          box-shadow: 0 2px 8px rgba(255, 107, 53, 0.2);
         }
       }
     }
@@ -766,11 +771,13 @@ $danger: #ff4757;
 
   .title-section {
     .account-title {
-      font-size: 26px;
+      font-size: 28px;
       font-weight: 800;
-      color: $text-main;
-      margin: 0 0 8px 0;
+      color: $text-white;
+      margin: 0 0 10px 0;
       line-height: 1.3;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     .meta-info {
@@ -780,15 +787,16 @@ $danger: #ff4757;
       font-size: 12px;
 
       .id-badge {
-        padding: 4px 10px;
-        background: #f0f0f0;
-        color: $text-sub;
-        border-radius: 4px;
-        font-weight: 600;
+        padding: 6px 12px;
+        background: $dark-light;
+        border: 1px solid $dark-border;
+        color: $primary;
+        font-weight: 700;
+        font-family: monospace;
       }
 
       .seller {
-        color: $text-light;
+        color: $text-gray;
         font-weight: 500;
       }
     }
@@ -796,49 +804,43 @@ $danger: #ff4757;
 
   .description {
     font-size: 13px;
-    color: $text-sub;
+    color: $text-gray;
     line-height: 1.6;
     margin: 0;
-    padding: 10px;
-    background: #fafafa;
-    border-left: 2px solid $primary;
-    border-radius: 4px;
+    padding: 12px 16px;
+    background: $dark-light;
+    border-left: 3px solid $primary;
   }
 
   // PRICE GRID
   .price-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 12px;
 
     .price-item {
-      padding: 12px;
-      border: 1px solid $border;
-      border-radius: 6px;
-      background: white;
+      padding: 16px;
+      border: 1px solid $dark-border;
+      background: $dark-light;
       transition: all 0.2s;
-
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+      gap: 8px;
 
       &:hover {
         border-color: $primary;
-        box-shadow: 0 3px 12px rgba(255, 107, 53, 0.1);
-        transform: translateY(-2px);
       }
 
       .price-label {
         font-size: 11px;
-        color: $text-light;
-        font-weight: 600;
+        color: $text-gray;
+        font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 1px;
       }
 
       .price-value {
-        font-size: 18px;
+        font-size: 20px;
         font-weight: 800;
         color: $primary;
 
@@ -850,27 +852,25 @@ $danger: #ff4757;
       .price-row {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 12px;
 
         .badge-discount {
-          padding: 2px 6px;
-          background: rgba(239, 68, 68, 0.2);
-          color: $success;
-          font-size: 14px;
+          padding: 4px 8px;
+          background: rgba($danger, 0.2);
+          border: 1px solid $danger;
+          color: $danger;
+          font-size: 12px;
           font-weight: 700;
-          border-radius: 3px;
-          text-transform: uppercase;
-          letter-spacing: 0.3px;
         }
       }
 
       &.atm-price {
-        background: $success_bg;
+        background: rgba($success, 0.1);
         border-color: $success;
+        border-left: 3px solid $success;
 
         &:hover {
           border-color: $success;
-          box-shadow: 0 3px 12px rgba(16, 185, 129, 0.1);
         }
       }
     }
@@ -881,35 +881,34 @@ $danger: #ff4757;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
-    padding: 12px;
-    background: $bg-light;
-    border-radius: 6px;
-    border: 1px solid $border;
+    padding: 16px;
+    background: $dark-light;
+    border: 1px solid $dark-border;
 
     .status-item {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
 
       .label {
         font-size: 11px;
-        color: $text-light;
-        font-weight: 600;
+        color: $text-gray;
+        font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 1px;
       }
 
       .value {
-        font-size: 13px;
+        font-size: 14px;
         font-weight: 700;
-        color: $text-main;
+        color: $text-white;
 
         &.code {
-
-          background: white;
-          padding: 4px 8px;
-          border-radius: 4px;
-          color: $primary;
+          background: $dark;
+          padding: 6px 10px;
+          color: $secondary;
+          font-family: monospace;
+          border: 1px solid $dark-border;
         }
       }
     }
@@ -917,24 +916,22 @@ $danger: #ff4757;
 
   // BENEFITS
   .benefits {
-    padding: 12px;
-    background: $success_bg;
-    border: 1px solid rgba(16, 185, 129, 0.2);
-    border-radius: 6px;
-
+    padding: 16px;
+    background: rgba($success, 0.08);
+    border: 1px solid rgba($success, 0.3);
+    border-left: 3px solid $success;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
 
     .benefit {
       display: flex;
       align-items: center;
       gap: 10px;
-      font-size: 12px;
-      color: #047857;
+      font-size: 13px;
+      color: $success;
 
       i {
-        color: $success;
         font-size: 14px;
         flex-shrink: 0;
       }
@@ -944,15 +941,14 @@ $danger: #ff4757;
   // BUTTONS
   .button-group {
     display: flex;
-    gap: 10px;
+    gap: 12px;
 
     .btn-primary {
       flex: 1;
-      padding: 12px;
-      background: linear-gradient(135deg, $primary, #ff8c5a);
-      color: white;
+      padding: 14px;
+      background: $primary;
+      color: $text-white;
       border: none;
-      border-radius: 6px;
       font-size: 14px;
       font-weight: 700;
       cursor: pointer;
@@ -960,67 +956,52 @@ $danger: #ff4757;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 10px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      box-shadow: 0 4px 12px rgba(255, 107, 53, 0.2);
+      letter-spacing: 1px;
 
       &:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(255, 107, 53, 0.3);
+        background: $primary-dark;
       }
 
       &:disabled {
-        background: #ccc;
+        background: $dark-border;
+        color: $text-gray;
         cursor: not-allowed;
-        opacity: 0.6;
       }
     }
 
     .btn-secondary {
-      width: 48px;
+      width: 52px;
       padding: 0;
-      background: white;
-      color: $primary;
-      border: 1.5px solid $border;
-      border-radius: 6px;
-      font-size: 16px;
+      background: $dark-light;
+      color: $text-white;
+      border: 1px solid $dark-border;
+      font-size: 18px;
       cursor: pointer;
       transition: all 0.2s;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 
       &:hover:not(:disabled) {
         border-color: $primary;
-        background: #fff8f5;
-        color: $primary-dark;
-        box-shadow: 0 4px 12px rgba(255, 107, 53, 0.15);
+        color: $primary;
       }
 
       &.is-favorite {
-        background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
-        border-color: #ff6b6b;
-        color: white;
+        background: $primary;
+        border-color: $primary;
+        color: $text-white;
         
         &:hover:not(:disabled) {
-          background: linear-gradient(135deg, #ff5252, #e04855);
-          box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+          background: $primary-dark;
         }
       }
 
       &:disabled {
-        opacity: 0.6;
+        opacity: 0.5;
         cursor: not-allowed;
-      }
-
-      i {
-        transition: transform 0.2s;
-      }
-
-      &:hover:not(:disabled) i {
-        transform: scale(1.1);
       }
     }
   }
@@ -1030,41 +1011,36 @@ $danger: #ff4757;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px;
-    background: $bg-light;
-    border: 1px solid $border;
-    border-radius: 6px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    padding: 14px;
+    background: $dark-light;
+    border: 1px solid $dark-border;
 
     .seller-left {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       flex: 1;
 
       .seller-avatar {
-        border-radius: 4px;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: white;
-        font-size: 16px;
         flex-shrink: 0;
-        box-shadow: 0 2px 8px rgba(255, 107, 53, 0.15);
+        border: 2px solid $primary;
       }
 
       .label {
         font-size: 11px;
-        color: $text-light;
+        color: $text-gray;
         margin: 0;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        font-weight: 600;
+        letter-spacing: 1px;
+        font-weight: 700;
       }
 
       .name {
-        font-size: 13px;
-        color: $text-main;
+        font-size: 14px;
+        color: $text-white;
         margin: 0;
         font-weight: 600;
       }
@@ -1072,6 +1048,11 @@ $danger: #ff4757;
 
     .btn-contact {
       cursor: pointer;
+      transition: transform 0.2s;
+
+      &:hover {
+        transform: scale(1.1);
+      }
     }
   }
 }
@@ -1083,25 +1064,27 @@ $danger: #ff4757;
   gap: 20px;
 
   .section-card {
-    background: $bg;
-    border: 1px solid $border;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    background: $dark-card;
+    border: 1px solid $dark-border;
+    padding: 24px;
     transition: all 0.2s;
 
     &:hover {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border-color: $text-muted;
     }
 
     .section-title {
       font-size: 16px;
       font-weight: 700;
-      color: $text-main;
-      margin: 0 0 16px 0;
+      color: $text-white;
+      margin: 0 0 20px 0;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid $dark-border;
 
       i {
         color: $primary;
@@ -1116,36 +1099,32 @@ $danger: #ff4757;
       gap: 16px;
 
       .policy-item {
-        padding: 16px;
-        background: $bg-light;
-        border: 1px solid $border;
-        border-radius: 6px;
+        padding: 20px;
+        background: $dark-light;
+        border: 1px solid $dark-border;
         text-align: center;
         transition: all 0.2s;
 
         &:hover {
           border-color: $primary;
-          background: #fffbf8;
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(255, 107, 53, 0.1);
         }
 
         .policy-icon {
           font-size: 32px;
           color: $primary;
-          margin-bottom: 10px;
+          margin-bottom: 12px;
         }
 
         h4 {
-          font-size: 13px;
+          font-size: 14px;
           font-weight: 700;
-          color: $text-main;
-          margin: 0 0 6px 0;
+          color: $text-white;
+          margin: 0 0 8px 0;
         }
 
         p {
           font-size: 12px;
-          color: $text-light;
+          color: $text-gray;
           margin: 0;
           line-height: 1.5;
         }
@@ -1156,31 +1135,31 @@ $danger: #ff4757;
     .info-grid {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 0;
 
       .info-row {
         display: grid;
-        grid-template-columns: 140px 1fr;
+        grid-template-columns: 160px 1fr;
         gap: 16px;
-        padding: 10px 0;
-        border-bottom: 1px solid #f0f0f0;
+        padding: 12px 0;
+        border-bottom: 1px solid $dark-border;
 
         &:last-child {
           border-bottom: none;
         }
 
         .info-label {
-          font-size: 13px;
-          font-weight: 600;
-          color: $text-light;
+          font-size: 12px;
+          font-weight: 700;
+          color: $text-gray;
           text-transform: uppercase;
-          letter-spacing: 0.5px;
+          letter-spacing: 1px;
         }
 
         .info-value {
-          font-size: 13px;
+          font-size: 14px;
           font-weight: 600;
-          color: $text-main;
+          color: $text-white;
 
           &.price-discount {
             color: $success;
@@ -1192,20 +1171,21 @@ $danger: #ff4757;
 
           .badge {
             display: inline-block;
-            padding: 4px 10px;
-            border-radius: 4px;
+            padding: 4px 12px;
             font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
 
             &.success {
-              background: rgba(16, 185, 129, 0.2);
+              background: rgba($success, 0.2);
+              border: 1px solid $success;
               color: $success;
             }
 
             &.danger {
-              background: rgba(255, 71, 87, 0.2);
+              background: rgba($danger, 0.2);
+              border: 1px solid $danger;
               color: $danger;
             }
           }
@@ -1216,20 +1196,24 @@ $danger: #ff4757;
     // DESCRIPTION
     .full-description {
       p {
-        font-size: 13px;
-        color: $text-sub;
+        font-size: 14px;
+        color: $text-gray;
         line-height: 1.7;
-        margin: 0 0 16px 0;
+        margin: 0 0 20px 0;
       }
 
       .description-extras {
+        padding: 16px;
+        background: $dark-light;
+        border-left: 3px solid $primary;
+
         h4 {
           font-size: 13px;
           font-weight: 700;
-          color: $text-main;
-          margin: 0 0 10px 0;
+          color: $text-white;
+          margin: 0 0 12px 0;
           text-transform: uppercase;
-          letter-spacing: 0.5px;
+          letter-spacing: 1px;
         }
 
         ul {
@@ -1238,9 +1222,9 @@ $danger: #ff4757;
           margin: 0;
 
           li {
-            font-size: 12px;
-            color: $text-sub;
-            padding: 6px 0;
+            font-size: 13px;
+            color: $success;
+            padding: 8px 0;
             line-height: 1.6;
           }
         }
@@ -1251,30 +1235,28 @@ $danger: #ff4757;
     .faq-list {
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
 
       .faq-item {
-        padding: 12px;
-        background: $bg-light;
-        border: 1px solid $border;
-        border-radius: 6px;
+        padding: 16px;
+        background: $dark-light;
+        border: 1px solid $dark-border;
         transition: all 0.2s;
 
         &:hover {
           border-color: $primary;
-          background: #fffbf8;
         }
 
         h4 {
-          font-size: 13px;
+          font-size: 14px;
           font-weight: 700;
-          color: $text-main;
-          margin: 0 0 6px 0;
+          color: $text-white;
+          margin: 0 0 8px 0;
         }
 
         p {
-          font-size: 12px;
-          color: $text-sub;
+          font-size: 13px;
+          color: $text-gray;
           margin: 0;
           line-height: 1.6;
         }
@@ -1290,7 +1272,7 @@ $danger: #ff4757;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.9);
+  background: rgba(0, 0, 0, 0.95);
   z-index: 9999;
   display: flex;
   align-items: center;
@@ -1308,14 +1290,13 @@ $danger: #ff4757;
 
   .lightbox-close {
     position: absolute;
-    top: -40px;
+    top: -50px;
     right: 0;
-    width: 40px;
-    height: 40px;
-    background: white;
+    width: 44px;
+    height: 44px;
+    background: $primary;
     border: none;
-    border-radius: 4px;
-    color: #1a1a1a;
+    color: $text-white;
     font-size: 18px;
     cursor: pointer;
     transition: all 0.2s;
@@ -1324,8 +1305,7 @@ $danger: #ff4757;
     justify-content: center;
 
     &:hover {
-      transform: scale(1.1);
-      background: #f0f0f0;
+      background: $primary-dark;
     }
   }
 
@@ -1342,19 +1322,18 @@ $danger: #ff4757;
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
-      border-radius: 6px;
+      border: 2px solid $dark-border;
       animation: zoomIn 0.3s ease-out;
     }
 
     .lightbox-prev,
     .lightbox-next {
       position: absolute;
-      width: 44px;
-      height: 44px;
-      background: rgba(255, 255, 255, 0.2);
-      border: 1px solid white;
-      border-radius: 4px;
-      color: white;
+      width: 48px;
+      height: 48px;
+      background: $dark-card;
+      border: 1px solid $dark-border;
+      color: $text-white;
       font-size: 18px;
       cursor: pointer;
       transition: all 0.2s;
@@ -1363,9 +1342,8 @@ $danger: #ff4757;
       justify-content: center;
 
       &:hover {
-        background: white;
-        color: #1a1a1a;
-        transform: scale(1.08);
+        background: $primary;
+        border-color: $primary;
       }
     }
 
@@ -1379,14 +1357,14 @@ $danger: #ff4757;
   }
 
   .lightbox-counter {
-    padding: 6px 16px;
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid white;
-    border-radius: 4px;
-    color: white;
+    padding: 8px 20px;
+    background: $dark-card;
+    border: 1px solid $dark-border;
+    color: $text-white;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
     margin-bottom: 15px;
+    letter-spacing: 1px;
   }
 
   .lightbox-thumbs {
@@ -1397,9 +1375,8 @@ $danger: #ff4757;
     .lightbox-thumb {
       width: 70px;
       height: 70px;
-      border-radius: 4px;
       overflow: hidden;
-      border: 2px solid transparent;
+      border: 2px solid $dark-border;
       cursor: pointer;
       opacity: 0.6;
       transition: all 0.2s;
@@ -1412,10 +1389,11 @@ $danger: #ff4757;
 
       &:hover {
         opacity: 1;
+        border-color: $text-gray;
       }
 
       &.active {
-        border-color: white;
+        border-color: $primary;
         opacity: 1;
       }
     }

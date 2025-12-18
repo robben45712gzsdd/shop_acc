@@ -3,7 +3,7 @@ export default {
   components: true,
   head: {
     titleTemplate: "%s - ShopAccGame24h ",
-    title: "ShopAccGame24h  - Shop bán tài khoan game uy tín hàng đầu Việt Nam",
+    title: "ShopAccGame24h  - Shop bán tài khoản game uy tín hàng đầu Việt Nam",
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
@@ -14,7 +14,12 @@ export default {
       },
     ],
     link: [
-      { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
+      { rel: "icon", type: "image/x-icon", href: "@/assets/images/logo.png" },
+      {
+        rel: "icon",
+        type: "image/png",
+        href: "@/assets/images/logo.png",
+      },
       {
         rel: "stylesheet",
         href: "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css",
@@ -42,10 +47,7 @@ export default {
   vuetify: {
     customVariables: ["~/assets/styles/variables.scss"],
   },
-  css: [
-    "~/assets/styles/main.scss",
-    "~/assets/styles/toast.scss",
-  ],
+  css: ["~/assets/styles/main.scss", "~/assets/styles/toast.scss"],
   router: {
     middleware: ["auth"],
   },

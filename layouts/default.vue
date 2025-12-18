@@ -53,7 +53,7 @@
             <div class="btn-logout"><strong>ĐĂNG KÝ</strong></div>
           </nuxt-link>
 
-         
+
         </div>
 
       </div>
@@ -81,14 +81,14 @@
           <!-- Liên hệ -->
           <div class="footer-contact">
             <h4>Liên hệ</h4>
-            <p>Email: <a href="mailto:support@thaisonshop.com">support@thaisonshop.com</a></p>
-            <p>Hotline: <a href="tel:0123456789">0123 456 789</a></p>
+            <p>Email: <a href="mailto:hoangthaisonqs@gmail.com">hoangthaisonqs@gmail.com</a></p>
+            <p>Hotline: <a href="tel:0123456789">0358950621</a></p>
             <p>Mạng xã hội:
             <div class="flex justify-center md:!justify-start items-center gap-4 mx-auto md:mx-0 mt-2">
-              <a href="#" target="_blank">
+              <a href="https://zalo.me/0358950621" target="_blank">
                 <img src="~/assets/images/zalo.webp" alt="Zalo" style="width: 30px; height: 30px;"></img>
               </a>
-              <a href="#" target="_blank">
+              <a href="https://www.facebook.com/thaisonneee" target="_blank">
                 <img src="~/assets/images/mess.png" alt="Facebook" style="width: 30px; height: 30px;"></img>
               </a>
             </div>
@@ -116,10 +116,10 @@
 
     <!-- FLOATING ICONS -->
     <div class="float-icons">
-      <a href="https://zalo.me/" target="_blank" class="float-icon zalo" title="Zalo">
+      <a href="https://zalo.me/0358950621" target="_blank" class="float-icon zalo" title="Zalo">
         <img src="@/assets/images/zalo.webp" alt="Zalo" style="width: 24px; height: 24px;" />
       </a>
-      <a href="https://facebook.com/" target="_blank" class="float-icon facebook" title="Facebook">
+      <a href="https://www.facebook.com/thaisonneee" target="_blank" class="float-icon facebook" title="Facebook">
         <img src="@/assets/images/mess.png" alt="Facebook" style="width: 24px; height: 24px;" />
       </a>
     </div>
@@ -469,7 +469,7 @@ export default {
       }
     },
 
-  
+
   },
 };
 </script>
@@ -507,7 +507,7 @@ export default {
     }
 
     ul {
-      li{
+      li {
         background: #1a1a1a;
       }
     }
@@ -1217,6 +1217,8 @@ export default {
           border-left: 4px solid #ff6b35;
           border-radius: 8px;
           padding: 15px;
+          flex-direction: column;
+          align-items: flex-start;
 
           .info-item {
             display: flex;
@@ -1306,7 +1308,7 @@ export default {
     background: #1a1a1a;
     border-bottom-color: #333;
 
-   
+
   }
 
   .wrap-nav {
