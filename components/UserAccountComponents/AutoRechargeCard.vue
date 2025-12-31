@@ -419,7 +419,6 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
       border-radius: 8px;
       background: $bg-light;
       transition: all 0.2s ease;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
       &:focus {
         outline: none;

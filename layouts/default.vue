@@ -1,5 +1,14 @@
 <template>
   <div id="app" @click="handleOutsideClick">
+    <!-- Policy Modal -->
+    <PolicyModal />
+    
+    <!-- Cookie Consent -->
+    <CookieConsent />
+    
+    <!-- Promo Modal -->
+    <PromoModal />
+    
     <div id="nav" :class="{ 'dark-mode': darkMode, 'light-mode': !darkMode }">
       <div class="flex w-full wrap-nav">
         <!-- MOBILE MENU ICON -->
@@ -10,7 +19,7 @@
         <div class="nav-left flex-1" @click.stop>
           <div class="logo">
             <nuxt-link to="/">
-              <img src="@/assets/images/logo.png" alt="" />
+              <img src="@/assets/images/logo.png" alt="logo" />
             </nuxt-link>
           </div>
           <ul class="menu" :class="{ active: showMenuMobile }" @click.stop="closeMenuOnClick">
@@ -25,6 +34,8 @@
                 NẠP ATM/MOMO TỰ ĐỘNG 24/24
               </a>
             </li>
+
+            <li><nuxt-link to="/FAQ">HỎI ĐÁP</nuxt-link></li>
           </ul>
         </div>
 
@@ -59,8 +70,37 @@
       </div>
     </div>
 
-    <div class="!mt-[70px] min-h-[calc(100vh-70px)]" :class="{ 'dark-mode': darkMode }" id="main">
+    <div class="!mt-[70px] min-h-[calc(100vh-70px)]" :class="{ 'dark-mode': darkMode, 'pb-mobile': is_login }" id="main">
       <Nuxt />
+    </div>
+
+    <!-- MOBILE BOTTOM NAV (only when logged in) -->
+    <div v-if="is_login" class="mobile-bottom-nav">
+      <nuxt-link to="/" class="nav-item" :class="{ active: $route.path === '/' }">
+        <i class="fas fa-home"></i>
+        <span>Trang chủ</span>
+      </nuxt-link>
+      
+      <nuxt-link to="/UserAccountPage?tab=autoRechargeCard" class="nav-item" :class="{ active: $route.query.tab === 'autoRechargeCard' }">
+        <i class="fas fa-credit-card"></i>
+        <span>Nạp thẻ</span>
+      </nuxt-link>
+      
+      <nuxt-link to="/UserAccountPage" class="nav-item avatar-item" :class="{ active: $route.path === '/UserAccountPage' && !$route.query.tab }">
+        <div class="avatar-circle">
+          <i class="fas fa-user"></i>
+        </div>
+      </nuxt-link>
+      
+      <a href="#" @click.prevent="openRechargeModal" class="nav-item">
+        <i class="fas fa-wallet"></i>
+        <span>Nạp tiền</span>
+      </a>
+      
+      <nuxt-link to="/FAQ" class="nav-item" :class="{ active: $route.path === '/FAQ' }">
+        <i class="fas fa-question-circle"></i>
+        <span>Hỏi đáp</span>
+      </nuxt-link>
     </div>
 
     <footer class="footer">
@@ -81,14 +121,14 @@
           <!-- Liên hệ -->
           <div class="footer-contact">
             <h4>Liên hệ</h4>
-            <p>Email: <a href="mailto:hoangthaisonqs@gmail.com">hoangthaisonqs@gmail.com</a></p>
-            <p>Hotline: <a href="tel:0123456789">0358950621</a></p>
+            <p>Email: <a href="mailto:tuanfbchinh@gmail.com">tuanfbchinh@gmail.com</a></p>
+            <p>Hotline: <a href="tel:0123456789">0336.856.626</a></p>
             <p>Mạng xã hội:
             <div class="flex justify-center md:!justify-start items-center gap-4 mx-auto md:mx-0 mt-2">
-              <a href="https://zalo.me/0358950621" target="_blank">
+              <a href="https://zalo.me/0336.856.626" target="_blank">
                 <img src="~/assets/images/zalo.webp" alt="Zalo" style="width: 30px; height: 30px;"></img>
               </a>
-              <a href="https://www.facebook.com/thaisonneee" target="_blank">
+              <a href="https://www.facebook.com/LyMinhTuan.AdminCheckScamVn" target="_blank">
                 <img src="~/assets/images/mess.png" alt="Facebook" style="width: 30px; height: 30px;"></img>
               </a>
             </div>
@@ -103,6 +143,7 @@
               <li><nuxt-link :to="{ name: 'RechargeOnline' }">Nạp thẻ</nuxt-link></li>
               <li><a href="#" @click.prevent="openRechargeModal">Nạp ATM/MOMO</a></li>
               <li><nuxt-link to="/UserAccountPage">Tài khoản</nuxt-link></li>
+              <li><nuxt-link to="/FAQ">Câu hỏi thường gặp</nuxt-link></li>
             </ul>
           </div>
         </div>
@@ -116,10 +157,10 @@
 
     <!-- FLOATING ICONS -->
     <div class="float-icons">
-      <a href="https://zalo.me/0358950621" target="_blank" class="float-icon zalo" title="Zalo">
+      <a href="https://zalo.me/0336.856.626" target="_blank" class="float-icon zalo" title="Zalo">
         <img src="@/assets/images/zalo.webp" alt="Zalo" style="width: 24px; height: 24px;" />
       </a>
-      <a href="https://www.facebook.com/thaisonneee" target="_blank" class="float-icon facebook" title="Facebook">
+      <a href="https://www.facebook.com/LyMinhTuan.AdminCheckScamVn" target="_blank" class="float-icon facebook" title="Facebook">
         <img src="@/assets/images/mess.png" alt="Facebook" style="width: 24px; height: 24px;" />
       </a>
     </div>
@@ -277,7 +318,15 @@
 </template>
 
 <script>
+import payment from '~/api/payment';
+
 export default {
+  components: {
+    PolicyModal: () => import('@/components/Modals/PolicyModal'),
+    CookieConsent: () => import('@/components/Modals/CookieConsent'),
+    PromoModal: () => import('@/components/Modals/PromoModal'),
+  },
+
   data() {
     return {
       showMenuMobile: false,
@@ -367,12 +416,38 @@ export default {
     },
 
     async handleRecharge() {
-      if (!this.rechargeAmount || this.rechargeAmount < 10000) {
-        this.$toast?.error?.('Vui lòng nhập số tiền hợp lệ (tối thiểu 10.000 VNĐ)');
+      // call api check payment
+      if (this.rechargeAmount < 10000 || this.rechargeAmount > 100000000) {
+        this.$toast?.error?.("Số tiền nạp không hợp lệ.");
         return;
       }
+      const res = await payment.checkPayment({
+        transCode: this.transactionId,
+      })
+      if (res && res.IsSuccess) {
+        this.isPaymentSuccessful = true;
+        this.successPaymentAmount = this.rechargeAmount;
+        this.paymentSuccessTime = new Date();
 
-      this.$toast?.info?.('Vui lòng hoàn tất chuyển khoản để xác nhận thanh toán');
+        this.playSuccessSound();
+
+        if (this.$store.state.user_data) {
+          this.$store.state.user_data.balance =
+            (this.$store.state.user_data.balance || 0) + this.rechargeAmount;
+        }
+
+        this.$toast?.success?.(`Nạp tiền thành công! +${this.formatCurrency(this.rechargeAmount)}`);
+
+        // Auto close sau 3 giây rồi reload
+        setTimeout(() => {
+          this.closeRechargeModal();
+          // Reload page sau khi đóng modal
+          window.location.reload();
+        }, 3000);
+      } else {
+        this.$toast?.error?.("Chưa nhận được thanh toán. Vui lòng kiểm tra lại.");
+      }
+       
     },
 
     handleWsMessage(event) {
@@ -636,6 +711,127 @@ export default {
   min-height: 100vh;
 }
 
+#main {
+  &.pb-mobile {
+    @media (max-width: 768px) {
+      padding-bottom: 70px;
+    }
+  }
+}
+
+// ============================================
+// MOBILE BOTTOM NAV
+// ============================================
+.mobile-bottom-nav {
+  display: none;
+  
+  @media (max-width: 768px) {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 65px;
+    background: #fff;
+    border-top: 1px solid #e5e7eb;
+    z-index: 1000;
+    padding: 0;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    text-decoration: none;
+    color: #6b7280;
+    transition: all 0.2s;
+    position: relative;
+    padding: 8px 0;
+
+    i {
+      font-size: 20px;
+      transition: all 0.2s;
+    }
+
+    span {
+      font-size: 11px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    &.active,
+    &:hover {
+      color: #c17635;
+
+      i {
+        transform: translateY(-2px);
+      }
+    }
+
+    // Avatar item (center)
+    &.avatar-item {
+      position: relative;
+      margin-top: -25px;
+
+      .avatar-circle {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #f6b43b, #d5612e);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        border: 3px solid #fff;
+        transition: all 0.3s;
+
+        i {
+          font-size: 24px;
+          color: #fff;
+          transform: none;
+        }
+      }
+
+      &:active .avatar-circle {
+        transform: scale(0.92);
+      }
+
+      &.active .avatar-circle,
+      &:hover .avatar-circle {
+        box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+        transform: scale(1.05);
+      }
+    }
+  }
+}
+
+.dark-mode .mobile-bottom-nav {
+  background: #1a1a1a;
+  border-top-color: #333;
+
+  .nav-item {
+    color: #9ca3af;
+
+    &.active,
+    &:hover {
+      color: #60a5fa;
+    }
+
+    &.avatar-item .avatar-circle {
+      border-color: #1a1a1a;
+      background: linear-gradient(135deg, #60a5fa, #93c5fd);
+    }
+  }
+}
+
 // ============================================
 // FOOTER
 // ============================================
@@ -643,7 +839,6 @@ export default {
 .footer {
   background-color: #0f0f0f;
   color: #fff;
-  font-family: 'Roboto', sans-serif;
   padding: 50px 20px 20px 20px;
   margin-top: auto;
 
@@ -751,7 +946,7 @@ export default {
   }
 
   @media (max-width: 768px) {
-    bottom: 20px;
+    bottom: 80px;
     right: 10px;
     gap: 10px;
 
@@ -1281,8 +1476,8 @@ export default {
           min-height: auto;
 
           .qr-box img {
-            width: 200px;
-            height: 200px;
+            width: auto;
+            height: auto;
           }
         }
 

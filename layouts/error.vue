@@ -53,7 +53,6 @@ body {
 }
 
 .notfound .notfound-404 h1 {
-  font-family: 'Josefin Sans', sans-serif;
   color: #222;
   font-size: 220px;
   letter-spacing: 10px;
@@ -67,7 +66,6 @@ body {
 }
 
 .notfound p {
-  font-family: 'Josefin Sans', sans-serif;
   color: #ffffff;
   font-size: 16px;
   font-weight: 600;
@@ -76,7 +74,6 @@ body {
 }
 
 .notfound a {
-  font-family: 'Josefin Sans', sans-serif;
   font-size: 14px;
   text-decoration: none;
   text-transform: uppercase;

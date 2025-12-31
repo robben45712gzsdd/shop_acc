@@ -418,7 +418,6 @@ $danger: #ff4655;
           font-size: 14px;
           color: $text-white;
           transition: all 0.2s;
-          font-family: inherit;
 
           &:focus {
             outline: none;

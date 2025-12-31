@@ -81,9 +81,9 @@ export default ({ app }, inject) => {
       if (status === 403 && process.client) {
         window.location.href = "/403";
       } 
-      else if (status === 401) {
-        window.location.href = "/Login";
-      }
+      // else if (status === 401) {
+      //   window.location.href = "/Login";
+      // }
       return Promise.reject(error);
     }
   );

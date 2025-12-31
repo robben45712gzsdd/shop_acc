@@ -27,11 +27,12 @@ export default async function ({ store, redirect, route }) {
   const currentPath = (route.path || "").toLowerCase();
 
   const publicPaths = [
-    "/login",
-    "/signup",
-    "/accountcategories",
-    "/",
-    "/detailaccountpage",
+    // "/login",
+    // "/register",
+    // "/accountcategories",
+    // "/",
+    // "/detailaccountpage",
+    // "/faq",
   ];
 
   const isPublic = publicPaths.some(

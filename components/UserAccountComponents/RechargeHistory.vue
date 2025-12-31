@@ -310,7 +310,6 @@ $yellow: #f59e0b;
             padding: 3px 6px;
             background: $bg-light;
             border-radius: 3px;
-            font-family: monospace;
             font-size: 11px;
             color: $text-sub;
           }

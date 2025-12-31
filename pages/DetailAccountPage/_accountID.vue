@@ -792,7 +792,6 @@ $danger: #ff4655;
         border: 1px solid $dark-border;
         color: $primary;
         font-weight: 700;
-        font-family: monospace;
       }
 
       .seller {
@@ -907,7 +906,6 @@ $danger: #ff4655;
           background: $dark;
           padding: 6px 10px;
           color: $secondary;
-          font-family: monospace;
           border: 1px solid $dark-border;
         }
       }

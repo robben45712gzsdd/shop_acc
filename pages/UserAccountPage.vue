@@ -203,11 +203,20 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
   padding-bottom: 40px;
   margin-top: 74px;
 
+  @media (max-width: 768px) {
+    margin-top: 0;
+    padding-bottom: 80px;
+  }
+
   .page-container {
     width: 100%;
     max-width: 1400px;
     margin: 0 auto;
     padding: 0 16px;
+
+    @media (max-width: 768px) {
+      padding: 0 10px;
+    }
   }
 }
 
@@ -504,49 +513,61 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
     border-radius: 50%;
 
     .page-container {
-      padding: 0 12px;
+      padding: 0 10px;
     }
   }
 
   .profile-header {
-    margin-bottom: 20px;
+    margin-bottom: 12px;
 
     .profile-bg {
-      height: 120px;
-      margin-bottom: -40px;
+      height: 60px;
+      margin-bottom: -24px;
     }
 
     .profile-card {
-      padding: 16px;
-      gap: 12px;
-      flex-direction: column;
-      text-align: center;
+      padding: 10px 12px;
+      gap: 10px;
+      flex-direction: row;
+      align-items: center;
+      text-align: left;
 
       .avatar-wrapper {
         .avatar {
-          width: 100px;
-          height: 100px;
+          width: 60px;
+          height: 60px;
           border-width: 3px;
         }
 
         .status-badge {
-          width: 32px;
-          height: 32px;
+          width: 20px;
+          height: 20px;
+          border-width: 3px;
         }
       }
 
       .profile-info {
+        flex: 1;
+        min-width: 0;
+
         .profile-name {
-          font-size: 18px;
-          margin-bottom: 4px;
+          font-size: 16px;
+          margin-bottom: 3px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         .profile-id {
-          font-size: 12px;
+          font-size: 11px;
+          margin-bottom: 2px;
         }
 
         .profile-email {
-          font-size: 13px;
+          font-size: 11px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
     }
@@ -554,13 +575,13 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
 
   .content-wrapper {
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 12px;
   }
 
   .sidebar {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
     position: static;
     top: auto;
 
@@ -568,33 +589,34 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
       margin-bottom: 0;
 
       .nav-group-title {
-        padding: 12px 14px;
-        font-size: 12px;
+        padding: 8px 12px;
+        font-size: 11px;
         gap: 6px;
 
         i {
-          font-size: 14px;
+          font-size: 13px;
         }
       }
 
       .nav-link {
         padding: 10px 12px;
-        font-size: 12px;
-        gap: 8px;
+        font-size: 13px;
+        gap: 10px;
 
         i {
-          font-size: 14px;
-          width: 16px;
+          font-size: 15px;
+          width: 18px;
         }
 
         span:first-of-type {
+          flex: 1;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
         }
 
         .badge {
-          padding: 1px 6px;
+          padding: 2px 6px;
           font-size: 10px;
         }
       }
@@ -605,45 +627,50 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
 // SMALL MOBILE (480px)
 @media (max-width: 480px) {
   .profile-header {
-    margin-bottom: 16px;
+    margin-bottom: 10px;
 
     .profile-bg {
-      height: 100px;
-      margin-bottom: -32px;
+      height: 50px;
+      margin-bottom: -20px;
     }
 
     .profile-card {
-      padding: 12px;
-      gap: 10px;
+      padding: 8px 10px;
+      gap: 8px;
 
       .avatar-wrapper .avatar {
-        width: 80px;
-        height: 80px;
+        width: 50px;
+        height: 50px;
       }
 
       .profile-info {
         .profile-name {
-          font-size: 16px;
+          font-size: 14px;
+          margin-bottom: 2px;
         }
 
         .profile-id {
-          font-size: 11px;
+          font-size: 10px;
+          margin-bottom: 1px;
         }
 
         .profile-email {
-          font-size: 12px;
+          font-size: 10px;
         }
       }
     }
   }
 
   .sidebar {
-    grid-template-columns: 1fr;
-
     .nav-group {
+      .nav-group-title {
+        padding: 7px 10px;
+        font-size: 10px;
+      }
+
       .nav-link {
-        padding: 10px;
-        font-size: 13px;
+        padding: 9px 10px;
+        font-size: 12px;
       }
     }
   }

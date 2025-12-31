@@ -66,7 +66,7 @@
           <!-- Actions -->
           <div class="modal-actions">
   
-            <a href="https://www.facebook.com/thaisonneee" target="_blank" class="btn-promo-secondary">
+            <a href="https://www.facebook.com/LyMinhTuan.AdminCheckScamVn" target="_blank" class="btn-promo-secondary">
               <i class="fab fa-facebook"></i>
               Fanpage hỗ trợ
             </a>
@@ -410,7 +410,6 @@ $success: #00ff88;
     font-size: 28px;
     font-weight: 900;
     color: $primary;
-    font-family: monospace;
   }
 
   .time-label {

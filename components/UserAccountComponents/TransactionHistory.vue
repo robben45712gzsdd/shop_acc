@@ -218,7 +218,7 @@ $warning: #f59e0b;
 $warning-light: #fffbeb;
 $danger: #ef4444;
 $danger-light: #fef2f2;
-$info: #3b82f6;
+$info: #c17635;
 $info-light: #eff6ff;
 
 .transaction-history {

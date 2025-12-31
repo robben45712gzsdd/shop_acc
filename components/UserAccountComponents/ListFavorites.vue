@@ -273,7 +273,7 @@ $bg-light: #f9fafb;
 $success: #10b981;
 $warning: #f59e0b;
 $danger: #ef4444;
-$info: #3b82f6;
+$info: #c17635;
 
 // === MAIN CONTAINER ===
 .favorites-container {

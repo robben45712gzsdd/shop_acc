@@ -418,7 +418,7 @@ $bg-darker: #f3f4f6;
 
 $green: #10b981;
 $green-light: #ecfdf5;
-$blue: #3b82f6;
+$blue: #c17635;
 $blue-light: #eff6ff;
 $purple: #a855f7;
 $purple-light: #faf5ff;
