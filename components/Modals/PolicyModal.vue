@@ -7,7 +7,7 @@
       
       <div class="policy-content">
         <div class="policy-intro">
-          <p><strong>Chào mừng bạn đến với ShopAccGame24h!</strong></p>
+          <p><strong>Chào mừng bạn đến với ACCGAME247!</strong></p>
           <p>Vui lòng đọc kỹ các điều khoản và chính sách dưới đây trước khi sử dụng dịch vụ của chúng tôi. Việc tiếp tục sử dụng website đồng nghĩa với việc bạn chấp nhận toàn bộ các điều khoản này.</p>
         </div>
 

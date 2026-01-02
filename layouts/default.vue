@@ -2,13 +2,13 @@
   <div id="app" @click="handleOutsideClick">
     <!-- Policy Modal -->
     <PolicyModal />
-    
+
     <!-- Cookie Consent -->
     <CookieConsent />
-    
+
     <!-- Promo Modal -->
     <PromoModal />
-    
+
     <div id="nav" :class="{ 'dark-mode': darkMode, 'light-mode': !darkMode }">
       <div class="flex w-full wrap-nav">
         <!-- MOBILE MENU ICON -->
@@ -70,7 +70,8 @@
       </div>
     </div>
 
-    <div class="!mt-[70px] min-h-[calc(100vh-70px)]" :class="{ 'dark-mode': darkMode, 'pb-mobile': is_login }" id="main">
+    <div class="!mt-[70px] min-h-[calc(100vh-70px)]" :class="{ 'dark-mode': darkMode, 'pb-mobile': is_login }"
+      id="main">
       <Nuxt />
     </div>
 
@@ -80,23 +81,25 @@
         <i class="fas fa-home"></i>
         <span>Trang chủ</span>
       </nuxt-link>
-      
-      <nuxt-link to="/UserAccountPage?tab=autoRechargeCard" class="nav-item" :class="{ active: $route.query.tab === 'autoRechargeCard' }">
+
+      <nuxt-link to="/UserAccountPage?tab=autoRechargeCard" class="nav-item"
+        :class="{ active: $route.query.tab === 'autoRechargeCard' }">
         <i class="fas fa-credit-card"></i>
         <span>Nạp thẻ</span>
       </nuxt-link>
-      
-      <nuxt-link to="/UserAccountPage" class="nav-item avatar-item" :class="{ active: $route.path === '/UserAccountPage' && !$route.query.tab }">
+
+      <nuxt-link to="/UserAccountPage" class="nav-item avatar-item"
+        :class="{ active: $route.path === '/UserAccountPage' && !$route.query.tab }">
         <div class="avatar-circle">
           <i class="fas fa-user"></i>
         </div>
       </nuxt-link>
-      
+
       <a href="#" @click.prevent="openRechargeModal" class="nav-item">
         <i class="fas fa-wallet"></i>
         <span>Nạp tiền</span>
       </a>
-      
+
       <nuxt-link to="/FAQ" class="nav-item" :class="{ active: $route.path === '/FAQ' }">
         <i class="fas fa-question-circle"></i>
         <span>Hỏi đáp</span>
@@ -150,17 +153,18 @@
 
         <!-- BOTTOM: bản quyền -->
         <div class="footer-bottom">
-          <p>© 2025 ShopAccGame24h. All rights reserved.</p>
+          <p>© 2025 ACCGAME247.net. All rights reserved.</p>
         </div>
       </div>
     </footer>
 
     <!-- FLOATING ICONS -->
-    <div class="float-icons">
+    <div class="float-icons" :class="{ 'isLogined': is_login }">
       <a href="https://zalo.me/0336.856.626" target="_blank" class="float-icon zalo" title="Zalo">
         <img src="@/assets/images/zalo.webp" alt="Zalo" style="width: 24px; height: 24px;" />
       </a>
-      <a href="https://www.facebook.com/LyMinhTuan.AdminCheckScamVn" target="_blank" class="float-icon facebook" title="Facebook">
+      <a href="https://www.facebook.com/LyMinhTuan.AdminCheckScamVn" target="_blank" class="float-icon facebook"
+        title="Facebook">
         <img src="@/assets/images/mess.png" alt="Facebook" style="width: 24px; height: 24px;" />
       </a>
     </div>
@@ -257,9 +261,16 @@
                   </div>
 
                   <!-- SUBMIT -->
-                  <button @click="handleRecharge" class="flex justify-center items-center btn-submit">
-                    <p class="!my-0 uppercase !leading-none">Xác nhận, tôi đã thanh toán</p>
-                    <i class="fa-arrow-right fas"></i>
+                  <button @click="handleRecharge" :disabled="isLoadingCheckPayment"
+                    class="flex justify-center items-center btn-submit">
+                    <div v-if="!isLoadingCheckPayment">
+                      <p class="!my-0 uppercase !leading-none">Xác nhận, tôi đã thanh toán</p>
+                      <i class="fa-arrow-right fas"></i>
+                    </div>
+                    <div v-else>
+                      <i class="fas fa-hourglass-half"></i>
+                      Đang kiểm tra...
+                    </div>
                   </button>
 
                   <!-- INFO -->
@@ -301,7 +312,7 @@
 
                     <div class="info-item">
                       <i class="fas fa-phone-alt"></i>
-                      <span>Nếu gặp lỗi, vui lòng liên hệ hỗ trợ: <b>0969 999 999</b></span>
+                      <span>Nếu gặp lỗi, vui lòng liên hệ hỗ trợ: <b>0336.856.626</b></span>
                     </div>
 
                   </div>
@@ -339,6 +350,7 @@ export default {
       isPaymentSuccessful: false,
       successPaymentAmount: 0,
       paymentSuccessTime: null,
+      isLoadingCheckPayment: false,
     };
   },
 
@@ -416,38 +428,44 @@ export default {
     },
 
     async handleRecharge() {
-      // call api check payment
-      if (this.rechargeAmount < 10000 || this.rechargeAmount > 100000000) {
-        this.$toast?.error?.("Số tiền nạp không hợp lệ.");
-        return;
-      }
-      const res = await payment.checkPayment({
-        transCode: this.transactionId,
-      })
-      if (res && res.IsSuccess) {
-        this.isPaymentSuccessful = true;
-        this.successPaymentAmount = this.rechargeAmount;
-        this.paymentSuccessTime = new Date();
+      try {
+        this.isLoadingCheckPayment = true;
+        const res = await payment.checkPayment({
+          transCode: this.transactionId?.match(/TopUpCode (\w+) Trans/)[1],
+        });
+        if (res && res?.success) {
+          this.isPaymentSuccessful = true;
+          this.successPaymentAmount = this.rechargeAmount;
+          this.paymentSuccessTime = new Date();
 
-        this.playSuccessSound();
+          this.playSuccessSound();
 
-        if (this.$store.state.user_data) {
-          this.$store.state.user_data.balance =
-            (this.$store.state.user_data.balance || 0) + this.rechargeAmount;
+          if (this.$store.state.user_data) {
+            this.$store.state.user_data.balance =
+              (this.$store.state.user_data.balance || 0) + this.rechargeAmount;
+          }
+
+          this.$toast?.success?.(`Nạp tiền thành công! +${this.formatCurrency(this.rechargeAmount)}`);
+
+          // // Auto close sau 3 giây rồi reload
+          setTimeout(() => {
+            this.closeRechargeModal();
+            // Reload page sau khi đóng modal
+            window.location.reload();
+          }, 3000);
+        } else {
+          this.$toast?.warning?.("Chưa nhận được thanh toán. Vui lòng kiểm tra lại.");
         }
-
-        this.$toast?.success?.(`Nạp tiền thành công! +${this.formatCurrency(this.rechargeAmount)}`);
-
-        // Auto close sau 3 giây rồi reload
-        setTimeout(() => {
-          this.closeRechargeModal();
-          // Reload page sau khi đóng modal
-          window.location.reload();
-        }, 3000);
-      } else {
-        this.$toast?.error?.("Chưa nhận được thanh toán. Vui lòng kiểm tra lại.");
+      } catch (error) {
+        console.error("Error checking payment:", error);
+        this.$toast?.warning?.("Đã xảy ra lỗi khi kiểm tra thanh toán.");
+      } finally {
+        this.isPaymentSuccessful = false;
+        this.successPaymentAmount = 0;
+        this.isLoadingCheckPayment = false;
+        this.paymentSuccessTime = null;
       }
-       
+
     },
 
     handleWsMessage(event) {
@@ -464,8 +482,7 @@ export default {
           this.playSuccessSound();
 
           if (this.$store.state.user_data) {
-            this.$store.state.user_data.balance =
-              (this.$store.state.user_data.balance || 0) + Price;
+            this.$store.commit('updateBalance', Price);
           }
 
           this.$toast?.success?.(`Nạp tiền thành công! +${this.formatCurrency(Price)}`);
@@ -724,7 +741,7 @@ export default {
 // ============================================
 .mobile-bottom-nav {
   display: none;
-  
+
   @media (max-width: 768px) {
     display: flex;
     position: fixed;
@@ -946,7 +963,7 @@ export default {
   }
 
   @media (max-width: 768px) {
-    bottom: 80px;
+    bottom: 30px;
     right: 10px;
     gap: 10px;
 
@@ -955,7 +972,11 @@ export default {
       height: 45px;
       font-size: 20px;
     }
+    &.isLogined{
+      bottom: 80px;
+    }
   }
+  
 }
 
 // ============================================

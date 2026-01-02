@@ -49,12 +49,8 @@
                   <span class="info-label">Số Tài Khoản</span>
                   <div class="info-value-with-copy">
                     <span ref="bankAccountNumber">3513042002</span>
-                    <button
-                      class="btn-copy-small"
-                      @click="copyToClipboard('bankAccountNumber', 'copyBankBtn')"
-                      ref="copyBankBtn"
-                      title="Sao chép"
-                    >
+                    <button class="btn-copy-small" @click="copyToClipboard('bankAccountNumber', 'copyBankBtn')"
+                      ref="copyBankBtn" title="Sao chép">
                       <i class="fas fa-copy"></i>
                     </button>
                   </div>
@@ -67,12 +63,8 @@
                   <span class="info-label">Mã Chuyển Khoản</span>
                   <div class="info-value-with-copy">
                     <span class="code-badge" ref="bankTransferId">{{ transactionId }}</span>
-                    <button
-                      class="btn-copy-small"
-                      @click="copyToClipboard('bankTransferId', 'copyTransferIdBtn')"
-                      ref="copyTransferIdBtn"
-                      title="Sao chép"
-                    >
+                    <button class="btn-copy-small" @click="copyToClipboard('bankTransferId', 'copyTransferIdBtn')"
+                      ref="copyTransferIdBtn" title="Sao chép">
                       <i class="fas fa-copy"></i>
                     </button>
                   </div>
@@ -84,11 +76,8 @@
             <div class="detail-section">
               <div class="section-title">Quét Mã QR Để Thanh Toán</div>
               <div class="qr-container">
-                <img
-                  :src="`https://img.vietqr.io/image/MB-3513042002-print.png?addInfo=${transactionId}`"
-                  alt="QR Code"
-                  class="qr-code"
-                />
+                <img :src="`https://img.vietqr.io/image/MB-3513042002-print.png?addInfo=${transactionId}`" alt="QR Code"
+                  class="!h-fit object-contain qr-code" />
                 <p class="qr-hint">Sử dụng ứng dụng ngân hàng để quét mã QR</p>
               </div>
             </div>
@@ -115,7 +104,8 @@
                   <div class="step-number">3</div>
                   <div class="step-content">
                     <p class="step-title">Điền thông tin chuyển khoản</p>
-                    <p class="step-desc">Số tài khoản: <strong>3513042002</strong> | Nội dung: <strong>{{ transactionId }}</strong></p>
+                    <p class="step-desc">Số tài khoản: <strong>3513042002</strong> | Nội dung: <strong>{{ transactionId
+                        }}</strong></p>
                   </div>
                 </div>
                 <div class="instruction-step">
@@ -134,7 +124,8 @@
               <div class="notes-list">
                 <div class="note-item warning">
                   <i class="fas fa-exclamation-triangle"></i>
-                  <span>Ghi đúng nội dung chuyển khoản <strong>{{ transactionId }}</strong>, nếu sai hệ thống không thể cộng tiền</span>
+                  <span>Ghi đúng nội dung chuyển khoản <strong>{{ transactionId }}</strong>, nếu sai hệ thống không thể
+                    cộng tiền</span>
                 </div>
                 <div class="note-item info">
                   <i class="fas fa-lightbulb"></i>
@@ -142,7 +133,8 @@
                 </div>
                 <div class="note-item info">
                   <i class="fas fa-clock"></i>
-                  <span>Chuyển khác ngân hàng vui lòng chọn "Chuyển tiền nhanh 24/7" để nhận tiền trong vòng 5-30 giây</span>
+                  <span>Chuyển khác ngân hàng vui lòng chọn "Chuyển tiền nhanh 24/7" để nhận tiền trong vòng 5-30
+                    giây</span>
                 </div>
                 <div class="note-item success">
                   <i class="fas fa-check-circle"></i>
@@ -153,11 +145,18 @@
 
             <!-- CONFIRM BUTTON -->
             <div class="confirm-section">
-              <button class="btn-confirm" @click="confirmTransfer">
-                <i class="fas fa-check"></i>
-                Xác Nhận, Tôi Đã Chuyển
+              <button class="btn-confirm" :disabled="isLoadingCheckPayment" @click="checkPayment">
+                <div v-if="!isLoadingCheckPayment">
+                  <i class="fas fa-check"></i>
+                  Xác Nhận, Tôi Đã Chuyển
+                </div>
+                <div v-else>
+                  <i class="fas fa-hourglass-half"></i>
+                  Đang kiểm tra...
+                </div>
               </button>
-              <p class="confirm-hint">Sau khi bấm, hệ thống sẽ kiểm tra và cộng tiền vào tài khoản trong vòng 30 giây</p>
+              <p class="confirm-hint">Sau khi bấm, hệ thống sẽ kiểm tra và cộng tiền vào tài khoản trong vòng 30 giây
+              </p>
             </div>
           </div>
         </transition>
@@ -193,6 +192,7 @@
 </template>
 
 <script>
+import payment from '@/api/payment';
 export default {
   name: 'AutoAtmRecharge',
   data() {
@@ -202,12 +202,13 @@ export default {
       toastMessage: '',
       toastType: 'success',
       toastIcon: 'fas fa-check-circle',
+      isLoadingCheckPayment: false,
     };
   },
 
   computed: {
     transactionId() {
-      return this.$store.state?.user_data?.topUpCode || 'GIAO_DICH_123456';
+      return this.$store.state?.user_data?.topUpCode;
     },
   },
 
@@ -257,14 +258,84 @@ export default {
       this.showToastMessage('Đã sao chép!', 'success', 'fas fa-check-circle');
     },
 
-    confirmTransfer() {
-      this.showToastMessage('Đang kiểm tra chuyển khoản...', 'info', 'fas fa-hourglass-half');
-      
-      setTimeout(() => {
-        this.showToastMessage('Chuyển khoản thành công! Tiền sẽ được cộng vào tài khoản trong 30 giây', 'success', 'fas fa-check-circle');
-      }, 2000);
+    async checkPayment() {
+      try {
+        this.isLoadingCheckPayment = true;
+        const res = await payment.checkPayment({
+          transCode: this.transactionId?.match(/TopUpCode (\w+) Trans/)[1],
+        });
+        if (res && res?.success) {
+          this.isPaymentSuccessful = true;
+          this.successPaymentAmount = this.rechargeAmount;
+          this.paymentSuccessTime = new Date();
+
+          this.playSuccessSound();
+
+          if (this.$store.state.user_data) {
+            this.$store.commit('updateBalance', this.successPaymentAmount);
+          }
+
+          this.$toast?.success?.(`Nạp tiền thành công! +${this.formatCurrency(this.rechargeAmount)}`);
+
+          // Auto close sau 3 giây rồi reload
+          setTimeout(() => {
+            this.closeRechargeModal();
+            // Reload page sau khi đóng modal
+            window.location.reload();
+          }, 3000);
+        }
+      } catch (error) {
+        console.error("Error checking payment:", error);
+        this.$toast?.warning?.("Giao dịch chưa thành công. Vui lòng kiểm tra lại.");
+      } finally {
+        this.isPaymentSuccessful = false;
+        this.successPaymentAmount = 0;
+        this.isLoadingCheckPayment = false;
+        this.paymentSuccessTime = null;
+      }
     },
 
+    playSuccessSound() {
+      try {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const now = audioContext.currentTime;
+
+        // First beep: 800Hz
+        const osc1 = audioContext.createOscillator();
+        const gain1 = audioContext.createGain();
+        osc1.connect(gain1);
+        gain1.connect(audioContext.destination);
+        osc1.frequency.value = 800;
+        osc1.type = 'sine';
+        gain1.gain.setValueAtTime(0.3, now);
+        gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+        osc1.start(now);
+        osc1.stop(now + 0.1);
+
+        // Second beep: 1000Hz
+        const osc2 = audioContext.createOscillator();
+        const gain2 = audioContext.createGain();
+        osc2.connect(gain2);
+        gain2.connect(audioContext.destination);
+        osc2.frequency.value = 1000;
+        osc2.type = 'sine';
+        gain2.gain.setValueAtTime(0.3, now + 0.15);
+        gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+        osc2.start(now + 0.15);
+        osc2.stop(now + 0.25);
+      } catch (e) {
+        console.log('Could not play success sound:', e);
+      }
+    },
+
+    formatPaymentTime(date) {
+      if (!date) return '';
+      return date.toLocaleTimeString('vi-VN', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+    },
     showComingSoon() {
       this.showToastMessage('Tính năng này sẽ ra mắt sớm', 'info', 'fas fa-clock');
     },
@@ -538,7 +609,7 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
                   background: linear-gradient(135deg, $primary, $primary-dark);
                   color: white;
                   border-radius: 6px;
-                  
+
                   font-size: 13px;
                   font-weight: 700;
                   word-break: break-all;
@@ -800,6 +871,7 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

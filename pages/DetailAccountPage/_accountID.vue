@@ -71,7 +71,8 @@
                 <span class="font-normal !text-gray-400 !text-sm !line-through price-value">{{
                   formatPrice(account.price) }}</span>
                 <span class="price-value discount">{{ formatPrice(account.priceSale) }}</span>
-                <span class="!text-red-400 badge-discount">-{{ (((account.price - account.priceSale) / account.price) * 100).toFixed(0) }}%</span>
+                <span class="!text-red-400 badge-discount">-{{ (((account.price - account.priceSale) / account.price) *
+                  100).toFixed(0) }}%</span>
               </div>
             </div>
           </div>
@@ -111,7 +112,8 @@
               <span v-if="!loadingBuy">{{ account.status === 0 ? 'Mua Ngay' : 'Đã Bán' }}</span>
               <span v-else>Đang xử lý...</span>
             </button>
-            <button class="btn-secondary" :class="{ 'is-favorite': isFavorite }" :disabled="loadingFavorite" @click="toggleFavorite">
+            <button class="btn-secondary" :class="{ 'is-favorite': isFavorite }" :disabled="loadingFavorite"
+              @click="toggleFavorite">
               <i class="fas fa-heart" :class="{ 'fa-solid': isFavorite, 'fa-regular': !isFavorite }"></i>
             </button>
           </div>
@@ -136,46 +138,7 @@
 
       <!-- BOTTOM SECTIONS -->
       <div class="bottom-sections">
-        <!-- POLICIES -->
-        <div class="section-card">
-          <h2 class="section-title">
-            <i class="fas fa-file-contract"></i>
-            Chính Sách
-          </h2>
-          <div class="policies-grid">
-            <div class="policy-item">
-              <div class="policy-icon">
-                <i class="fas fa-redo"></i>
-              </div>
-              <h4>Chính sách đổi trả</h4>
-              <p>Đổi tài khoản trong 24h nếu có vấn đề</p>
-            </div>
 
-            <div class="policy-item">
-              <div class="policy-icon">
-                <i class="fas fa-shield-alt"></i>
-              </div>
-              <h4>Bảo mật 100%</h4>
-              <p>Tài khoản được bảo vệ an toàn tuyệt đối</p>
-            </div>
-
-            <div class="policy-item">
-              <div class="policy-icon">
-                <i class="fas fa-lock-open"></i>
-              </div>
-              <h4>Đổi mật khẩu free</h4>
-              <p>Hỗ trợ đổi MK miễn phí trọn đời</p>
-            </div>
-
-            <div class="policy-item">
-              <div class="policy-icon">
-                <i class="fas fa-headset"></i>
-              </div>
-              <h4>Hỗ trợ 24/7</h4>
-              <p>Liên hệ hỗ trợ bất cứ lúc nào</p>
-            </div>
-          </div>
-        </div>
 
         <!-- DETAILED INFO -->
         <div class="section-card">
@@ -232,6 +195,46 @@
                 <li>✓ Hỗ trợ đăng nhập lại sau khi mua</li>
                 <li>✓ Cam kết 100% tiền hoàn nếu sai thông tin</li>
               </ul>
+            </div>
+          </div>
+        </div>
+        <!-- POLICIES -->
+        <div class="section-card">
+          <h2 class="section-title">
+            <i class="fas fa-file-contract"></i>
+            Chính Sách
+          </h2>
+          <div class="policies-grid">
+            <div class="policy-item">
+              <div class="policy-icon">
+                <i class="fas fa-redo"></i>
+              </div>
+              <h4>Chính sách đổi trả</h4>
+              <p>Đổi tài khoản trong 24h nếu có vấn đề</p>
+            </div>
+
+            <div class="policy-item">
+              <div class="policy-icon">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+              <h4>Bảo mật 100%</h4>
+              <p>Tài khoản được bảo vệ an toàn tuyệt đối</p>
+            </div>
+
+            <div class="policy-item">
+              <div class="policy-icon">
+                <i class="fas fa-lock-open"></i>
+              </div>
+              <h4>Đổi mật khẩu free</h4>
+              <p>Hỗ trợ đổi MK miễn phí trọn đời</p>
+            </div>
+
+            <div class="policy-item">
+              <div class="policy-icon">
+                <i class="fas fa-headset"></i>
+              </div>
+              <h4>Hỗ trợ 24/7</h4>
+              <p>Liên hệ hỗ trợ bất cứ lúc nào</p>
             </div>
           </div>
         </div>
@@ -365,9 +368,9 @@ export default {
     },
 
     async checkFavoriteStatus() {
-      
+
       if (!this.accountID || !this.isAuthenticated) return;
-      
+
       try {
         const res = await favoriteApi.checkIsFavorite({
           accountId: this.accountID,
@@ -991,7 +994,7 @@ $danger: #ff4655;
         background: $primary;
         border-color: $primary;
         color: $text-white;
-        
+
         &:hover:not(:disabled) {
           background: $primary-dark;
         }
@@ -1093,7 +1096,7 @@ $danger: #ff4655;
     // POLICIES
     .policies-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 4fr));
       gap: 16px;
 
       .policy-item {
@@ -1457,7 +1460,7 @@ $danger: #ff4655;
       padding: 16px;
 
       .policies-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 4fr;
       }
     }
   }
@@ -1488,7 +1491,7 @@ $danger: #ff4655;
 
   .gallery-section .main-image-container {
     .thumbnail-container {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(5, 1fr);
     }
   }
 

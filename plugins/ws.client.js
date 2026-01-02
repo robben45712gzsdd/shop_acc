@@ -1,9 +1,14 @@
 // plugins/ws.client.js
+import Cookies from 'js-cookie';
+
 export default ({ store }, inject) => {
   let ws = null;
 
-  const getToken = () =>
-    store.state.token || store.state.user_data?.token || null;
+  const getToken = () => {
+    // Ưu tiên lấy từ Cookie, sau đó mới từ store
+    const cookieToken = Cookies.get('token');
+    return cookieToken || store.state.token || store.state.user_data?.token || null;
+  };
 
   const connect = () => {
     const rawToken = getToken();
@@ -21,6 +26,7 @@ export default ({ store }, inject) => {
     ws = new WebSocket(url);
 
     ws.onopen = () => {
+      console.log("WebSocket đã kết nối");
       // Gửi token lại 1 lần nữa khi socket mở — đảm bảo server nhận token
       const freshToken = getToken();
       if (freshToken) {

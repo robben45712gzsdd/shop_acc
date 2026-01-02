@@ -20,6 +20,14 @@ export const mutations = {
   setIsDarkMode(state, value) {
     state.darkMode = value
   },
+  updateBalance(state, amount) {
+    if (state.user_data) {
+      state.user_data = {
+        ...state.user_data,
+        balance: (state.user_data.balance || 0) + amount
+      }
+    }
+  },
   resetAuth(state) {
     state.user_data = {}
     state.token = null

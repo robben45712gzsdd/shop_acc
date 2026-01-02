@@ -9,7 +9,7 @@
         <div class="promo-content">
           <div class="promo-header">
             <h2>🎉 KHUYẾN MÃI ĐẶC BIỆT!</h2>
-            <p class="promo-subtitle">Chào mừng bạn đến với ShopAccGame24h</p>
+            <p class="promo-subtitle">Chào mừng bạn đến với ACCGAME247</p>
           </div>
           
           <div class="promo-body">

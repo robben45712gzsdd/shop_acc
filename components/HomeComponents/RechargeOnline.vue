@@ -61,15 +61,8 @@
             >
               <!-- Discount Badge -->
               <div class="discount-badge">
-                <div class="discount-icon">
-                  <i class="fas fa-fire"></i>
-                </div>
-                <div class="discount-text">
-                  <span class="percent">{{ deal.discount }}%</span>
-                  <span class="label">GIẢM</span>
-                </div>
-                <div class="badge-shine"></div>
-                <div class="badge-glow"></div>
+                <i class="fas fa-tag"></i>
+                <span class="discount-value">-{{ deal.discount?.toFixed(0) }}%</span>
               </div>
 
               <!-- Card Content -->
@@ -548,97 +541,31 @@ export default {
 
         .discount-badge {
           position: absolute;
-          top: 10px;
+          top: 12px;
           right: 12px;
           z-index: 10;
           display: flex;
           align-items: center;
-          gap: 8px;
-          background: linear-gradient(135deg, #ff3b3b, #ff6b00);
-          padding: 5px 10px;
-          border-radius: 12px;
-          box-shadow: 0 4px 12px rgba(255, 59, 59, 0.5), 0 0 30px rgba(255, 59, 59, 0.3);
+          gap: 6px;
+          background: linear-gradient(135deg, #ef4444, #dc2626);
+          padding: 6px 12px;
+          border-radius: 20px;
+          box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
           transition: all 0.3s ease;
-          animation: badgePulse 2s ease-in-out infinite;
-          overflow: hidden;
-          font-size: 16px;
+          border: 1.5px solid rgba(255, 255, 255, 0.2);
 
-          &::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
-            animation: badgeRotate 3s linear infinite;
+          i {
+            color: #fff;
+            font-size: 12px;
+            animation: subtleFloat 2s ease-in-out infinite;
           }
 
-          .badge-shine {
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
-            animation: badgeShine 3s ease-in-out infinite;
-            transform: skewX(-20deg);
-          }
-
-          .badge-glow {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 120%;
-            height: 120%;
-            background: radial-gradient(circle, rgba(255, 107, 0, 0.4) 0%, transparent 70%);
-            transform: translate(-50%, -50%);
-            animation: badgeGlow 2s ease-in-out infinite alternate;
-            pointer-events: none;
-          }
-
-          .discount-icon {
-            width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 255, 255, 0.25);
-            border-radius: 50%;
-            position: relative;
-            z-index: 2;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-            
-            i {
-              color: #fff;
-              font-size: 14px;
-              animation: fireFlicker 1.5s infinite, fireBounce 0.8s ease-in-out infinite;
-              filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.8));
-            }
-          }
-
-          .discount-text {
-            display: flex;
-            flex-direction: column;
-            line-height: 1.1;
-            position: relative;
-            z-index: 2;
-
-            .percent {
-              color: #fff;
-              font-size: 18px;
-              font-weight: 800;
-              text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 10px rgba(255, 255, 255, 0.5);
-              animation: percentZoom 1.5s ease-in-out infinite;
-            }
-
-            .label {
-              color: rgba(255, 255, 255, 0.95);
-              font-size: 9px;
-              font-weight: 600;
-              letter-spacing: 1px;
-              text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-            }
+          .discount-value {
+            color: #fff;
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 0.3px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
           }
         }
 
@@ -873,52 +800,12 @@ export default {
   }
 }
 
-@keyframes badgePulse {
+@keyframes subtleFloat {
   0%, 100% {
-    transform: scale(1);
-    box-shadow: 0 4px 12px rgba(255, 59, 59, 0.5), 0 0 30px rgba(255, 59, 59, 0.3);
+    transform: translateY(0);
   }
   50% {
-    transform: scale(1.05);
-    box-shadow: 0 6px 20px rgba(255, 59, 59, 0.7), 0 0 40px rgba(255, 59, 59, 0.5);
-  }
-}
-
-@keyframes badgeRotate {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes badgeShine {
-  0% {
-    left: -100%;
-  }
-  50%, 100% {
-    left: 200%;
-  }
-}
-
-@keyframes badgeGlow {
-  0% {
-    opacity: 0.3;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  100% {
-    opacity: 0.6;
-    transform: translate(-50%, -50%) scale(1.2);
-  }
-}
-
-@keyframes percentZoom {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.08);
+    transform: translateY(-2px);
   }
 }
 

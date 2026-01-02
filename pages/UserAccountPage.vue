@@ -1,6 +1,14 @@
 <template>
   <div class="user-account-page">
-    <div class="page-container">
+    <div class="!py-10 page-container">
+      <!-- Mobile Menu Button -->
+      <button class="mobile-menu-btn" @click="toggleMobileMenu" v-if="isMobileView">
+        <i class="fas fa-bars"></i>
+      </button>
+
+      <!-- Mobile Overlay -->
+      <div class="mobile-overlay" v-if="isMobileMenuOpen" @click="toggleMobileMenu"></div>
+
       <!-- HEADER PROFILE -->
       <div class="profile-header">
         <div class="profile-bg"></div>
@@ -20,7 +28,7 @@
       <!-- MAIN CONTENT -->
       <div class="content-wrapper">
         <!-- SIDEBAR NAVIGATION -->
-        <aside class="sidebar">
+        <aside class="sidebar" :class="{ 'mobile-open': isMobileMenuOpen }">
           <div class="nav-group">
             <div class="nav-group-title">
               <i class="fas fa-user"></i>
@@ -100,6 +108,8 @@ export default {
 
   data() {
     return {
+      isMobileMenuOpen: false,
+      isMobileView: false,
       nav: {
         accountInfor: true,
         changePassword: false,
@@ -137,6 +147,22 @@ export default {
   },
 
   methods: {
+    toggleMobileMenu() {
+      this.isMobileMenuOpen = !this.isMobileMenuOpen;
+      // Prevent body scroll when menu is open
+      if (this.isMobileMenuOpen) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    },
+    checkMobileView() {
+      this.isMobileView = window.innerWidth <= 768;
+      if (!this.isMobileView) {
+        this.isMobileMenuOpen = false;
+        document.body.style.overflow = '';
+      }
+    },
     navigateTo(target) {
 
       // update nav state
@@ -148,6 +174,11 @@ export default {
       this.$router.push({
         query: { tab: target }
       });
+
+      // Close mobile menu after navigation
+      if (this.isMobileView) {
+        this.toggleMobileMenu();
+      }
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
     },
@@ -169,6 +200,14 @@ export default {
     if (tab && this.nav[tab] !== undefined) {
       this.navigateTo(tab);
     }
+
+    // Check mobile view on mount and window resize
+    this.checkMobileView();
+    window.addEventListener('resize', this.checkMobileView);
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.checkMobileView);
+    document.body.style.overflow = '';
   },
   watch: {
     '$route.query.tab'(newTab) {
@@ -197,6 +236,62 @@ $bg-darker: #f3f4f6;
 $shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
 $shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
 $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+
+// Mobile Menu Button
+.mobile-menu-btn {
+  position: fixed;
+  top: 10px;
+  left: 20px;
+  z-index: 1001;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: $primary;
+  color: white;
+  border: none;
+  box-shadow: $shadow-md;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+
+  i {
+    font-size: 20px;
+  }
+
+  &:hover {
+    background: $primary-dark;
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+// Mobile Overlay
+.mobile-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  animation: fadeIn 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .mobile-menu-btn {
+    display: flex;
+  }
+
+  .mobile-overlay {
+    display: block;
+  }
+}
 
 .user-account-page {
   min-height: 100vh;
@@ -333,80 +428,113 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
 // SIDEBAR
 .sidebar {
   position: sticky;
-  top: 100px;
-  height: fit-content;
+  top: 20px;
+  height: calc(100vh - 40px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  padding-right: 4px;
 
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba($primary, 0.3);
+    border-radius: 3px;
+
+    &:hover {
+      background: rgba($primary, 0.5);
+    }
+  }
 
   .nav-group {
     background: $bg;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: $shadow-md;
-    margin-bottom: 20px;
-    border: 1px solid $border;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba($border, 0.8);
+    transition: all 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transform: translateY(-1px);
+    }
 
     .nav-group-title {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 16px 20px;
-      background: linear-gradient(135deg, rgba($primary, 0.08), rgba($primary, 0.03));
-      border-bottom: 2px solid $border;
-      font-size: 13px;
+      gap: 8px;
+      padding: 12px 16px;
+      background: $bg-darker;
+      border-bottom: 1px solid $border;
+      font-size: 11px;
       font-weight: 700;
-      color: $text-main;
+      color: $text-sub;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
 
       i {
-        font-size: 16px;
+        font-size: 13px;
         color: $primary;
       }
     }
 
     .nav-link {
-      border: 1px solid $border;
-
       display: flex;
       align-items: center;
       gap: 12px;
       width: 100%;
-      padding: 14px 20px;
+      padding: 12px 16px;
       background: transparent;
       border: none;
-      border-left: 3px solid transparent;
+      border-left: 2px solid transparent;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 13.5px;
       color: $text-sub;
       transition: all 0.2s ease;
       text-align: left;
+      position: relative;
 
       i {
         font-size: 16px;
         width: 20px;
         flex-shrink: 0;
-        color: inherit;
+        color: $text-light;
+        transition: all 0.2s ease;
+        text-align: center;
       }
 
       span:first-of-type {
         flex: 1;
         font-weight: 500;
+        line-height: 1.4;
       }
 
       .badge {
-        display: inline-block;
-        padding: 2px 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 22px;
+        height: 22px;
+        padding: 0 8px;
         background: $primary;
         color: white;
-        border-radius: 12px;
+        border-radius: 11px;
         font-size: 11px;
         font-weight: 600;
         margin-left: auto;
       }
 
       &:hover {
-        background: $border-light;
-        color: $primary;
+        background: rgba($primary, 0.05);
+        color: $text-main;
 
         i {
           color: $primary;
@@ -414,12 +542,16 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
       }
 
       &.active {
-        background: rgba($primary, 0.1);
+        background: rgba($primary, 0.08);
         color: $primary;
         border-left-color: $primary;
-        font-weight: 600;
 
         i {
+          color: $primary;
+        }
+
+        span:first-of-type {
+          font-weight: 600;
           color: $primary;
         }
       }
@@ -581,25 +713,53 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
   .sidebar {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    position: static;
-    top: auto;
+    gap: 10px;
+    position: fixed;
+    top: 0;
+    left: -100%;
+    height: 100vh;
+    width: 280px;
+    background: $bg;
+    z-index: 1000;
+    overflow-y: auto;
+    padding: 80px 12px 20px;
+    box-shadow: 4px 0 16px rgba(0, 0, 0, 0.12);
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &.mobile-open {
+      left: 0;
+    }
+
+    // Close button in mobile sidebar
+    &::before {
+      content: '';
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 50%;
+      display: none;
+    }
 
     .nav-group {
       margin-bottom: 0;
+      border-radius: 10px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
       .nav-group-title {
-        padding: 8px 12px;
-        font-size: 11px;
+        padding: 10px 14px;
+        font-size: 10px;
         gap: 6px;
 
         i {
-          font-size: 13px;
+          font-size: 12px;
         }
       }
 
       .nav-link {
-        padding: 10px 12px;
+        padding: 11px 14px;
         font-size: 13px;
         gap: 10px;
 
@@ -608,15 +768,10 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
           width: 18px;
         }
 
-        span:first-of-type {
-          flex: 1;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-
         .badge {
-          padding: 2px 6px;
+          min-width: 20px;
+          height: 20px;
+          padding: 0 6px;
           font-size: 10px;
         }
       }
