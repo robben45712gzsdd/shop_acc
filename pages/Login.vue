@@ -51,6 +51,7 @@
             <input type="checkbox" v-model="rememberMe" />
             <span>Ghi nhớ đăng nhập</span>
           </label>
+          <a href="#" @click.prevent="handleForgotPassword" class="forgot-link">Quên mật khẩu?</a>
         </div>
 
         <!-- Error Message -->
@@ -210,6 +211,10 @@ export default {
       } finally {
         this.loading = false;
       }
+    },
+
+    handleForgotPassword() {
+      this.$toast.info('Vui lòng liên hệ hotline 0336.856.626 để được hỗ trợ khôi phục mật khẩu');
     }
   }
 };
@@ -217,7 +222,7 @@ export default {
 
 <style lang="scss" scoped>
 .login-page {
-  min-height: calc(100vh - 70px);
+  min-height: calc(100vh - 90px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -370,6 +375,19 @@ export default {
 
   &:hover {
     color: #1a1a1a;
+  }
+}
+
+.forgot-link {
+  font-size: 14px;
+  color: #c17635;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s;
+
+  &:hover {
+    text-decoration: underline;
+    color: #a05a1f;
   }
 }
 

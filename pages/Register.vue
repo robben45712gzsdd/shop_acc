@@ -118,13 +118,24 @@
           <span>Vui lòng nhập đúng số điện thoại để khôi phục mật khẩu khi cần thiết</span>
         </div>
 
+        <!-- Policy Acceptance -->
+        <div class="policy-acceptance">
+          <label class="checkbox-label">
+            <input type="checkbox" v-model="acceptedPolicy" />
+            <span>
+              Tôi đã đọc và đồng ý với 
+              <a href="#" @click.prevent="showPolicyModal = true" class="policy-link">Điều khoản & Chính sách</a>
+            </span>
+          </label>
+        </div>
+
         <!-- General Error -->
         <div v-if="generalError" class="alert-error">
           {{ generalError }}
         </div>
 
         <!-- Submit Button -->
-        <button type="submit" class="btn-submit" :disabled="!isValid || loading">
+        <button type="submit" class="btn-submit" :disabled="!isValid || !acceptedPolicy || loading">
           <span v-if="!loading">Đăng Ký</span>
           <span v-else><i class="fas fa-spinner fa-spin"></i> Đang xử lý...</span>
         </button>
@@ -136,6 +147,9 @@
         </div>
       </form>
     </div>
+
+    <!-- Policy Modal -->
+    <PolicyModal :show="showPolicyModal" @close="showPolicyModal = false" />
   </div>
 </template>
 
@@ -144,6 +158,10 @@
 import auth from "~/api/auth";
 
 export default {
+  components: {
+    PolicyModal: () => import('@/components/Modals/PolicyModal'),
+  },
+
   data() {
     return {
       userName: '',
@@ -155,6 +173,8 @@ export default {
       showPassword: false,
       showConfirmPassword: false,
       loading: false,
+      acceptedPolicy: false,
+      showPolicyModal: false,
       generalError: '',
       errors: {
         userName: '',
@@ -390,7 +410,7 @@ export default {
 
 <style lang="scss" scoped>
 .register-page {
-  min-height: calc(100vh - 70px);
+  min-height: calc(100vh - 90px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -539,6 +559,83 @@ export default {
     font-size: 14px;
     margin-top: 1px;
     flex-shrink: 0;
+  }
+}
+.policy-acceptance {
+  padding: 14px;
+  background: #f9fafb;
+  border: 1.5px solid #d1d5db;
+  border-radius: 8px;
+
+  .checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    cursor: pointer;
+    gap: 10px;
+
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      cursor: pointer;
+      flex-shrink: 0;
+      accent-color: #c17635;
+    }
+
+    span {
+      flex: 1;
+      font-size: 13px;
+      color: #374151;
+      line-height: 1.5;
+    }
+
+    .policy-link {
+      color: #c17635;
+      text-decoration: none;
+      font-weight: 600;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+.policy-acceptance {
+  padding: 14px;
+  background: #f9fafb;
+  border: 1.5px solid #d1d5db;
+  border-radius: 8px;
+
+  .checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    cursor: pointer;
+    gap: 10px;
+
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    span {
+      flex: 1;
+      font-size: 13px;
+      color: #374151;
+      line-height: 1.5;
+    }
+
+    .policy-link {
+      color: #c17635;
+      text-decoration: none;
+      font-weight: 600;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 }
 

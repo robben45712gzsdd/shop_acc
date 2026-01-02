@@ -283,7 +283,7 @@ $danger: #ff4655;
 // ============================================
 .account-categories {
   width: 100%;
-  min-height: calc(100vh - 70px);
+  min-height: calc(100vh - 90px);
   background: $dark;
   padding: 0 0 60px;
 }

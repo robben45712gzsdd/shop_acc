@@ -1,20 +1,13 @@
 <template>
   <div id="app" @click="handleOutsideClick">
-    <!-- Policy Modal -->
-    <PolicyModal />
-
     <!-- Cookie Consent -->
     <CookieConsent />
 
-    <!-- Promo Modal -->
-    <PromoModal />
-
     <div id="nav" :class="{ 'dark-mode': darkMode, 'light-mode': !darkMode }">
+      <!-- Marquee Banner -->
+      <MarqueeBanner />
+
       <div class="flex w-full wrap-nav">
-        <!-- MOBILE MENU ICON -->
-        <div class="flex-1 mobile-menu-bar" @click.stop="toggleMenuMobile">
-          <i class="fa fa-bars"></i>
-        </div>
         <!-- LEFT / MENU -->
         <div class="nav-left flex-1" @click.stop>
           <div class="logo">
@@ -45,24 +38,32 @@
         <div class="nav-right !flex flex-1 justify-end items-center">
 
           <!-- Nếu chưa login -->
-          <nuxt-link v-if="!is_login" :to="{ name: 'Login' }">
-            <div class="btn-account">
-              <strong>ĐĂNG NHẬP</strong>
-            </div>
-          </nuxt-link>
+          <div v-if="!is_login" class="auth-group">
+            <nuxt-link :to="{ name: 'Login' }" class="auth-link">
+              <i class="fas fa-user"></i>
+              Đăng nhập
+            </nuxt-link>
+            <nuxt-link :to="{ name: 'Register' }" class="auth-link register">
+              <i class="fas fa-user-plus"></i>
+              Đăng ký
+            </nuxt-link>
+          </div>
 
           <!-- Nếu đã login -->
-          <nuxt-link v-if="is_login" to="/UserAccountPage">
-            <div class="flex !flex-col !items-center !px-2 !py-0 font-normal btn-account">
-              <span class="!text-[12px]">TÀI KHOẢN</span>
-              <span class="!text-[12px]">Ví: {{ user.balance?.toLocaleString() || 0 }} VNĐ</span>
-            </div>
-          </nuxt-link>
-
-          <!-- Signup / Logout -->
-          <nuxt-link v-if="!is_login" :to="{ name: 'Register' }">
-            <div class="btn-logout"><strong>ĐĂNG KÝ</strong></div>
-          </nuxt-link>
+          <div v-if="is_login" class="user-section">
+            <nuxt-link to="/UserAccountPage" class="user-info">
+              <div class="balance-box">
+                <i class="fas fa-coins"></i>
+                <span class="balance-amount">{{ user.balance?.toLocaleString() || 0 }}</span>
+              </div>
+              <div class="user-avatar">
+                <i class="fas fa-user-circle"></i>
+              </div>
+            </nuxt-link>
+            <button @click="handleLogout" class="logout-btn" title="Đăng xuất">
+              <i class="fas fa-power-off"></i>
+            </button>
+          </div>
 
 
         </div>
@@ -70,7 +71,7 @@
       </div>
     </div>
 
-    <div class="!mt-[70px] min-h-[calc(100vh-70px)]" :class="{ 'dark-mode': darkMode, 'pb-mobile': is_login }"
+    <div class="!mt-[90px] min-h-[calc(100vh-90px)]" :class="{ 'dark-mode': darkMode, 'pb-mobile': is_login }"
       id="main">
       <Nuxt />
     </div>
@@ -263,11 +264,11 @@
                   <!-- SUBMIT -->
                   <button @click="handleRecharge" :disabled="isLoadingCheckPayment"
                     class="flex justify-center items-center btn-submit">
-                    <div v-if="!isLoadingCheckPayment">
+                    <div v-if="!isLoadingCheckPayment" class="flex justify-center items-center gap-2">
                       <p class="!my-0 uppercase !leading-none">Xác nhận, tôi đã thanh toán</p>
                       <i class="fa-arrow-right fas"></i>
                     </div>
-                    <div v-else>
+                    <div v-else class="flex justify-center items-center gap-2">
                       <i class="fas fa-hourglass-half"></i>
                       Đang kiểm tra...
                     </div>
@@ -333,9 +334,9 @@ import payment from '~/api/payment';
 
 export default {
   components: {
-    PolicyModal: () => import('@/components/Modals/PolicyModal'),
     CookieConsent: () => import('@/components/Modals/CookieConsent'),
     PromoModal: () => import('@/components/Modals/PromoModal'),
+    MarqueeBanner: () => import('@/components/MarqueeBanner'),
   },
 
   data() {
@@ -375,6 +376,15 @@ export default {
   mounted() {
     // Listen for WebSocket messages
     window.addEventListener('ws-message', this.handleWsMessage);
+    
+    // Check cookie consent
+    const cookieConsent = localStorage.getItem('cookieConsent');
+    if (!cookieConsent) {
+      // Show cookie consent if not accepted yet
+      setTimeout(() => {
+        this.$store.commit('modals/SHOW_COOKIE_CONSENT');
+      }, 1000);
+    }
   },
 
   beforeDestroy() {
@@ -561,6 +571,12 @@ export default {
       }
     },
 
+    handleLogout() {
+      this.$store.dispatch('logout');
+      this.$router.push('/');
+      this.$toast.success('Đăng xuất thành công');
+    },
+
 
   },
 };
@@ -577,15 +593,15 @@ export default {
   left: 0;
   right: 0;
   height: 70px;
-  background: black;
-  border-bottom: 1px solid #e0e0e0;
   z-index: 1000;
 
   &.dark-mode {
-    background: #1a1a1a;
-    border-bottom-color: #333;
+    height: auto;
 
     .wrap-nav {
+      padding: 10px 20px;
+      background: #1a1a1a;
+      border-bottom-color: #333;
 
       .nav-left .menu li a,
       .nav-left .menu li nuxt-link {
@@ -611,6 +627,7 @@ export default {
     padding: 0 20px;
     height: 100%;
     display: flex;
+    background-color: white;
     align-items: center;
     justify-content: space-between;
   }
@@ -652,7 +669,7 @@ export default {
         flex-direction: column;
         gap: 0;
         background: white;
-        border-bottom: 1px solid #e0e0e0;
+        // border-bottom: 1px solid #e0e0e0;
         max-height: 0;
         overflow: hidden;
         transition: max-height 0.3s ease;
@@ -671,53 +688,183 @@ export default {
 
   .mobile-menu-bar {
     display: none;
-    cursor: pointer;
-    font-size: 24px;
-    color: #bdbdbd;
-
-    @media (max-width: 768px) {
-      display: block;
-    }
   }
 
   .nav-right {
     display: flex;
-    gap: 12px;
-    align-items: stretch;
+    gap: 10px;
+    align-items: center;
 
-    .btn-account,
-    .btn-logout {
-      padding: 8px 16px;
-      border-radius: 6px;
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 600;
-      transition: all 0.3s;
-      cursor: pointer;
-      border: none;
-      background: none;
-    }
-
-    .btn-account {
-      color: #333;
-      border: 2px solid #ff6b35;
-
-      &:hover {
-        background: #ff6b35;
-        color: white;
-      }
-    }
-
-    .btn-logout {
-      background: linear-gradient(135deg, #ff6b35, #ff8c5a);
-      color: white;
+    // Auth group (Login + Register)
+    .auth-group {
       display: flex;
+      gap: 8px;
       align-items: center;
 
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+      .auth-link {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+
+        i {
+          font-size: 14px;
+        }
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.15);
+          border-color: rgba(255, 255, 255, 0.3);
+          transform: translateY(-1px);
+        }
+
+        &.register {
+          background: linear-gradient(135deg, #ff6b35 0%, #ff8c5a 100%);
+          border: none;
+          color: #fff;
+
+          &:hover {
+            background: linear-gradient(135deg, #ff8c5a 0%, #ffa575 100%);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+          }
+        }
+
+        @media (max-width: 768px) {
+          padding: 8px 12px;
+          font-size: 12px;
+
+          span {
+            display: none;
+          }
+
+          i {
+            margin: 0;
+          }
+        }
       }
+    }
+
+    // User section (when logged in)
+    .user-section {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+
+        .balance-box {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 8px 12px;
+          background: linear-gradient(135deg, #ff6b35 0%, #ff8c5a 100%);
+          border-radius: 6px;
+          color: #fff;
+          font-weight: 700;
+          font-size: 14px;
+          transition: all 0.3s ease;
+
+          i {
+            font-size: 16px;
+            animation: coinSpin 3s linear infinite;
+          }
+
+          .balance-amount {
+            white-space: nowrap;
+          }
+
+          @media (max-width: 768px) {
+            padding: 8px 10px;
+            font-size: 13px;
+          }
+        }
+
+        .user-avatar {
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.1);
+          border: 2px solid #ff6b35;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #ff6b35;
+          transition: all 0.3s ease;
+
+          i {
+            font-size: 20px;
+          }
+
+          @media (max-width: 768px) {
+            display: none;
+          }
+        }
+
+        &:hover {
+          .balance-box {
+            background: linear-gradient(135deg, #ff8c5a 0%, #ffa575 100%);
+            box-shadow: 0 4px 14px rgba(255, 107, 53, 0.5);
+            transform: translateY(-2px);
+          }
+
+          .user-avatar {
+            background: #ff6b35;
+            color: #fff;
+            transform: rotate(10deg) scale(1.1);
+          }
+        }
+      }
+
+      .logout-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(239, 68, 68, 0.1);
+        border: 2px solid #ef4444;
+        color: #ef4444;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+
+        i {
+          font-size: 14px;
+        }
+
+        &:hover {
+          background: #ef4444;
+          color: #fff;
+          transform: rotate(90deg);
+          box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+        }
+
+        &:active {
+          transform: rotate(90deg) scale(0.95);
+        }
+
+        @media (max-width: 768px) {
+          display: none;
+        }
+      }
+    }
+
+    @keyframes coinSpin {
+      0% { transform: rotateY(0deg); }
+      50% { transform: rotateY(180deg); }
+      100% { transform: rotateY(360deg); }
     }
   }
 }
@@ -972,11 +1119,12 @@ export default {
       height: 45px;
       font-size: 20px;
     }
-    &.isLogined{
+
+    &.isLogined {
       bottom: 80px;
     }
   }
-  
+
 }
 
 // ============================================
@@ -1517,17 +1665,17 @@ export default {
   right: 0;
   height: 70px;
   background: white;
-  border-bottom: 1px solid #e0e0e0;
+  
   z-index: 1000;
-
+  
   &.dark-mode {
     background: #1a1a1a;
-    border-bottom-color: #333;
-
-
+    
+    
   }
-
+  
   .wrap-nav {
+    border-bottom:  1px solid #333;
     max-width: 1400px;
     margin: 0 auto;
     padding: 0 16px;
@@ -1644,7 +1792,7 @@ export default {
       overflow: hidden;
 
       max-height: 0;
-      border-bottom: 1px solid transparent;
+      // border-bottom: 1px solid transparent;
       transition: max-height 0.35s ease, border-color 0.3s ease;
 
       &.active {

@@ -396,8 +396,8 @@ $info: #c17635;
     max-width: 500px;
 
     .empty-icon {
-      width: 100px;
-      height: 100px;
+      width: 90px;
+      height: 90px;
       margin: 0 auto 24px;
       background: $bg-light;
       border-radius: 50%;

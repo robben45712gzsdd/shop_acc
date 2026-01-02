@@ -1,11 +1,6 @@
 <template>
   <div class="user-account-page">
     <div class="!py-10 page-container">
-      <!-- Mobile Menu Button -->
-      <button class="mobile-menu-btn" @click="toggleMobileMenu" v-if="isMobileView">
-        <i class="fas fa-bars"></i>
-      </button>
-
       <!-- Mobile Overlay -->
       <div class="mobile-overlay" v-if="isMobileMenuOpen" @click="toggleMobileMenu"></div>
 
@@ -13,6 +8,11 @@
       <div class="profile-header">
         <div class="profile-bg"></div>
         <div class="profile-card">
+          <!-- Mobile Menu Button -->
+          <button class="mobile-menu-btn" @click="toggleMobileMenu" v-if="isMobileView">
+            <i class="fas fa-bars"></i>
+          </button>
+
           <div class="avatar-wrapper">
             <img src="@/assets/images/avatar-user.jpg" :alt="user.name" class="avatar" />
             <div class="status-badge"></div>
@@ -22,6 +22,10 @@
             <p class="profile-id">ID: {{ user.userId }}</p>
             <p class="profile-email">{{ user.email }}</p>
           </div>
+          <button @click="user_logout" class="logout-button">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Đăng xuất</span>
+          </button>
         </div>
       </div>
 
@@ -29,6 +33,22 @@
       <div class="content-wrapper">
         <!-- SIDEBAR NAVIGATION -->
         <aside class="sidebar" :class="{ 'mobile-open': isMobileMenuOpen }">
+          <!-- User Info Section -->
+          <div class="sidebar-user-info">
+            <div class="sidebar-avatar">
+              <img src="@/assets/images/avatar-user.jpg" :alt="user.name" />
+              <div class="online-status"></div>
+            </div>
+            <div class="sidebar-user-details">
+              <h3 class="sidebar-username">{{ user.name }}</h3>
+              <p class="sidebar-user-id">ID: {{ user.userId }}</p>
+              <div class="sidebar-balance">
+                <i class="fas fa-wallet"></i>
+                <span>{{ user.balance?.toLocaleString() || 0 }}đ</span>
+              </div>
+            </div>
+          </div>
+
           <div class="nav-group">
             <div class="nav-group-title">
               <i class="fas fa-user"></i>
@@ -239,25 +259,22 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
 
 // Mobile Menu Button
 .mobile-menu-btn {
-  position: fixed;
-  top: 10px;
-  left: 20px;
-  z-index: 1001;
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
   background: $primary;
   color: white;
   border: none;
   box-shadow: $shadow-md;
   cursor: pointer;
-  display: none;
-  align-items: center;
-  justify-content: center;
   transition: all 0.3s ease;
+  flex-shrink: 0;
 
   i {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   &:hover {
@@ -267,6 +284,10 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
 
   &:active {
     transform: scale(0.95);
+  }
+
+  @media (max-width: 768px) {
+    display: flex;
   }
 }
 
@@ -279,7 +300,7 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 999;
+  z-index: 1000;
   animation: fadeIn 0.3s ease;
 }
 
@@ -355,12 +376,17 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
     position: relative;
     background: $bg;
     border-radius: 12px;
-    padding: 10px 0;
+    padding: 10px;
     display: flex;
     align-items: center;
-    gap: 24px;
+    gap: 16px;
     border-bottom: 1px solid $border;
     z-index: 2;
+
+    @media (max-width: 768px) {
+      gap: 12px;
+      padding: 12px;
+    }
 
     .avatar-wrapper {
       position: relative;
@@ -415,6 +441,49 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
         margin: 0;
       }
     }
+
+    .logout-button {
+      padding: 12px 24px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+
+      i {
+        font-size: 16px;
+      }
+
+      &:hover {
+        background: linear-gradient(135deg, #dc2626, #b91c1c);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+
+      @media (max-width: 768px) {
+        padding: 10px 16px;
+        font-size: 14px;
+
+        span {
+          display: none;
+        }
+
+        i {
+          margin: 0;
+        }
+      }
+    }
   }
 }
 
@@ -451,6 +520,85 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
 
     &:hover {
       background: rgba($primary, 0.5);
+    }
+  }
+
+  // User Info Section
+  .sidebar-user-info {
+    background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 4px 12px rgba($primary, 0.25);
+    margin-bottom: 4px;
+
+    .sidebar-avatar {
+      position: relative;
+      flex-shrink: 0;
+
+      img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        object-fit: cover;
+      }
+
+      .online-status {
+        position: absolute;
+        bottom: 2px;
+        right: 2px;
+        width: 14px;
+        height: 14px;
+        background: #10b981;
+        border-radius: 50%;
+        border: 2px solid white;
+      }
+    }
+
+    .sidebar-user-details {
+      flex: 1;
+      min-width: 0;
+
+      .sidebar-username {
+        font-size: 16px;
+        font-weight: 700;
+        color: white;
+        margin: 0 0 4px 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .sidebar-user-id {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.7);
+        margin: 0 0 8px 0;
+        font-weight: 600;
+      }
+
+      .sidebar-balance {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 6px;
+        backdrop-filter: blur(10px);
+
+        i {
+          font-size: 12px;
+          color: #fbbf24;
+        }
+
+        span {
+          font-size: 13px;
+          font-weight: 700;
+          color: white;
+        }
+      }
     }
   }
 
