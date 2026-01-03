@@ -373,7 +373,6 @@ export default {
           name: this.name,
           phoneNumber: this.phoneNumber,
           password: this.password,
-          role: 0,
           isActive: true
         });
 
