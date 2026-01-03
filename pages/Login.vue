@@ -214,7 +214,7 @@ export default {
     },
 
     handleForgotPassword() {
-      this.$toast.info('Vui lòng liên hệ hotline 0336.856.626 để được hỗ trợ khôi phục mật khẩu');
+      this.$router.push('/ForgotPassword');
     }
   }
 };

@@ -129,7 +129,7 @@
                 <p class="name">Hoàng Thái Sơn</p>
               </div>
             </div>
-            <a class="btn-contact" href="https://zalo.me/chat/join/0x0" target="_blank">
+            <a class="btn-contact" href="https://zalo.me/0336.856.626" target="_blank">
               <img src="@/assets/images/zalo.webp" alt="Zalo" width="32" height="32" />
             </a>
           </div>
@@ -295,10 +295,12 @@
             {{ lightboxIndex + 1 }} / {{ account.getListImages?.length }}
           </div>
 
-          <div class="lightbox-thumbs" v-if="account.getListImages?.length > 1">
-            <div v-for="(img, index) in account.getListImages" :key="index" class="lightbox-thumb"
-              :class="{ active: lightboxIndex === index }" @click="lightboxIndex = index">
-              <img :src="img.imageUrl" :alt="'Ảnh ' + (index + 1)" />
+          <div class="w-full overflow-x-auto lightbox-thumbs--container">
+            <div class="lightbox-thumbs" v-if="account.getListImages?.length > 1">
+              <div v-for="(img, index) in account.getListImages" :key="index" class="lightbox-thumb"
+                :class="{ active: lightboxIndex === index }" @click="lightboxIndex = index">
+                <img :src="img.imageUrl" :alt="'Ảnh ' + (index + 1)" />
+              </div>
             </div>
           </div>
         </div>
@@ -440,7 +442,7 @@ export default {
         const res = await order.createOrder({
           accountID: this.accountID,
         });
-        if (res.success) {
+        if (res?.success) {
           const d = res.data;
           this.$toast.success(
             `🎉 Mua tài khoản thành công!\n\n` +
@@ -450,6 +452,8 @@ export default {
           setTimeout(() => {
             window.location.href = "/UserAccountPage?tab=accountPurchaseHistory";
           }, 3000);
+        } else {
+          this.$toast.error(res.message || "Đã có lỗi xảy ra khi tạo đơn hàng.");
         }
       }
       catch (err) {
@@ -548,7 +552,7 @@ $danger: #ff4655;
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 20px;
+  margin: 20px 10px 10px;
   font-size: 12px;
 
   a {
@@ -1368,34 +1372,42 @@ $danger: #ff4655;
     letter-spacing: 1px;
   }
 
-  .lightbox-thumbs {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
+  .lightbox-thumbs--container {
 
-    .lightbox-thumb {
-      width: 70px;
-      height: 70px;
-      overflow: hidden;
-      border: 2px solid $dark-border;
-      cursor: pointer;
-      opacity: 0.6;
-      transition: all 0.2s;
+    &::-webkit-scrollbar {
+      height: 2px;
+    }
 
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
+    .lightbox-thumbs {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      width: max-content;
 
-      &:hover {
-        opacity: 1;
-        border-color: $text-gray;
-      }
+      .lightbox-thumb {
+        width: 70px;
+        height: 70px;
+        overflow: hidden;
+        border: 2px solid $dark-border;
+        cursor: pointer;
+        opacity: 0.6;
+        transition: all 0.2s;
 
-      &.active {
-        border-color: $primary;
-        opacity: 1;
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        &:hover {
+          opacity: 1;
+          border-color: $text-gray;
+        }
+
+        &.active {
+          border-color: $primary;
+          opacity: 1;
+        }
       }
     }
   }
@@ -1460,7 +1472,7 @@ $danger: #ff4655;
       padding: 16px;
 
       .policies-grid {
-        grid-template-columns: 4fr;
+        grid-template-columns: repeat(2, 1fr);
       }
     }
   }
@@ -1509,14 +1521,9 @@ $danger: #ff4655;
 
     .seller-info {
       padding: 10px;
-      flex-direction: column;
       gap: 10px;
-      align-items: stretch;
+      justify-content: space-between;
 
-      .btn-contact {
-        width: 100%;
-        justify-content: center;
-      }
     }
   }
 
@@ -1571,6 +1578,26 @@ $danger: #ff4655;
         height: 60px;
       }
     }
+  }
+}
+
+.policies-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+/* Tablet */
+@media (max-width: 992px) {
+  .policies-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+  .policies-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 </style>

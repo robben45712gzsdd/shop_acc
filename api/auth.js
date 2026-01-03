@@ -55,9 +55,54 @@ const changePassword = async (body) => {
   });
 };
 
+// forgot password - send reset code to email or username
+const forgotPassword = async (body) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`/api/Auth/ForgotPassword/Request`, body)
+      .then((response) => {
+        resolve(response?.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
+// verify reset code
+const verifyResetCode = async (body) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`/api/Auth/ForgotPassword/Verify`, body)
+      .then((response) => {
+        resolve(response?.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
+// reset password with code
+const resetPassword = async (body) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`/api/Auth/ForgotPassword/Reset`, body)
+      .then((response) => {
+        resolve(response?.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
 export default {
   login,
   register,
   getMainProfile,
   changePassword,
+  forgotPassword,
+  verifyResetCode,
+  resetPassword,
 };

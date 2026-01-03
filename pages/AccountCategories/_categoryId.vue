@@ -55,7 +55,7 @@
                   <i class="fas fa-money-bill-wave"></i>
                   Khoảng giá
                 </label>
-                <div class="price-inputs">
+                <div class="flex-wrap !max-w-full price-inputs">
                   <input v-model="minPriceInput" type="text" placeholder="Tối thiểu" class="filter-input"
                     @input="onPriceInput('minPrice')" @change="applyFilters" />
                   <span class="price-divider">-</span>

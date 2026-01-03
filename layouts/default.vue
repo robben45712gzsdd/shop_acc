@@ -107,7 +107,7 @@
       </nuxt-link>
     </div>
 
-    <footer class="footer">
+    <footer class="footer" :class="{ '!mb-16': is_login}">
       <div class="wrap-footer">
         <!-- TOP: logo + info + liên hệ -->
         <div class="footer-top">
@@ -376,7 +376,7 @@ export default {
   mounted() {
     // Listen for WebSocket messages
     window.addEventListener('ws-message', this.handleWsMessage);
-    
+
     // Check cookie consent
     const cookieConsent = localStorage.getItem('cookieConsent');
     if (!cookieConsent) {
@@ -737,7 +737,7 @@ export default {
         }
 
         @media (max-width: 768px) {
-          padding: 8px 12px;
+          padding: 8px 6px;
           font-size: 12px;
 
           span {
@@ -862,9 +862,17 @@ export default {
     }
 
     @keyframes coinSpin {
-      0% { transform: rotateY(0deg); }
-      50% { transform: rotateY(180deg); }
-      100% { transform: rotateY(360deg); }
+      0% {
+        transform: rotateY(0deg);
+      }
+
+      50% {
+        transform: rotateY(180deg);
+      }
+
+      100% {
+        transform: rotateY(360deg);
+      }
     }
   }
 }
@@ -1665,17 +1673,17 @@ export default {
   right: 0;
   height: 70px;
   background: white;
-  
+
   z-index: 1000;
-  
+
   &.dark-mode {
     background: #1a1a1a;
-    
-    
+
+
   }
-  
+
   .wrap-nav {
-    border-bottom:  1px solid #333;
+    border-bottom: 1px solid #b5b5b557;
     max-width: 1400px;
     margin: 0 auto;
     padding: 0 16px;

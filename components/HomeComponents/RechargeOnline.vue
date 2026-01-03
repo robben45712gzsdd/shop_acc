@@ -906,7 +906,7 @@ export default {
 
 @media (max-width: 480px) {
   .recharge-online {
-    margin: 30px auto !important;
+    margin: 0 auto !important;
     padding: 5px;
   }
 
