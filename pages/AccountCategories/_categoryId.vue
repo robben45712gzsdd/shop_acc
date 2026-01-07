@@ -177,7 +177,7 @@ export default {
           if (res.success) {
             this.accounts = res.data.map((acc) => ({
               ...acc,
-              image: acc.getListImages?.[0]?.imageUrl || "/default-image.png",
+              image: acc?.images || "/default-image.png",
             }));
             this.totalRecords = res.totalRecords || res.data.length;
           }

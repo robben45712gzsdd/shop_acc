@@ -355,6 +355,16 @@ export default {
         });
         if (res.success) {
           this.account = res.data;
+          this.account.getListImages = this.account.getListImages || [];
+          
+          // Add the single image from 'images' field to getListImages array
+          if (this.account.images && !this.account.getListImages.some(img => img.imageUrl === this.account.images)) {
+            this.account.getListImages.unshift({
+              accountId: this.account.accountId,
+              imageUrl: this.account.images
+            });
+          }
+          
           if (this.account.getListImages?.length) {
             this.selectedImage = this.account.getListImages[0].imageUrl;
           }

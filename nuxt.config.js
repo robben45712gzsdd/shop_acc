@@ -3,7 +3,7 @@ export default {
   components: true,
   head: {
     titleTemplate: "%s - ACCGAME247 ",
-    title: "ACCGAME247  - Shop bán tài khoản game uy tín hàng đầu Việt Nam",
+    title: "ACCGAME247 - Shop bán tài khoản game uy tín hàng đầu Việt Nam",
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
@@ -14,12 +14,22 @@ export default {
       },
     ],
     link: [
-      { rel: "icon", type: "image/x-icon", href: "@/assets/images/logo.png" },
+      // Favicon chuẩn đa trình duyệt
       {
         rel: "icon",
         type: "image/png",
-        href: "@/assets/images/logo.png",
+        sizes: "96x96",
+        href: "/favicon-96x96.png",
       },
+      { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+      { rel: "shortcut icon", href: "/favicon.ico" },
+      {
+        rel: "apple-touch-icon",
+        sizes: "180x180",
+        href: "/apple-touch-icon.png",
+      },
+      { rel: "manifest", href: "/site.webmanifest" },
+
       {
         rel: "stylesheet",
         href: "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css",
@@ -44,18 +54,9 @@ export default {
     { src: "~/plugins/ws.client.js", mode: "client" },
   ],
   buildModules: ["@nuxtjs/vuetify"],
-  vuetify: {
-    customVariables: ["~/assets/styles/variables.scss"],
-  },
+  vuetify: { customVariables: ["~/assets/styles/variables.scss"] },
   css: ["~/assets/styles/main.scss", "~/assets/styles/toast.scss"],
-  router: {
-    middleware: ["auth"],
-  },
-  build: {
-    extend(config, ctx) {},
-  },
-  server: {
-    host: "0.0.0.0",
-    port: process.env.PORT,
-  },
+  router: { middleware: ["auth"] },
+  build: { extend(config, ctx) {} },
+  server: { host: "0.0.0.0", port: process.env.PORT },
 };

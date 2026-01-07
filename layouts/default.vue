@@ -107,7 +107,7 @@
       </nuxt-link>
     </div>
 
-    <footer class="footer" :class="{ '!mb-16': is_login}">
+    <footer class="footer">
       <div class="wrap-footer">
         <!-- TOP: logo + info + liên hệ -->
         <div class="footer-top">
