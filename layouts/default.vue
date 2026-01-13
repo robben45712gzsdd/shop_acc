@@ -12,7 +12,7 @@
         <div class="nav-left flex-1" @click.stop>
           <div class="logo">
             <nuxt-link to="/">
-              <img src="@/assets/images/logo.png" alt="logo" />
+              <img src="@/assets/images/logo/accgame247_2.gif" alt="logo" />
             </nuxt-link>
           </div>
           <ul class="menu" :class="{ active: showMenuMobile }" @click.stop="closeMenuOnClick">
@@ -114,7 +114,7 @@
           <!-- Logo & Giới thiệu -->
           <div class="footer-brand">
             <nuxt-link to="/" class="flex !justify-center md:!justify-start">
-              <img src="@/assets/images/logo.png" alt="ThaiSonShop Logo" class="footer-logo" />
+              <img src="@/assets/images/logo/acgame247_logo.png" alt="ThaiSonShop Logo" class="footer-logo" />
             </nuxt-link>
             <p>
               Hệ thống bán acc tự động, đảm bảo uy tín và chất lượng.
@@ -154,7 +154,7 @@
 
         <!-- BOTTOM: bản quyền -->
         <div class="footer-bottom">
-          <p>© 2025 ACCGAME247.net. All rights reserved.</p>
+          <p>© 2025 ACCGAME247.NET. All rights reserved.</p>
         </div>
       </div>
     </footer>

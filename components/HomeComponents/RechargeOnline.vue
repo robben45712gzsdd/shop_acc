@@ -109,7 +109,7 @@
     </div>
     
     <div class="right">
-      <img src="@/assets/images/recharge-banner.gif" alt="Banner" />
+      <img src="@/assets/images/logo/banner.gif" alt="Banner" />
     </div>
   </div>
 </template>

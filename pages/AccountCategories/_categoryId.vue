@@ -18,7 +18,7 @@
             <i :class="filterExpanded ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
           </button>
         </div>
-        
+
         <transition name="filter-collapse">
           <div class="filter-container" v-show="filterExpanded">
             <!-- ROW 1: SORT & ORDER -->
@@ -81,7 +81,15 @@
         <div v-for="(acc, index) in accounts" :key="acc.accountId" class="account-type">
           <nuxt-link :to="'/DetailAccountPage/' + acc.accountId" class="account-link">
             <div class="wrap-type-account">
-              <img class="img-type-account" :src="acc.image" :alt="acc.title" />
+              <div class="image-container">
+                <img class="img-type-account" :src="acc.image" :alt="acc.title" />
+                <div class="image-label">
+                  <div class="account-code">{{ acc.accountCode }}</div>
+                  <div class="discount-badge" v-if="calculateDiscount(acc.price, acc.priceSale) > 0">
+                    -{{ calculateDiscount(acc.price, acc.priceSale) }}%
+                  </div>
+                </div>
+              </div>
               <p class="name-type-acc"><strong>{{ acc.title }}</strong></p>
               <p class="num-acc">Mô tả: <strong>{{ acc.description }}</strong></p>
               <div class="price">
@@ -93,14 +101,14 @@
               </div>
             </div>
           </nuxt-link>
-          
+
           <!-- FAVORITE SECTION -->
           <div class="favorite-section">
             <div class="favorite-count">
               <i class="fas fa-heart"></i>
               <span>{{ acc.totalFavorite || 0 }} lượt thích</span>
             </div>
-           
+
           </div>
         </div>
       </div>
@@ -191,6 +199,11 @@ export default {
       if (!price) return "0";
       return Number(price).toLocaleString("vi-VN") + " đ";
     },
+    calculateDiscount(originalPrice, salePrice) {
+      if (!originalPrice || !salePrice || originalPrice <= 0) return 0;
+      const discount = ((originalPrice - salePrice) / originalPrice) * 100;
+      return Math.round(discount);
+    },
     onPriceInput(key) {
       let input = this[key + "Input"];
       let numeric = input.replace(/\D/g, "");
@@ -239,7 +252,7 @@ export default {
 
         // Call API
         const res = await favorite.addFavorite({ accountId: acc.accountId });
-        
+
         if (res.success) {
           this.$toast.success(previousState ? "Đã bỏ yêu thích!" : "Đã thêm vào yêu thích!");
         } else {
@@ -516,8 +529,9 @@ $danger: #ff4655;
     flex-direction: column;
     background: $dark-card;
     border: 1px solid $dark-border;
-    transition: all 0.2s;
+    transition: all 0.3s ease;
     position: relative;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 
     &::before {
       content: '';
@@ -526,172 +540,248 @@ $danger: #ff4655;
       left: 0;
       width: 3px;
       height: 0;
-      background: $primary;
-      transition: height 0.3s;
+      background: linear-gradient(180deg, $primary 0%, #ff6b35 100%);
+      transition: height 0.4s ease;
     }
 
     &:hover {
       border-color: $primary;
+      transform: translateY(-8px);
+      box-shadow: 0 12px 24px rgba(255, 107, 107, 0.2);
 
       &::before {
         height: 100%;
       }
-
-      .wrap-type-account .img-type-account {
-        filter: brightness(1.1);
-      }
     }
 
-    .account-link {
-      text-decoration: none;
-      color: inherit;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
+    .wrap-type-account .img-type-account {
+      filter: brightness(1.1);
     }
+  }
 
-    .wrap-type-account {
-      display: flex;
-      flex-direction: column;
+  .account-link {
+    text-decoration: none;
+    color: inherit;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .wrap-type-account {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    flex: 1;
+
+    .image-container {
+      position: relative;
       width: 100%;
-      flex: 1;
-
-      .img-type-account {
-        width: 100%;
-        height: 180px;
-        object-fit: cover;
-        border-bottom: 1px solid $dark-border;
-        transition: filter 0.3s;
-      }
-
-      .name-type-acc {
-        color: $text-white;
-        text-transform: uppercase;
-        margin: 16px 16px 8px;
-        font-size: 14px;
-        letter-spacing: 1px;
-        
-        strong {
-          font-weight: 700;
-        }
-      }
-
-      .num-acc {
-        margin: 0 16px 16px;
-        color: $text-gray;
-        font-size: 13px;
-        line-height: 1.5;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        
-        strong {
-          color: $text-white;
-          font-weight: 500;
-        }
-      }
-
-      .price {
-        display: flex;
-        gap: 12px;
-        align-items: center;
-        margin: auto 16px 16px;
-        padding: 12px 16px;
-        background: $dark-light;
-        border-left: 3px solid $primary;
-
-        .old-price {
-          text-decoration: line-through;
-          color: $text-gray;
-          font-size: 13px;
-        }
-
-        .new-price {
-          color: $primary;
-          font-weight: 800;
-          font-size: 18px;
-        }
-      }
-
-      .btn-buy-now {
-        margin: 0 16px 16px;
-
-        img {
-          width: 100%;
-          max-width: 140px;
-          filter: brightness(0.9);
-          transition: filter 0.2s;
-        }
-
-        &:hover img {
-          filter: brightness(1);
-        }
-      }
+      height: 180px;
+      overflow: hidden;
     }
 
-    // Favorite Section
-    .favorite-section {
+    .img-type-account {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-bottom: 1px solid $dark-border;
+      transition: filter 0.3s;
+    }
+
+    .image-label {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       display: flex;
-      align-items: center;
+      flex-direction: column;
       justify-content: space-between;
-      padding: 12px 16px;
-      background: $dark-light;
-      border-top: 1px solid $dark-border;
-      gap: 12px;
+      padding: 0;
+      pointer-events: none;
 
-      .favorite-count {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 13px;
-        color: $text-gray;
-
-        i {
-          color: $primary;
-          font-size: 14px;
-        }
+      .account-code {
+        background: linear-gradient(90deg, #00d4ff 0%, #0099ff 100%);
+        color: #000;
+        padding: 4px 15px;
+        border-radius: 2px;
+        font-size: 10px;
+        width: fit-content;
+        font-weight: 500 !important;
+        letter-spacing: 1.5px;
+        border: none;
+        text-transform: uppercase;
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.3);
+        clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 0 100%, 8px 50%);
+        position: relative;
       }
 
-      .btn-favorite {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        padding: 8px 16px;
-        background: transparent;
-        border: 1px solid $dark-border;
-        color: $text-white;
-        font-size: 12px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+      .discount-badge {
+        background: linear-gradient(90deg, #ff1744 0%, #ff5722 100%);
+        color: #fff;
+        padding: 6px 14px;
+        border-radius: 2px;
+        font-size: 16px;
+        font-weight: 500;
+        text-align: center;
+        width: fit-content;
+        align-self: flex-end;
+        font-style: italic;
+        letter-spacing: 1px;
+        box-shadow: 0 0 25px rgba(255, 23, 68, 0.7), 0 0 40px rgba(255, 23, 68, 0.3), inset 0 0 15px rgba(255, 255, 255, 0.2);
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        position: relative;
+        clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+        animation: neon-flicker 0.15s infinite, neon-pulse 2s infinite;
+        text-shadow: 0 0 10px rgba(255, 23, 68, 0.5);
+      }
 
-        i {
-          font-size: 12px;
-          transition: all 0.2s;
-        }
-
-        &:hover:not(:disabled) {
-          border-color: $primary;
-          color: $primary;
-        }
-
-        &.is-favorited {
-          background: $primary;
-          border-color: $primary;
-          color: $text-white;
-        }
-
-        &:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
-        }
+      .discount-badge::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+        pointer-events: none;
+        clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+        border-radius: 2px;
       }
     }
   }
+
+  .name-type-acc {
+    color: $text-white;
+    text-transform: uppercase;
+    margin: 16px 16px 8px;
+    font-size: 14px;
+    letter-spacing: 1px;
+
+    strong {
+      font-weight: 700;
+    }
+  }
+
+  .num-acc {
+    margin: 0 16px 16px;
+    color: $text-gray;
+    font-size: 13px;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+
+    strong {
+      color: $text-white;
+      font-weight: 500;
+    }
+  }
+
+  .price {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin: auto 16px 16px;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.05) 0%, rgba(255, 107, 107, 0.02) 100%);
+    border-left: 3px solid $primary;
+    border-radius: 4px;
+
+    .old-price {
+      text-decoration: line-through;
+      color: $text-gray;
+      font-size: 13px;
+    }
+
+    .new-price {
+      color: $primary;
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: -0.5px;
+    }
+  }
+
+  .btn-buy-now {
+    margin: 0 16px 16px;
+
+    img {
+      width: 100%;
+      max-width: 140px;
+      filter: brightness(0.95);
+      transition: filter 0.3s ease;
+      cursor: pointer;
+    }
+
+    &:hover img {
+      filter: brightness(1);
+    }
+  }
 }
+
+// Favorite Section
+.favorite-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: $dark-light;
+  border-top: 1px solid $dark-border;
+  gap: 12px;
+
+  .favorite-count {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: $text-gray;
+
+    i {
+      color: $primary;
+      font-size: 14px;
+    }
+  }
+
+  .btn-favorite {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: transparent;
+    border: 1px solid $dark-border;
+    color: $text-white;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    i {
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+
+    &:hover:not(:disabled) {
+      border-color: $primary;
+      color: $primary;
+    }
+
+    &.is-favorited {
+      background: $primary;
+      border-color: $primary;
+      color: $text-white;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+
 
 // ============================================
 // EMPTY STATE
@@ -724,7 +814,7 @@ $danger: #ff4655;
   justify-content: center;
   align-items: center;
   min-height: 300px;
-  
+
   .my-10 {
     margin: 40px 0;
   }
@@ -804,6 +894,50 @@ $danger: #ff4655;
         height: 200px;
       }
     }
+  }
+}
+
+@keyframes neon-flicker {
+
+  0%,
+  19%,
+  21%,
+  23%,
+  25%,
+  54%,
+  56%,
+  100% {
+    text-shadow: 0 0 10px rgba(255, 23, 68, 0.5);
+  }
+
+  20%,
+  24%,
+  55% {
+    text-shadow: 0 0 15px rgba(255, 23, 68, 0.8), 0 0 30px rgba(255, 23, 68, 0.6);
+  }
+}
+
+@keyframes neon-pulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 25px rgba(255, 23, 68, 0.7), 0 0 40px rgba(255, 23, 68, 0.3), inset 0 0 15px rgba(255, 255, 255, 0.2);
+  }
+
+  50% {
+    box-shadow: 0 0 35px rgba(255, 23, 68, 0.9), 0 0 60px rgba(255, 23, 68, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.3);
+  }
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
   }
 }
 </style>
