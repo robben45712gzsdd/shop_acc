@@ -122,13 +122,7 @@ export default {
 
         if (res.success === true) {
           this.successMessage = 'Mã xác nhận đã được gửi tới email của bạn!';
-          
-          setTimeout(() => {
-            this.$router.push({
-              path: '/ResetPassword',
-              query: { emailOrUsername: this.emailOrUsername }
-            });
-          }, 1500);
+        
         } else {
           this.generalError = res.message || 'Không thể gửi mã xác nhận. Vui lòng thử lại';
         }

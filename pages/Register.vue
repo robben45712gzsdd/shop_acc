@@ -10,57 +10,32 @@
         <!-- Username -->
         <div class="form-field" :class="{ error: errors.userName }">
           <label>Tên đăng nhập <span class="required">*</span></label>
-          <input
-            v-model="userName"
-            type="text"
-            placeholder="Nhập tên đăng nhập"
-            @blur="validateUsername"
-            @input="clearError('userName')"
-            :disabled="loading"
-          />
+          <input v-model="userName" type="text" placeholder="Nhập tên đăng nhập" @blur="validateUsername"
+            @input="clearError('userName')" :disabled="loading" />
           <span v-if="errors.userName" class="error-msg">{{ errors.userName }}</span>
         </div>
 
         <!-- Email -->
         <div class="form-field" :class="{ error: errors.email }">
           <label>Email <span class="required">*</span></label>
-          <input
-            v-model="email"
-            type="email"
-            placeholder="Nhập email"
-            @blur="validateEmail"
-            @input="clearError('email')"
-            :disabled="loading"
-          />
+          <input v-model="email" type="email" placeholder="Nhập email" @blur="validateEmail"
+            @input="clearError('email')" :disabled="loading" />
           <span v-if="errors.email" class="error-msg">{{ errors.email }}</span>
         </div>
 
         <!-- Full Name -->
         <div class="form-field" :class="{ error: errors.name }">
           <label>Tên đầy đủ <span class="required">*</span></label>
-          <input
-            v-model="name"
-            type="text"
-            placeholder="Nhập họ và tên"
-            @blur="validateName"
-            @input="clearError('name')"
-            :disabled="loading"
-          />
+          <input v-model="name" type="text" placeholder="Nhập họ và tên" @blur="validateName"
+            @input="clearError('name')" :disabled="loading" />
           <span v-if="errors.name" class="error-msg">{{ errors.name }}</span>
         </div>
 
         <!-- Phone Number -->
         <div class="form-field" :class="{ error: errors.phoneNumber }">
           <label>Số điện thoại <span class="required">*</span></label>
-          <input
-            v-model="phoneNumber"
-            type="tel"
-            placeholder="Nhập số điện thoại"
-            @blur="validatePhoneNumber"
-            @input="clearError('phoneNumber')"
-            :disabled="loading"
-            maxlength="11"
-          />
+          <input v-model="phoneNumber" type="tel" placeholder="Nhập số điện thoại" @blur="validatePhoneNumber"
+            @input="clearError('phoneNumber')" :disabled="loading" maxlength="11" />
           <span v-if="errors.phoneNumber" class="error-msg">{{ errors.phoneNumber }}</span>
         </div>
 
@@ -68,20 +43,9 @@
         <div class="form-field" :class="{ error: errors.password }">
           <label>Mật khẩu <span class="required">*</span></label>
           <div class="password-field">
-            <input
-              v-model="password"
-              :type="showPassword ? 'text' : 'password'"
-              placeholder="Nhập mật khẩu"
-              @blur="validatePassword"
-              @input="clearError('password')"
-              :disabled="loading"
-            />
-            <button
-              type="button"
-              class="toggle-password"
-              @click="showPassword = !showPassword"
-              tabindex="-1"
-            >
+            <input v-model="password" :type="showPassword ? 'text' : 'password'" placeholder="Nhập mật khẩu"
+              @blur="validatePassword" @input="clearError('password')" :disabled="loading" />
+            <button type="button" class="toggle-password" @click="showPassword = !showPassword" tabindex="-1">
               <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
             </button>
           </div>
@@ -92,20 +56,11 @@
         <div class="form-field" :class="{ error: errors.re_password }">
           <label>Nhập lại mật khẩu <span class="required">*</span></label>
           <div class="password-field">
-            <input
-              v-model="re_password"
-              :type="showConfirmPassword ? 'text' : 'password'"
-              placeholder="Nhập lại mật khẩu"
-              @blur="validateConfirmPassword"
-              @input="clearError('re_password')"
-              :disabled="loading"
-            />
-            <button
-              type="button"
-              class="toggle-password"
-              @click="showConfirmPassword = !showConfirmPassword"
-              tabindex="-1"
-            >
+            <input v-model="re_password" :type="showConfirmPassword ? 'text' : 'password'"
+              placeholder="Nhập lại mật khẩu" @blur="validateConfirmPassword" @input="clearError('re_password')"
+              :disabled="loading" />
+            <button type="button" class="toggle-password" @click="showConfirmPassword = !showConfirmPassword"
+              tabindex="-1">
               <i :class="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
             </button>
           </div>
@@ -123,7 +78,7 @@
           <label class="checkbox-label">
             <input type="checkbox" v-model="acceptedPolicy" />
             <span>
-              Tôi đã đọc và đồng ý với 
+              Tôi đã đọc và đồng ý với
               <a href="#" @click.prevent="showPolicyModal = true" class="policy-link">Điều khoản & Chính sách</a>
             </span>
           </label>
@@ -142,7 +97,7 @@
 
         <!-- Login Link -->
         <div class="login-link">
-          Đã có tài khoản? 
+          Đã có tài khoản?
           <nuxt-link to="/Login">Đăng nhập ngay</nuxt-link>
         </div>
       </form>
@@ -208,99 +163,99 @@ export default {
   methods: {
     validateUsername() {
       const val = this.userName.trim();
-      
+
       if (!val) {
         this.errors.userName = 'Vui lòng nhập tên đăng nhập';
         return false;
       }
-      
+
       if (val.length < 3) {
         this.errors.userName = 'Tên đăng nhập phải có ít nhất 3 ký tự';
         return false;
       }
-      
+
       if (val.length > 30) {
         this.errors.userName = 'Tên đăng nhập không được quá 30 ký tự';
         return false;
       }
-      
+
       if (!/^[a-zA-Z0-9_]+$/.test(val)) {
         this.errors.userName = 'Tên đăng nhập chỉ chứa chữ, số và dấu gạch dưới';
         return false;
       }
-      
+
       this.errors.userName = '';
       return true;
     },
 
     validateEmail() {
       const val = this.email.trim();
-      
+
       if (!val) {
         this.errors.email = 'Vui lòng nhập email';
         return false;
       }
-      
+
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(val)) {
         this.errors.email = 'Email không đúng định dạng';
         return false;
       }
-      
+
       this.errors.email = '';
       return true;
     },
 
     validateName() {
       const val = this.name.trim();
-      
+
       if (!val) {
         this.errors.name = 'Vui lòng nhập tên đầy đủ';
         return false;
       }
-      
+
       if (val.length < 2) {
         this.errors.name = 'Tên phải có ít nhất 2 ký tự';
         return false;
       }
-      
+
       if (val.length > 50) {
         this.errors.name = 'Tên không được quá 50 ký tự';
         return false;
       }
-      
+
       this.errors.name = '';
       return true;
     },
 
     validatePhoneNumber() {
       const val = this.phoneNumber.trim();
-      
+
       if (!val) {
         this.errors.phoneNumber = 'Vui lòng nhập số điện thoại';
         return false;
       }
-      
+
       if (!/^[0-9]+$/.test(val)) {
         this.errors.phoneNumber = 'Số điện thoại chỉ chứa chữ số';
         return false;
       }
-      
+
       if (val.length < 10) {
         this.errors.phoneNumber = 'Số điện thoại phải có ít nhất 10 số';
         return false;
       }
-      
+
       if (val.length > 11) {
         this.errors.phoneNumber = 'Số điện thoại không được quá 11 số';
         return false;
       }
-      
+
       if (!/^(0[3|5|7|8|9])/.test(val)) {
         this.errors.phoneNumber = 'Số điện thoại không hợp lệ';
         return false;
       }
-      
+
       this.errors.phoneNumber = '';
       return true;
     },
@@ -310,23 +265,23 @@ export default {
         this.errors.password = 'Vui lòng nhập mật khẩu';
         return false;
       }
-      
+
       if (this.password.length < 6) {
         this.errors.password = 'Mật khẩu phải có ít nhất 6 ký tự';
         return false;
       }
-      
+
       if (this.password.length > 50) {
         this.errors.password = 'Mật khẩu không được quá 50 ký tự';
         return false;
       }
-      
+
       this.errors.password = '';
-      
+
       if (this.re_password) {
         this.validateConfirmPassword();
       }
-      
+
       return true;
     },
 
@@ -335,12 +290,12 @@ export default {
         this.errors.re_password = 'Vui lòng nhập lại mật khẩu';
         return false;
       }
-      
+
       if (this.re_password !== this.password) {
         this.errors.re_password = 'Mật khẩu nhập lại không khớp';
         return false;
       }
-      
+
       this.errors.re_password = '';
       return true;
     },
@@ -358,8 +313,8 @@ export default {
       const isPasswordValid = this.validatePassword();
       const isConfirmPasswordValid = this.validateConfirmPassword();
 
-      if (!isUsernameValid || !isEmailValid || !isNameValid || 
-          !isPhoneValid || !isPasswordValid || !isConfirmPasswordValid) {
+      if (!isUsernameValid || !isEmailValid || !isNameValid ||
+        !isPhoneValid || !isPasswordValid || !isConfirmPasswordValid) {
         return;
       }
 
@@ -377,16 +332,14 @@ export default {
         });
 
         this.$toast.success('Đăng ký thành công! Đang chuyển trang...');
-        
-        setTimeout(() => {
-          this.$router.push('/Login');
-        }, 500);
+        this.$router.push('/Login');
+
       } catch (err) {
         console.error(err);
-        
+
         if (err.response?.data) {
           const errorData = err.response.data;
-          
+
           if (Array.isArray(errorData) && errorData[0]) {
             const e = errorData[0];
             this.errors[e.param] = e.msg;
@@ -560,6 +513,7 @@ export default {
     flex-shrink: 0;
   }
 }
+
 .policy-acceptance {
   padding: 14px;
   background: #f9fafb;
@@ -599,6 +553,7 @@ export default {
     }
   }
 }
+
 .policy-acceptance {
   padding: 14px;
   background: #f9fafb;

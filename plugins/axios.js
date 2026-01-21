@@ -19,6 +19,25 @@ export default ({ app }, inject) => {
     return new URLSearchParams(obj).toString();
   }
 
+  // Remove diacritics (accents) from text
+  function removeDiacritics(text) {
+    if (!text || text.trim() === '') {
+      return '';
+    }
+    // Normalize to NFD (decomposed form) and remove combining marks
+    return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
+  // Minify body by removing diacritics and all whitespace
+  function minifyBody(body) {
+    if (!body || (typeof body === 'string' && body.trim() === '')) {
+      return '';
+    }
+    
+    const normalized = removeDiacritics(body);
+    return normalized.replace(/\s+/g, '');
+  }
+
   // Tính contentMD5 dựa trên body (POST/PUT/PATCH) hoặc rỗng (GET)
   function getContentMD5(config) {
     const method = config?.method?.toUpperCase();
@@ -32,6 +51,8 @@ export default ({ app }, inject) => {
       body = config.data ? JSON.stringify(config.data) : "";
     }
 
+    body = minifyBody(body);
+    
     if (!body || body === "") {
       return md5(""); // rỗng thì hash chuỗi rỗng
     }
@@ -65,7 +86,7 @@ export default ({ app }, inject) => {
     const stringToSign = `${httpMethod}${path}${contentMD5}${requestTime}${API_KEY}`;
 
     const sign = md5(stringToSign);
-
+    
     // Gắn headers
     config.headers["Sign"] = sign;
     config.headers["Request-Time"] = requestTime;

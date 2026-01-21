@@ -1,7 +1,9 @@
 export const state = () => ({
   showPolicyModal: false,
   showCookieConsent: false,
-  showPromoModal: false
+  showPromoModal: false,
+  showVerifyMailModal: false,
+  showChangePasswordModal: false
 })
 
 export const mutations = {
@@ -22,6 +24,18 @@ export const mutations = {
   },
   HIDE_PROMO_MODAL(state) {
     state.showPromoModal = false
+  },
+  SHOW_VERIFY_MAIL_MODAL(state) {
+    state.showVerifyMailModal = true
+  },
+  HIDE_VERIFY_MAIL_MODAL(state) {
+    state.showVerifyMailModal = false
+  },
+  SHOW_CHANGE_PASSWORD_MODAL(state) {
+    state.showChangePasswordModal = true
+  },
+  HIDE_CHANGE_PASSWORD_MODAL(state) {
+    state.showChangePasswordModal = false
   }
 }
 
@@ -43,5 +57,17 @@ export const actions = {
   },
   hidePromoModal({ commit }) {
     commit('HIDE_PROMO_MODAL')
+  },
+  showVerifyMailModal({ commit }) {
+    commit('SHOW_VERIFY_MAIL_MODAL')
+  },
+  hideVerifyMailModal({ commit }) {
+    commit('HIDE_VERIFY_MAIL_MODAL')
+  },
+  showChangePasswordModal({ commit }) {
+    commit('SHOW_CHANGE_PASSWORD_MODAL')
+  },
+  hideChangePasswordModal({ commit }) {
+    commit('HIDE_CHANGE_PASSWORD_MODAL')
   }
 }

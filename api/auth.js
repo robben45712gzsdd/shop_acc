@@ -97,6 +97,62 @@ const resetPassword = async (body) => {
   });
 };
 
+// verify mail token
+const verifyMailToken = async (body) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`/api/Auth/ForgotPassword/Verify`, body)
+      .then((response) => {
+        resolve(response?.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
+// verify mail with OTP code
+const verifyMail = async (body) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`/api/Auth/ForgotPassword/Verify`, body)
+      .then((response) => {
+        resolve(response?.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
+// resend verify code
+const resendVerifyCode = async (body) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`/api/Auth/VerifyMail/Resend`, body)
+      .then((response) => {
+        resolve(response?.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
+// update password after verify
+const updatePasswordAfterVerify = async (body) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`/api/Auth/ForgotPassword/Reset`, body)
+      .then((response) => {
+        resolve(response?.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
 export default {
   login,
   register,
@@ -105,4 +161,8 @@ export default {
   forgotPassword,
   verifyResetCode,
   resetPassword,
+  verifyMailToken,
+  verifyMail,
+  resendVerifyCode,
+  updatePasswordAfterVerify,
 };
