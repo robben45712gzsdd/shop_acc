@@ -193,6 +193,8 @@ export default {
     }
   },
   async mounted() {
+    this.$store.commit('setIsDarkMode', false);
+
     // Get token from query params
     this.token = this.$route.query.token
     

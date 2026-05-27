@@ -61,71 +61,96 @@ export default {
 
 
 <style lang="scss">
+$primary: #f28a59;
+$surface: #ffffff;
+$surface-soft: #f8fafc;
+$border: #e9eef3;
+$text: #0f172a;
+$muted: #64748b;
+
 .list-game-account {
-  padding-bottom: 20px;
-  margin: 60px auto 30px auto;
-  width: 100%;
-  background-color: var(--black-three);
   display: flex;
   flex-direction: column;
-
+  width: 100%;
+  margin: 32px auto 28px;
+  padding-bottom: 18px;
 
   .title {
-    text-transform: uppercase;
-    font-size: 1.9rem;
+    padding: 10px 0 20px;
+    color: $primary;
     text-align: center;
-    padding: 30px 0;
-    color: var(--yellow-active);
+    font-size: 1.7rem;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
   }
 
   .list-type-account {
     display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    grid-gap: 10px;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 12px;
     padding: 0 10px;
-    max-width: 100vw;
     overflow-x: hidden;
 
     .type-account {
       grid-column: span 3;
       display: flex;
-      border: 2px solid var(--yellow-text);
-      padding-bottom: 20px;
+      background: $surface;
+      border: 1px solid $border;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+      transition: all 0.18s ease;
+
+      &:hover {
+        transform: translateY(-3px);
+        border-color: rgba(242, 138, 89, 0.16);
+        box-shadow: 0 18px 32px rgba(15, 23, 42, 0.08);
+      }
 
       &.disabled {
-        opacity: 0.5;
+        opacity: 0.55;
         pointer-events: none;
       }
 
       .wrap-type-account {
+        width: 100%;
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: center;
-        width: 100%;
-
-        .name-type-acc {
-          color: var(--yellow-active);
-          text-transform: uppercase;
-          margin: 16px 0 0 0;
-        }
-
-        .num-acc {
-          margin-top: 10px;
-          color: #fff;
-        }
+        justify-content: flex-start;
+        padding: 12px 12px 16px;
 
         .img-type-account {
           width: 100%;
+          border-radius: 14px;
+          background: $surface-soft;
+        }
+
+        .name-type-acc {
+          margin: 12px 0 0;
+          color: $text;
+          text-transform: uppercase;
+          text-align: center;
+          font-size: 0.92rem;
+          line-height: 1.35;
+        }
+
+        .num-acc {
+          margin-top: 8px;
+          color: $muted;
+          font-size: 0.9rem;
+          text-align: center;
         }
 
         .btn-buy-now {
-          margin-top: 20px;
-          max-width: 135px;
+          margin-top: 16px;
+          max-width: 140px;
           padding: 0 5px;
 
           img {
             width: 100%;
+            display: block;
           }
         }
       }
@@ -139,9 +164,35 @@ export default {
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 560px) {
   .list-game-account {
-    margin: 30px auto;
+    margin: 24px auto 20px;
+
+    .title {
+      font-size: 1.45rem;
+      padding-bottom: 14px;
+    }
+  }
+
+  .list-game-account .list-type-account {
+    gap: 10px;
+    padding: 0 8px;
+
+    .type-account {
+      border-radius: 16px;
+
+      .wrap-type-account {
+        padding: 10px;
+
+        .name-type-acc {
+          font-size: 0.88rem;
+        }
+
+        .num-acc {
+          font-size: 0.84rem;
+        }
+      }
+    }
   }
 }
 </style>

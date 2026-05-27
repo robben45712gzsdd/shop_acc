@@ -88,7 +88,7 @@ a {
     content: "";
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgb(166 166 166 / 9%);
     backdrop-filter: blur(1px); /* hiệu ứng mờ sang */
     z-index: 5;
   }

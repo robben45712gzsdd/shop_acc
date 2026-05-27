@@ -157,7 +157,7 @@ export default {
   },
 
   mounted() {
-    this.$store.commit('setIsDarkMode', true);
+    this.$store.commit('setIsDarkMode', false);
   },
 
   methods: {

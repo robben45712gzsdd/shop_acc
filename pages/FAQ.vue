@@ -267,26 +267,12 @@ export default {
   }
 }
 </script>
-
 <style scoped>
 .faq-page {
   min-height: 100vh;
-  background: #0f1419;
-  padding: 60px 20px;
+  background: #fbfcfd;
+  padding: 56px 20px;
   position: relative;
-}
-
-.faq-page::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    radial-gradient(circle at 20% 50%, rgba(250, 105, 53, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(250, 105, 53, 0.05) 0%, transparent 50%);
-  pointer-events: none;
 }
 
 .faq-container {
@@ -299,49 +285,44 @@ export default {
 /* Header */
 .faq-header {
   text-align: center;
-  margin-bottom: 50px;
-  color: #e8e8e8;
+  margin-bottom: 40px;
+  color: #111827;
 }
 
 .header-icon {
-  display: inline-block;
-  width: 80px;
-  height: 80px;
-  background: rgba(250, 105, 53, 0.1);
+  display: inline-flex;
+  width: 72px;
+  height: 72px;
+  background: rgba(242, 138, 89, 0.06);
   border-radius: 50%;
-  display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 20px;
-  border: 3px solid rgba(250, 105, 53, 0.2);
+  margin-bottom: 14px;
+  border: 1px solid rgba(242, 138, 89, 0.12);
 }
 
 .header-icon i {
-  font-size: 2.5rem;
-  color: #FA6935;
+  font-size: 2rem;
+  color: #F28A59;
 }
 
 .faq-title {
-  font-size: 3rem;
+  font-size: 2.6rem;
   font-weight: 800;
-  margin-bottom: 15px;
-  letter-spacing: -1px;
-  background: linear-gradient(135deg, #ffffff 0%, #FA6935 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  margin-bottom: 8px;
+  color: #0f172a;
 }
 
 .faq-subtitle {
-  font-size: 1.2rem;
-  opacity: 0.7;
-  font-weight: 300;
-  color: #b0b0b0;
+  font-size: 1.05rem;
+  opacity: 0.85;
+  font-weight: 400;
+  color: #475569;
 }
 
 /* Search Section */
 .search-section {
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 
 .search-wrapper {
@@ -352,189 +333,177 @@ export default {
 
 .search-icon {
   position: absolute;
-  left: 25px;
+  left: 18px;
   top: 50%;
   transform: translateY(-50%);
-  color: #FA6935;
-  font-size: 1.2rem;
+  color: #F28A59;
+  font-size: 1.1rem;
 }
 
 .search-input {
   width: 100%;
-  padding: 18px 25px 18px 60px;
-  font-size: 1.05rem;
-  border: 2px solid #1a1f26;
-  border-radius: 50px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  padding: 13px 18px 13px 48px;
+  font-size: 0.99rem;
+  border: 1px solid #eef2f6;
+  border-radius: 999px;
   outline: none;
-  transition: all 0.3s ease;
-  background: #1a1f26;
-  color: #e8e8e8;
+  transition: all 0.15s ease;
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 1px 6px rgba(16, 24, 40, 0.06);
 }
 
 .search-input:focus {
-  border-color: #FA6935;
-  box-shadow: 0 4px 30px rgba(250, 105, 53, 0.3);
-  background: #1f2429;
+  border-color: rgba(242,138,89,0.5);
+  box-shadow: 0 8px 20px rgba(242,138,89,0.06);
 }
 
 .search-input::placeholder {
-  color: #6b7280;
+  color: #94a3b8;
 }
 
 /* Category Tabs */
 .category-tabs {
   display: flex;
-  gap: 12px;
-  margin-bottom: 40px;
+  gap: 10px;
+  margin-bottom: 28px;
   flex-wrap: wrap;
   justify-content: center;
 }
 
 .category-tab {
-  padding: 12px 24px;
-  background: #1a1f26;
-  color: #b0b0b0;
-  border: 2px solid #252b34;
-  border-radius: 30px;
+  padding: 10px 18px;
+  background: #ffffff;
+  color: #334155;
+  border: 1px solid #e6e9ee;
+  border-radius: 999px;
   cursor: pointer;
   font-weight: 600;
   font-size: 0.95rem;
-  transition: all 0.3s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
 .category-tab:hover {
-  background: #1f2429;
-  border-color: #FA6935;
-  color: #FA6935;
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
 .category-tab.active {
-  background: #FA6935;
+  background: #F28A59;
   color: white;
-  border-color: #FA6935;
-  box-shadow: 0 4px 20px rgba(250, 105, 53, 0.4);
+  border-color: #F28A59;
 }
 
 .category-tab i {
-  font-size: 1rem;
+  font-size: 0.95rem;
 }
 
 /* FAQ List */
 .faq-list {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
 .faq-item {
-  background: #1a1f26;
-  border-radius: 20px;
+  background: #ffffff;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease;
-  border: 2px solid #252b34;
+  transition: all 0.12s ease;
+  border: 1px solid #eef2f6;
 }
 
 .faq-item:hover {
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
-  transform: translateY(-3px);
-  border-color: #FA6935;
+  transform: translateY(-2px);
+  border-color: rgba(242,138,89,0.08);
+  box-shadow: 0 3px 10px rgba(16,24,40,0.06);
 }
 
 .faq-question {
-  padding: 25px 30px;
+  padding: 20px 22px;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #1a1f26;
-  color: #e8e8e8;
-  transition: all 0.3s ease;
-}
-
-.faq-question:hover {
-  background: #1f2429;
+  background: transparent;
+  color: #0f172a;
 }
 
 .question-content {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 14px;
   flex: 1;
 }
 
 .question-icon {
   width: 40px;
   height: 40px;
-  background: rgba(250, 105, 53, 0.1);
+  background: rgba(242,138,89,0.05);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border: 2px solid rgba(250, 105, 53, 0.2);
+  border: 1px solid rgba(242,138,89,0.1);
 }
 
 .question-icon i {
-  font-size: 1.2rem;
-  color: #FA6935;
+  font-size: 1.1rem;
+  color: #F28A59;
 }
 
 .faq-question h3 {
   margin: 0;
-  font-size: 1.15rem;
-  font-weight: 600;
-  line-height: 1.5;
-  color: #e8e8e8;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #0f172a;
 }
 
 .toggle-icon {
-  font-size: 1.2rem;
-  font-weight: bold;
-  min-width: 35px;
-  height: 35px;
+  font-size: 1.1rem;
+  min-width: 34px;
+  height: 34px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(250, 105, 53, 0.1);
+  background: rgba(242,138,89,0.05);
   border-radius: 50%;
-  transition: all 0.3s ease;
-  color: #FA6935;
+  transition: transform 0.12s ease, background 0.12s ease;
+  color: #F28A59;
 }
 
 .toggle-icon.rotated {
   transform: rotate(180deg);
-  background: #FA6935;
+  background: #F28A59;
   color: white;
 }
 
 .faq-answer {
-  padding: 30px;
-  background: #161b22;
-  border-top: 2px solid #252b34;
+  padding: 20px 22px;
+  background: #ffffff;
+  border-top: 1px solid #eef2f6;
 }
 
 .faq-answer p {
-  margin: 0 0 15px 0;
-  line-height: 1.8;
-  color: #b0b0b0;
-  font-size: 1.02rem;
+  margin: 0 0 12px 0;
+  line-height: 1.7;
+  color: #334155;
+  font-size: 0.98rem;
 }
 
 .faq-meta {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 2px solid #252b34;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #eef2f6;
   font-size: 0.9rem;
-  color: #6b7280;
+  color: #64748b;
 }
 
 .faq-date {
@@ -545,22 +514,21 @@ export default {
 }
 
 .faq-date i {
-  color: #FA6935;
+  color: #F28A59;
 }
 
 .faq-category {
-  background: #FA6935;
+  background: #F28A59;
   color: white;
-  padding: 6px 16px;
-  border-radius: 20px;
+  padding: 6px 14px;
+  border-radius: 16px;
   font-size: 0.85rem;
   font-weight: 600;
-  box-shadow: 0 2px 8px rgba(250, 105, 53, 0.3);
 }
 
 /* Transitions */
 .fade-enter-active, .fade-leave-active {
-  transition: all 0.4s ease;
+  transition: all 0.28s ease;
   max-height: 1000px;
 }
 
@@ -574,119 +542,95 @@ export default {
 /* Empty State */
 .empty-state {
   text-align: center;
-  padding: 80px 20px;
-  background: #1a1f26;
-  border-radius: 20px;
-  color: #6b7280;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  border: 2px solid #252b34;
+  padding: 56px 20px;
+  background: #ffffff;
+  border-radius: 12px;
+  color: #64748b;
+  border: 1px solid #eef2f6;
 }
 
 .empty-state i {
-  color: #FA6935;
-  margin-bottom: 20px;
-  opacity: 0.5;
+  color: #F28A59;
+  margin-bottom: 18px;
+  opacity: 0.9;
 }
 
 .empty-state p {
-  font-size: 1.3rem;
-  margin: 0 0 10px 0;
-  font-weight: 600;
-  color: #e8e8e8;
+  font-size: 1.15rem;
+  margin: 0 0 8px 0;
+  font-weight: 700;
+  color: #0f172a;
 }
 
 .empty-state span {
-  font-size: 1rem;
-  color: #6b7280;
+  font-size: 0.98rem;
+  color: #64748b;
 }
 
 /* Contact Section */
 .contact-section {
-  margin-top: 60px;
-  padding: 50px 40px;
-  background: #1a1f26;
-  border-radius: 25px;
+  margin-top: 40px;
+  padding: 36px 28px;
+  background: #ffffff;
+  border-radius: 12px;
   text-align: center;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
   position: relative;
   overflow: hidden;
-  border: 2px solid #252b34;
-}
-
-.contact-section::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(250, 105, 53, 0.05) 0%, transparent 70%);
-  pointer-events: none;
+  border: 1px solid #eef2f6;
 }
 
 .contact-icon {
   display: inline-block;
-  width: 70px;
-  height: 70px;
-  background: linear-gradient(135deg, #FA6935, #ff7d4d);
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, #F28A59, #ff7d4d);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 25px;
-  box-shadow: 0 4px 20px rgba(250, 105, 53, 0.4);
+  margin: 0 auto 18px;
   position: relative;
 }
 
 .contact-icon i {
-  font-size: 2rem;
+  font-size: 1.7rem;
   color: white;
 }
 
 .contact-section h3 {
-  font-size: 1.8rem;
-  margin-bottom: 15px;
-  color: #e8e8e8;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #0f172a;
   font-weight: 700;
-  position: relative;
 }
 
 .contact-section p {
-  color: #b0b0b0;
-  margin-bottom: 30px;
-  font-size: 1.05rem;
-  position: relative;
+  color: #475569;
+  margin-bottom: 18px;
+  font-size: 0.98rem;
 }
 
 .contact-button {
-  padding: 15px 40px;
-  background: linear-gradient(135deg, #FA6935, #ff7d4d);
+  padding: 12px 32px;
+  background: linear-gradient(135deg, #F28A59, #ff7d4d);
   color: white;
   border: none;
-  border-radius: 50px;
-  font-size: 1.05rem;
+  border-radius: 999px;
+  font-size: 0.98rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba(250, 105, 53, 0.4);
+  transition: transform 0.18s ease;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  position: relative;
+  gap: 8px;
 }
 
 .contact-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 30px rgba(250, 105, 53, 0.6);
-  background: linear-gradient(135deg, #ff7d4d, #FA6935);
-}
-
-.contact-button:active {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 
 .contact-button i {
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 /* Responsive */
@@ -696,63 +640,63 @@ export default {
   }
 
   .faq-title {
-    font-size: 2.2rem;
-  }
-
-  .faq-subtitle {
-    font-size: 1rem;
-  }
-
-  .header-icon {
-    width: 60px;
-    height: 60px;
-  }
-
-  .header-icon i {
     font-size: 2rem;
   }
 
+  .faq-subtitle {
+    font-size: 0.98rem;
+  }
+
+  .header-icon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .header-icon i {
+    font-size: 1.6rem;
+  }
+
   .category-tabs {
-    gap: 10px;
+    gap: 8px;
   }
 
   .category-tab {
-    padding: 10px 18px;
+    padding: 8px 14px;
     font-size: 0.9rem;
   }
 
   .faq-question {
-    padding: 18px 20px;
+    padding: 14px 16px;
   }
 
   .question-icon {
-    width: 35px;
-    height: 35px;
+    width: 34px;
+    height: 34px;
   }
 
   .question-icon i {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
 
   .faq-question h3 {
-    font-size: 1rem;
+    font-size: 0.98rem;
   }
 
   .faq-answer {
-    padding: 20px;
+    padding: 16px;
   }
 
   .contact-section {
-    padding: 40px 25px;
+    padding: 28px 20px;
   }
 
   .contact-section h3 {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
   }
 
   .contact-button {
-    padding: 12px 30px;
-    font-size: 1rem;
+    padding: 10px 24px;
+    font-size: 0.95rem;
   }
 }
 
@@ -762,11 +706,11 @@ export default {
   }
 
   .category-tab {
-    padding: 10px 15px;
+    padding: 8px 12px;
   }
 
   .search-input {
-    padding: 16px 20px 16px 50px;
+    padding: 12px 16px 12px 44px;
     font-size: 0.95rem;
   }
 }

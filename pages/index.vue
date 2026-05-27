@@ -4,12 +4,10 @@
     <transition name="modal-fade">
       <div class="promo-modal-overlay" v-if="showPromoModal" @click.self="closePromoModal">
         <div class="promo-modal">
-          <!-- Close Button -->
           <button class="modal-close" @click="closePromoModal">
             <i class="fas fa-times"></i>
           </button>
 
-          <!-- Header với hiệu ứng -->
           <div class="modal-header">
             <div class="flash-badge">
               <i class="fas fa-bolt"></i>
@@ -23,10 +21,9 @@
             </div>
           </div>
 
-          <!-- Content -->
           <div class="modal-body">
             <p class="promo-desc">Cơ hội sở hữu tài khoản game chất lượng với giá siêu hời!</p>
-            
+
             <ul class="promo-features">
               <li>
                 <i class="fas fa-check-circle"></i>
@@ -63,22 +60,13 @@
             </div>
           </div>
 
-          <!-- Actions -->
           <div class="modal-actions">
-  
             <a href="https://www.facebook.com/LyMinhTuan.AdminCheckScamVn" target="_blank" class="btn-promo-secondary">
               <i class="fab fa-facebook"></i>
               Fanpage hỗ trợ
             </a>
           </div>
 
-          <!-- Footer -->
-          <div class="modal-footer">
-            <label class="dont-show-again">
-              <input type="checkbox" v-model="dontShowAgain" />
-              <span>Không hiển thị lại hôm nay</span>
-            </label>
-          </div>
         </div>
       </div>
     </transition>
@@ -86,9 +74,6 @@
     <section>
       <RechargeOnline />
       <ListGameAccount />
-      <!-- <div class="hot-mini-game">
-        <div class="title"><strong>mini game siêu hot</strong></div>
-      </div> -->
     </section>
   </div>
 </template>
@@ -131,25 +116,24 @@ export default {
     },
 
     startCountdown() {
-      // Set end time to midnight
       const now = new Date();
       const endOfDay = new Date(now);
       endOfDay.setHours(23, 59, 59, 999);
-      
+
       this.countdownInterval = setInterval(() => {
-        const now = new Date();
-        const diff = endOfDay - now;
-        
+        const current = new Date();
+        const diff = endOfDay - current;
+
         if (diff <= 0) {
           this.countdown = { hours: '00', minutes: '00', seconds: '00' };
           clearInterval(this.countdownInterval);
           return;
         }
-        
+
         const hours = Math.floor(diff / (1000 * 60 * 60));
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-        
+
         this.countdown = {
           hours: hours.toString().padStart(2, '0'),
           minutes: minutes.toString().padStart(2, '0'),
@@ -160,7 +144,7 @@ export default {
   },
 
   mounted() {
-    this.$store.commit('setIsDarkMode', true);
+    this.$store.commit('setIsDarkMode', false);
     this.checkShowModal();
     this.startCountdown();
   },
@@ -174,327 +158,316 @@ export default {
 </script>
 
 <style lang="scss">
-// ============================================
-// DARK GAMING THEME VARIABLES
-// ============================================
-$primary: #ff4655;
-$primary-dark: #d63845;
-$secondary: #00d9ff;
-$accent: #ffb800;
-$dark: #0a0a0a;
-$dark-card: #121212;
-$dark-light: #1a1a1a;
-$dark-border: #2a2a2a;
-$text-white: #ffffff;
-$text-gray: #888888;
-$success: #00ff88;
+$primary: #f28a59;
+$primary-dark: #e67540;
+$primary-soft: rgba(242, 138, 89, 0.12);
+$page-bg: #fbfcfd;
+$surface: #ffffff;
+$surface-soft: #f8fafc;
+$border: #e9eef3;
+$border-strong: #dde5ec;
+$text: #0f172a;
+$muted: #64748b;
+$muted-2: #94a3b8;
 
 .homepage-content {
-  padding-top: 1px;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-size: cover;
+  min-height: 100vh;
+  background:
+   radial-gradient(circle at top, rgba(242, 138, 89, 0.08), transparent 36%), linear-gradient(180deg, #ffffff 0%, #d7ffd3 38%, #f7fff4 100%);
 }
 
-// ============================================
-// PROMO MODAL - GAMING STYLE
-// ============================================
 .promo-modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(4px);
+  inset: 0;
   z-index: 9999;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   padding: 20px;
+  background: rgba(15, 23, 42, 0.58);
+  backdrop-filter: blur(8px);
 }
 
 .promo-modal {
-  background: $dark-card;
-  border: 1px solid $dark-border;
   width: 100%;
-  max-width: 480px;
+  max-width: 520px;
   position: relative;
   overflow: hidden;
+  border-radius: 5px;
+  background: $surface;
+  border: 1px solid rgba(242, 138, 89, 0.16);
+  box-shadow: 0 30px 80px rgba(15, 23, 42, 0.16);
 
-  // Red accent line at top
   &::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, $primary, $accent, $primary);
-    background-size: 200% 100%;
-    animation: gradientSlide 3s ease infinite;
-      background: $primary;
+    inset: 0 0 auto 0;
+    height: 5px;
+    background: linear-gradient(90deg, $primary, #f5a25d, $primary);
   }
-}
-
-@keyframes gradientSlide {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
 }
 
 .modal-close {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 36px;
-  height: 36px;
-  background: $dark-light;
-  border: 1px solid $dark-border;
-  color: $text-gray;
-  font-size: 16px;
-  cursor: pointer;
+  top: 14px;
+  right: 14px;
+  width: 38px;
+  height: 38px;
+  border: 1px solid $border;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  color: $muted;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s;
-  z-index: 10;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  z-index: 2;
 
   &:hover {
-    background: $primary;
-    border-color: $primary;
-    color: $text-white;
+    transform: rotate(90deg);
+    border-color: rgba(242, 138, 89, 0.24);
+    color: $primary;
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
   }
 }
 
 .modal-header {
-  padding: 32px 24px 20px;
+  padding: 34px 28px 22px;
   text-align: center;
-  background: linear-gradient(180deg, rgba($primary, 0.1) 0%, transparent 100%);
-    background: rgba($primary, 0.1);
-  border-bottom: 1px solid $dark-border;
+  background: linear-gradient(180deg, rgba(242, 138, 89, 0.08), transparent);
 }
 
 .flash-badge {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 14px;
-  background: $accent;
-  color: $dark;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: $primary-soft;
+  color: $primary;
   font-size: 11px;
   font-weight: 800;
+  letter-spacing: 1.8px;
   text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 16px;
-  animation: pulse 2s ease-in-out infinite;
+  margin-bottom: 14px;
 
   i {
     font-size: 12px;
   }
 }
 
-@keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-}
-
 .modal-title {
-  color: $text-white;
+  margin: 0 0 14px;
+  color: $text;
   font-size: 28px;
+  line-height: 1.1;
   font-weight: 900;
+  letter-spacing: 2px;
   text-transform: uppercase;
-  letter-spacing: 3px;
-  margin: 0 0 16px 0;
 }
 
 .discount-badge {
   display: inline-flex;
   align-items: baseline;
   gap: 4px;
-  padding: 12px 24px;
-  background: $primary;
-  position: relative;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #ff0000, #ff1919);
+  box-shadow: 0 12px 30px rgba(242, 138, 89, 0.22);
 
   .discount-number {
     font-size: 48px;
     font-weight: 900;
-    color: $text-white;
+    color: #ffffff;
     line-height: 1;
   }
 
   .discount-percent {
     font-size: 24px;
     font-weight: 800;
-    color: $text-white;
+    color: rgba(255, 255, 255, 0.95);
   }
 
   .discount-text {
-    font-size: 14px;
+    margin-left: 6px;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 13px;
     font-weight: 700;
-    color: rgba(255,255,255,0.8);
-    margin-left: 8px;
     text-transform: uppercase;
     letter-spacing: 1px;
   }
 }
 
 .modal-body {
-  padding: 24px;
+  padding: 0 28px 24px;
 }
 
 .promo-desc {
-  color: $text-gray;
-  font-size: 14px;
+  margin: 0 0 18px;
+  color: $muted;
   text-align: center;
-  margin: 0 0 20px 0;
-  line-height: 1.6;
+  line-height: 1.65;
+  font-size: 14px;
 }
 
 .promo-features {
   list-style: none;
+  margin: 0 0 22px;
   padding: 0;
-  margin: 0 0 24px 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 
   li {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 12px;
-    padding: 12px 16px;
-    background: $dark-light;
-    border-left: 3px solid $success;
+    padding: 12px 14px;
+    border: 1px solid $border;
+    border-radius: 16px;
+    background: $surface-soft;
 
     i {
-      color: $success;
+      color: $primary;
       font-size: 16px;
+      margin-top: 1px;
+      flex-shrink: 0;
     }
 
     span {
-      color: $text-white;
+      color: $text;
       font-size: 13px;
       font-weight: 500;
+      line-height: 1.5;
     }
   }
 }
 
 .promo-countdown {
-  text-align: center;
   padding: 16px;
-  background: $dark-light;
-  border: 1px solid $dark-border;
+  border-radius: 18px;
+  background: #f8fafc;
+  border: 1px solid $border;
+  text-align: center;
 }
 
 .countdown-label {
   display: block;
-  color: $text-gray;
+  margin-bottom: 12px;
+  color: $muted-2;
   font-size: 12px;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
-  margin-bottom: 12px;
 }
 
 .countdown-timer {
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  gap: 10px;
 }
 
 .time-block {
+  min-width: 58px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: $surface;
+  border: 1px solid $border;
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 50px;
 
   .time-value {
+    color: $primary;
     font-size: 28px;
     font-weight: 900;
-    color: $primary;
+    line-height: 1;
   }
 
   .time-label {
+    margin-top: 4px;
+    color: $muted-2;
     font-size: 10px;
-    color: $text-gray;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
   }
 }
 
 .time-sep {
+  margin-bottom: 12px;
+  color: $muted-2;
   font-size: 24px;
   font-weight: 700;
-  color: $text-gray;
-  margin-bottom: 16px;
 }
 
 .modal-actions {
-  padding: 0 24px 24px;
+  padding: 0 28px 24px;
   display: flex;
   gap: 12px;
 }
 
-.btn-promo-primary,
-.btn-promo-secondary {
+.btn-promo-secondary,
+.btn-promo-primary {
   flex: 1;
-  display: flex;
+  min-height: 48px;
+  padding: 12px 18px;
+  border-radius: 14px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 14px 20px;
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
   text-decoration: none;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.18s ease;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
 }
 
 .btn-promo-primary {
-  background: $primary;
-  border: 1px solid $primary;
-  color: $text-white;
+  background: linear-gradient(135deg, $primary, #f5a25d);
+  border: 1px solid transparent;
+  color: #ffffff;
 
   &:hover {
-    background: $primary-dark;
-  }
-
-  i {
-    font-size: 14px;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(242, 138, 89, 0.18);
   }
 }
 
 .btn-promo-secondary {
-  background: transparent;
-  border: 1px solid $dark-border;
-  color: $text-white;
+  background: #ffffff;
+  border: 1px solid $border-strong;
+  color: $text;
 
   &:hover {
-    border-color: $secondary;
-    color: $secondary;
+    transform: translateY(-1px);
+    border-color: rgba(242, 138, 89, 0.32);
+    color: $primary;
+    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.06);
   }
 
   i {
-    font-size: 14px;
     color: #1877f2;
+    font-size: 14px;
   }
 }
 
 .modal-footer {
-  padding: 16px 24px;
-  background: $dark-light;
-  border-top: 1px solid $dark-border;
+  padding: 14px 28px 22px;
+  border-top: 1px solid $border;
+  background: linear-gradient(180deg, rgba(248, 250, 252, 0.8), #ffffff);
 }
 
 .dont-show-again {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 10px;
+  color: $muted;
   cursor: pointer;
   font-size: 13px;
-  color: $text-gray;
 
   input[type="checkbox"] {
     width: 16px;
@@ -503,23 +476,26 @@ $success: #00ff88;
     cursor: pointer;
   }
 
+  span {
+    transition: color 0.18s ease;
+  }
+
   &:hover span {
-    color: $text-white;
+    color: $text;
   }
 }
 
-// Modal Animation
 .modal-fade-enter-active,
 .modal-fade-leave-active {
-  transition: opacity 0.3s ease;
+  transition: opacity 0.24s ease;
 }
 
 .modal-fade-enter-active .promo-modal {
-  animation: modalSlideIn 0.3s ease;
+  animation: modalSlideIn 0.24s ease;
 }
 
 .modal-fade-leave-active .promo-modal {
-  animation: modalSlideOut 0.2s ease;
+  animation: modalSlideOut 0.18s ease;
 }
 
 .modal-fade-enter,
@@ -530,43 +506,56 @@ $success: #00ff88;
 @keyframes modalSlideIn {
   from {
     opacity: 0;
-    transform: scale(0.9) translateY(-20px);
+    transform: translateY(18px) scale(0.96);
   }
   to {
     opacity: 1;
-    transform: scale(1) translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
 @keyframes modalSlideOut {
   from {
     opacity: 1;
-    transform: scale(1);
+    transform: translateY(0) scale(1);
   }
   to {
     opacity: 0;
-    transform: scale(0.9);
+    transform: translateY(16px) scale(0.97);
   }
 }
 
-// ============================================
-// RESPONSIVE
-// ============================================
-@media (max-width: 480px) {
+section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 18px 16px 28px;
+}
+
+@media (max-width: 768px) {
   .promo-modal {
     max-width: 100%;
+    border-radius: 20px;
+  }
+
+  .modal-header {
+    padding: 30px 20px 18px;
+  }
+
+  .modal-body,
+  .modal-actions,
+  .modal-footer {
+    padding-left: 20px;
+    padding-right: 20px;
   }
 
   .modal-title {
     font-size: 22px;
-    letter-spacing: 2px;
+    letter-spacing: 1.5px;
   }
 
   .discount-badge {
-    padding: 10px 20px;
-
     .discount-number {
-      font-size: 36px;
+      font-size: 38px;
     }
 
     .discount-percent {
@@ -574,47 +563,31 @@ $success: #00ff88;
     }
   }
 
-  .modal-actions {
-    flex-direction: column;
+  .countdown-timer {
+    gap: 8px;
   }
 
-  .time-block .time-value {
-    font-size: 22px;
-  }
-}
+  .time-block {
+    min-width: 52px;
+    padding: 8px 10px;
 
-// ============================================
-// SECTION STYLES
-// ============================================
-section {
-  max-width: var(--max-width);
-  margin: 0px auto;
-
-  .hot-mini-game {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--black-three);
-
-    .title {
-      text-transform: uppercase;
-      font-size: 1.9rem;
-      text-align: center;
-      padding: 30px 0px;
-      color: var(--yellow-active);
+    .time-value {
+      font-size: 24px;
     }
   }
 }
 
 @media (max-width: 480px) {
-  footer {
-    .wrap-footer {
-      p {
-        line-height: 20px;
-        font-size: 0.9rem;
-      }
-    }
+  .modal-actions {
+    flex-direction: column;
+  }
+
+  .countdown-timer {
+    gap: 6px;
+  }
+
+  .time-sep {
+    font-size: 20px;
   }
 }
 </style>

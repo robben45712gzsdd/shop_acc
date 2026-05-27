@@ -106,7 +106,7 @@ export default {
   },
 
   mounted() {
-    this.$store.commit('setIsDarkMode', true);
+    this.$store.commit('setIsDarkMode', false);
     
     if (this.$store.state.user_data?.username) {
       this.$router.push('/');
