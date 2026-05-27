@@ -59,20 +59,7 @@
 
               <!-- TÀI KHOẢN -->
               <td class="cell-cred">
-                <div class="cred-preview">
-                  <div class="cred-line">
-                    <i class="fas fa-user"></i>
-                    <span class="cred-text" :class="{ blur: !visibleItems[item.orderId] }">
-                      {{ item.credentials?.username || 'N/A' }}
-                    </span>
-                  </div>
-                  <div class="cred-line">
-                    <i class="fas fa-lock"></i>
-                    <span class="cred-text" :class="{ blur: !visibleItems[item.orderId] }">
-                      {{ item.credentials?.password || 'N/A' }}
-                    </span>
-                  </div>
-                </div>
+                <span class="cred-empty">Đã ẩn</span>
               </td>
 
               <!-- GIÁ -->
@@ -195,36 +182,43 @@
               </div>
             </div>
 
-            <!-- CREDENTIALS -->
+            <!-- GET ACCOUNT GUIDE -->
             <div class="modal-section">
-              <div class="section-header">
-                <h4 class="section-title">Thông Tin Tài Khoản</h4>
-                <div class="actions">
-                  <button class="action-btn" @click="toggleVisibility" :title="visibleItems[selectedItem.orderId] ? 'Ẩn' : 'Hiện'">
-                    <i :class="visibleItems[selectedItem.orderId] ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
-                  </button>
-                  <button class="action-btn" @click="copyCredentials(selectedItem)" title="Sao chép">
-                    <i class="fas fa-copy"></i>
-                  </button>
-                </div>
-              </div>
-              <div class="cred-box">
-                <div class="cred-item">
-                  <label class="cred-label">
-                    <i class="fas fa-user"></i>
-                    Tài Khoản
-                  </label>
-                  <div class="cred-value" :class="{ blur: !visibleItems[selectedItem.orderId] }">
-                    {{ selectedItem.credentials?.username || 'N/A' }}
+              <h4 class="section-title">
+                <i class="fas fa-question-circle"></i>
+                Cách Lấy Tài Khoản
+              </h4>
+              <div class="guide-box">
+                <div class="guide-step">
+                  <div class="step-number">1</div>
+                  <div class="step-content">
+                    <p class="step-title">Sao chép mã đơn hàng</p>
+                    <div class="code-display">
+                      <span class="code-text">{{ selectedItem.orderCode }}</span>
+                      <button class="copy-btn" @click="copyOrderCode(selectedItem.orderCode)" title="Sao chép">
+                        <i class="fas fa-copy"></i>
+                      </button>
+                    </div>
                   </div>
                 </div>
-                <div class="cred-item">
-                  <label class="cred-label">
-                    <i class="fas fa-lock"></i>
-                    Mật Khẩu
-                  </label>
-                  <div class="cred-value" :class="{ blur: !visibleItems[selectedItem.orderId] }">
-                    {{ selectedItem.credentials?.password || 'N/A' }}
+
+                <div class="guide-step">
+                  <div class="step-number">2</div>
+                  <div class="step-content">
+                    <p class="step-title">Liên hệ chủ tài khoản qua Zalo</p>
+                    <p class="step-desc">Gửi mã đơn hàng và ID tài khoản để yêu cầu nhận username + password</p>
+                    <button class="btn-zalo" @click="sendZaloMessage(selectedItem)" title="Gửi tin nhắn Zalo">
+                      <i class="fas fa-paper-plane"></i>
+                      Gửi Tin Nhắn Zalo
+                    </button>
+                  </div>
+                </div>
+
+                <div class="guide-step">
+                  <div class="step-number">3</div>
+                  <div class="step-content">
+                    <p class="step-title">Nhận thông tin từ chủ tài khoản</p>
+                    <p class="step-desc">Chủ tài khoản sẽ gửi username và password cho bạn qua Zalo</p>
                   </div>
                 </div>
               </div>
@@ -256,6 +250,7 @@
 
 <script>
 import order from "~/api/order";
+import zaloConfig from "~/constants/zaloConfig";
 
 export default {
   data() {
@@ -378,6 +373,36 @@ export default {
       }
     },
 
+    copyOrderCode(orderCode) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(orderCode).then(() => {
+          this.$toast?.success?.(zaloConfig.MESSAGES.copiedOrderCode);
+        });
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = orderCode;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        this.$toast?.success?.(zaloConfig.MESSAGES.copiedOrderCode);
+      }
+    },
+
+    sendZaloMessage(item) {
+      // Lấy số Zalo từ config (có thể tùy chỉnh theo danh mục)
+      let zaloPhoneNumber = zaloConfig.CATEGORY_ZALO_MAP[item.accountTitle] || 
+                            zaloConfig.DEFAULT_ZALO_PHONE;
+      
+      const message = `Xin chào, tôi vừa mua tài khoản với mã đơn hàng: ${item.orderCode}\n\nID tài khoản: ${item.accountId}\n\nVui lòng gửi cho tôi username và password.`;
+      
+      const encodedMessage = encodeURIComponent(message);
+      const zaloUrl = `https://zalo.me/${zaloPhoneNumber}/?text=${encodedMessage}`;
+      
+      window.open(zaloUrl, '_blank');
+      this.$toast?.info?.(zaloConfig.MESSAGES.openingZalo);
+    },
+
     formatPrice(num) {
       return (num || 0).toLocaleString("vi-VN") + "đ";
     },
@@ -475,6 +500,8 @@ $success-light: #ecfdf5;
       }
     }
   }
+
+
 }
 
 // ============================================
@@ -654,38 +681,14 @@ $success-light: #ecfdf5;
   }
 
   .cell-cred {
-    .cred-preview {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-
-      .cred-line {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 11px;
-
-        i {
-          color: $primary;
-          font-size: 11px;
-          flex-shrink: 0;
-        }
-
-        .cred-text {
-          
-          color: $text-sub;
-          max-width: 120px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          transition: all 0.2s;
-
-          &.blur {
-            filter: blur(3px);
-            user-select: none;
-          }
-        }
-      }
+    .cred-empty {
+      display: inline-block;
+      padding: 4px 8px;
+      background: #f3f4f6;
+      color: $text-sub;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
     }
   }
 
@@ -703,7 +706,7 @@ $success-light: #ecfdf5;
   }
 
   .cell-time {
-    .time-info {
+      .time-info {
       .date {
         font-weight: 700;
         color: $text-main;
@@ -741,8 +744,8 @@ $success-light: #ecfdf5;
   }
 }
 
-// EMPTY STATE
-.empty-row {
+  // EMPTY STATE
+  .empty-row {
   border: none;
 
   .empty-state {
@@ -1059,7 +1062,7 @@ $success-light: #ecfdf5;
           img {
             width: 100%;
             height: auto;
-            display: block;
+              border-radius: 6px;
           }
 
           &:hover {
@@ -1163,6 +1166,128 @@ $success-light: #ecfdf5;
 }
 
 // ============================================
+// GUIDE SECTION
+// ============================================
+
+.guide-box {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+    background: #f0f9ff;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #dbeafe;
+
+  .guide-step {
+    display: flex;
+    gap: 12px;
+
+    .step-number {
+      min-width: 32px;
+      width: 32px;
+      height: 32px;
+        background: $primary;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .step-content {
+      flex: 1;
+      padding-top: 2px;
+
+      .step-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: $text-main;
+        margin: 0 0 8px 0;
+      }
+
+      .step-desc {
+        font-size: 12px;
+        color: $text-sub;
+        margin: 0 0 10px 0;
+        line-height: 1.4;
+      }
+
+      .code-display {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: white;
+        padding: 10px 12px;
+        border-radius: 6px;
+        border: 1px solid $border;
+        margin-bottom: 8px;
+
+        .code-text {
+          font-family: 'Courier New', monospace;
+          font-size: 12px;
+          color: $primary;
+          font-weight: 600;
+          flex: 1;
+          word-break: break-all;
+        }
+
+        .copy-btn {
+          width: 28px;
+          height: 28px;
+          border: 1px solid $primary;
+          background: white;
+          color: $primary;
+          border-radius: 4px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s;
+          font-size: 12px;
+          flex-shrink: 0;
+
+          &:hover {
+            background: $primary;
+            color: white;
+          }
+        }
+      }
+
+      .btn-zalo {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+          background: #0084ff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        i {
+          font-size: 12px;
+        }
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0, 132, 255, 0.3);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+      }
+    }
+  }
+}
+
+// ============================================
 // RESPONSIVE
 // ============================================
 
@@ -1171,7 +1296,7 @@ $success-light: #ecfdf5;
     padding: 12px 16px;
     flex-direction: column;
     gap: 10px;
-    align-items: flex-start;
+      background: $primary;
 
     .header-title h2 {
       font-size: 16px;

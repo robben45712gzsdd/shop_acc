@@ -257,6 +257,7 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
   .info-header {
     padding: 24px;
     background: linear-gradient(135deg, rgba($primary, 0.08), rgba($primary, 0.03));
+      background: rgba($primary, 0.08);
     border-bottom: 2px solid $border;
 
     .header-content {
@@ -312,6 +313,7 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
         right: 0;
         height: 3px;
         background: linear-gradient(90deg, $primary, $primary-light);
+          background: $primary;
         transform: scaleX(0);
         transform-origin: left;
         transition: transform 0.3s ease;
@@ -375,6 +377,7 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
           display: inline-block;
           padding: 8px;
           background: linear-gradient(135deg, $primary, $primary-dark);
+            background: $primary;
           color: white;
           border-radius: 6px;
           font-size: 12px;
@@ -561,6 +564,7 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
 
       &.primary {
         background: linear-gradient(135deg, $primary, $primary-dark);
+          background: $primary;
         color: white;
 
         &:hover {

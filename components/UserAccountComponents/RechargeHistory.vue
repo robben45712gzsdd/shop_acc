@@ -193,6 +193,8 @@ $yellow: #f59e0b;
   .history-header {
     padding: 20px 24px;
     background: linear-gradient(135deg, rgba($primary, 0.08), rgba($primary, 0.03));
+  border-radius: 8px;
+      background: rgba($primary, 0.08);
     border-bottom: 2px solid $border;
     display: flex;
     justify-content: space-between;

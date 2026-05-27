@@ -238,6 +238,7 @@ $info-light: #eff6ff;
   justify-content: space-between;
   padding: 16px 20px;
   background: linear-gradient(135deg, rgba(255, 107, 53, 0.08), rgba(255, 107, 53, 0.03));
+  background: rgba(255, 107, 53, 0.08);
 
   .header-title {
     display: flex;

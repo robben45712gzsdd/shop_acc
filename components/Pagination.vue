@@ -93,6 +93,7 @@ export default {
 
 .page-btn.active {
   background: linear-gradient(135deg, #ff6b35, #ff8c5a);
+    background: #ff6b35;
   color: white;
   border-color: #ff6b35;
 }

@@ -34,6 +34,7 @@ style.textContent = `
   .custom-toast {
     padding: 16px !important;
     border-radius: 12px !important;
+      border-radius: 8px !important;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);

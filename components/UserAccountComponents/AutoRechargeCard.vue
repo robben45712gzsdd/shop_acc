@@ -315,6 +315,7 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
   .form-header {
     padding: 24px;
     background: linear-gradient(135deg, rgba($primary, 0.08), rgba($primary, 0.03));
+      background: rgba($primary, 0.08);
     border-bottom: 2px solid $border;
 
     .header-content {

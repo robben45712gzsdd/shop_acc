@@ -350,6 +350,7 @@ $shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
     border-bottom: 2px solid $border;
 
     .header-content {
+      background: rgba($primary, 0.08);
       display: flex;
       align-items: center;
       gap: 12px;

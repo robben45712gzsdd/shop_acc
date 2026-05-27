@@ -85,6 +85,7 @@ export default {
 
 .promo-modal {
   background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+    background: #ff6b6b;
   border-radius: 25px;
   max-width: 500px;
   width: 100%;
@@ -167,6 +168,7 @@ export default {
 .promo-badge {
   display: inline-block;
   background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+    background: #ffd700;
   color: #d32f2f;
   padding: 8px 20px;
   border-radius: 20px;
@@ -184,6 +186,7 @@ export default {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+    color: #ff6b6b;
   line-height: 1;
   margin: 10px 0 20px 0;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
@@ -238,6 +241,7 @@ export default {
   width: 100%;
   padding: 18px;
   background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+    background: #ff6b6b;
   color: #fff;
   border: none;
   border-radius: 12px;

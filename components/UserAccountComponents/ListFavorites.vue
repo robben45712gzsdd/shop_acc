@@ -302,6 +302,8 @@ $info: #c17635;
       height: 48px;
       background: linear-gradient(135deg, $primary, $primary-light);
       border-radius: 12px;
+      background: $primary;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -431,6 +433,7 @@ $info: #c17635;
       gap: 10px;
       padding: 14px 32px;
       background: linear-gradient(135deg, $primary, $primary-light);
+        background: $primary;
       color: white;
       text-decoration: none;
       border-radius: 12px;
@@ -638,6 +641,7 @@ $info: #c17635;
 
           &.btn-view {
             background: linear-gradient(135deg, $primary, $primary-light);
+              background: $primary;
             color: white;
             box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
 

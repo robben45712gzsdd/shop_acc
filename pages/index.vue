@@ -233,6 +233,7 @@ $success: #00ff88;
     background: linear-gradient(90deg, $primary, $accent, $primary);
     background-size: 200% 100%;
     animation: gradientSlide 3s ease infinite;
+      background: $primary;
   }
 }
 
@@ -269,6 +270,7 @@ $success: #00ff88;
   padding: 32px 24px 20px;
   text-align: center;
   background: linear-gradient(180deg, rgba($primary, 0.1) 0%, transparent 100%);
+    background: rgba($primary, 0.1);
   border-bottom: 1px solid $dark-border;
 }
 

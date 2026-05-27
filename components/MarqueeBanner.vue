@@ -42,6 +42,7 @@ export default {
 <style lang="scss" scoped>
 .marquee-banner {
   background: linear-gradient(90deg, #1a1a2e 0%, #16213e 50%, #1a1a2e 100%);
+    background: #1a1a2e;
   border-bottom: 1px solid rgba(245, 158, 11, 0.2);
   overflow: hidden;
   padding: 10px 0;
@@ -63,11 +64,13 @@ export default {
   &::before {
     left: 0;
     background: linear-gradient(90deg, #1a1a2e 0%, transparent 100%);
+      background: #1a1a2e;
   }
 
   &::after {
     right: 0;
     background: linear-gradient(90deg, transparent 0%, #1a1a2e 100%);
+      background: #1a1a2e;
   }
 }
 

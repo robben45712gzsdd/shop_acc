@@ -309,7 +309,7 @@ export default {
 
 <style lang="scss" scoped>
 .reset-password-page {
-  min-height: calc(100vh - 90px);
+  min-height: calc(100vh - 110px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -322,6 +322,7 @@ export default {
   max-width: 420px;
   background: #fff;
   border-radius: 12px;
+    border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
   padding: 40px 35px;
   animation: slideUp 0.3s ease;

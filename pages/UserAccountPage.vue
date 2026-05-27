@@ -344,6 +344,7 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
   .profile-bg {
     height: 10px;
     background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+      background: $primary;
     border-radius: 12px;
     margin-bottom: -60px;
     position: relative;
@@ -376,6 +377,7 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
     position: relative;
     background: $bg;
     border-radius: 12px;
+      border-radius: 8px;
     padding: 10px;
     display: flex;
     align-items: center;
@@ -462,7 +464,12 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
       }
 
       &:hover {
-        background: linear-gradient(135deg, #dc2626, #b91c1c);
+      background: #ef4444;
+    }
+
+    .logout-button:hover {
+        background: darken(#ef4444, 10%);
+          background: $primary;
         transform: translateY(-2px);
         box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
       }
@@ -605,6 +612,7 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
   .nav-group {
     background: $bg;
     border-radius: 12px;
+      border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
     border: 1px solid rgba($border, 0.8);
@@ -711,6 +719,7 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
 .main-panel {
   background: $bg;
   border-radius: 12px;
+    border-radius: 8px;
   box-shadow: $shadow-md;
   overflow: hidden;
   height: fit-content;

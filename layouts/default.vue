@@ -35,7 +35,7 @@
 
 
         <!-- RIGHT / ACCOUNT -->
-        <div class="nav-right !flex flex-1 justify-end items-center">
+        <div class="nav-right !flex justify-end items-center">
 
           <!-- Nếu chưa login -->
           <div v-if="!is_login" class="auth-group">
@@ -57,7 +57,7 @@
                 <span class="balance-amount">{{ user.balance?.toLocaleString() || 0 }}</span>
               </div>
               <div class="user-avatar">
-                <i class="fas fa-user-circle"></i>
+                <i class="text-white fas fa-user-circle"></i>
               </div>
             </nuxt-link>
             <button @click="handleLogout" class="logout-btn" title="Đăng xuất">
@@ -71,7 +71,7 @@
       </div>
     </div>
 
-    <div class="!mt-[90px] min-h-[calc(100vh-90px)]" :class="{ 'dark-mode': darkMode, 'pb-mobile': is_login }"
+    <div class="!mt-[110px] min-h-[calc(100vh-110px)]" :class="{ 'dark-mode': darkMode, 'pb-mobile': is_login }"
       id="main">
       <Nuxt />
     </div>
@@ -731,8 +731,8 @@ export default {
           color: #fff;
 
           &:hover {
-            background: linear-gradient(135deg, #ff8c5a 0%, #ffa575 100%);
-            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+            background: darken(#ff6b35, 10%);
+          background: #ff6b35;
           }
         }
 
@@ -772,6 +772,7 @@ export default {
           background: linear-gradient(135deg, #ff6b35 0%, #ff8c5a 100%);
           border-radius: 6px;
           color: #fff;
+            background: #ff6b35;
           font-weight: 700;
           font-size: 14px;
           transition: all 0.3s ease;
@@ -795,7 +796,7 @@ export default {
           width: 36px;
           height: 36px;
           border-radius: 50%;
-          background: rgba(255, 255, 255, 0.1);
+              background: darken(#ff6b35, 10%);
           border: 2px solid #ff6b35;
           display: flex;
           align-items: center;
@@ -815,7 +816,6 @@ export default {
         &:hover {
           .balance-box {
             background: linear-gradient(135deg, #ff8c5a 0%, #ffa575 100%);
-            box-shadow: 0 4px 14px rgba(255, 107, 53, 0.5);
             transform: translateY(-2px);
           }
 
@@ -848,7 +848,6 @@ export default {
           background: #ef4444;
           color: #fff;
           transform: rotate(90deg);
-          box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
         }
 
         &:active {
@@ -978,7 +977,6 @@ export default {
 
       &.active .avatar-circle,
       &:hover .avatar-circle {
-        box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
         transform: scale(1.05);
       }
     }
@@ -1104,11 +1102,9 @@ export default {
     text-decoration: none;
     font-size: 24px;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 
     &:hover {
       transform: translateY(-5px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
     }
 
     &.zalo,
@@ -1475,7 +1471,6 @@ export default {
               &:focus {
                 outline: none;
                 border-color: #ff6b35;
-                box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
               }
 
               &::placeholder {
@@ -1576,7 +1571,6 @@ export default {
 
           &:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 8px rgba(0, 175, 44, 0.3);
           }
 
           &:active {
@@ -1766,7 +1760,6 @@ export default {
 
       &:hover {
         transform: translateY(-3px);
-        box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
       }
     }
   }

@@ -1,5 +1,5 @@
 <template>
-  <div class="detail-account-page">
+  <div class="detail-account-page" :class="{ 'light-theme': lightTheme }">
     <!-- LOADING STATE -->
     <div v-if="loading" class="loading-container">
       <div class="spinner"></div>
@@ -61,8 +61,6 @@
             </div>
           </div>
 
-          <p class="description">{{ account.description }}</p>
-
           <!-- PRICE CARDS -->
           <div class="price-grid">
             <div class="price-item atm-price">
@@ -77,11 +75,31 @@
             </div>
           </div>
 
+          <p class="description">{{ account.description }}</p>
+
+          <div class="support-panel">
+            <div class="support-panel-header">
+              <i class="fas fa-gift"></i>
+              <span>Ưu đãi nhận được</span>
+            </div>
+            <div class="support-grid">
+              <div v-for="offer in offerHighlights" :key="offer.title" class="support-item">
+                <i :class="offer.icon"></i>
+                <div>
+                  <h4>{{ offer.title }}</h4>
+                  <p>{{ offer.text }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- ACCOUNT STATUS -->
           <div class="status-section">
             <div class="status-item">
               <span class="label">Tình Trạng</span>
-              <span class="value">{{ account.status === 0 ? 'Còn hàng' : 'Đã bán' }}</span>
+              <span class="value status-pill" :class="account.status === 0 ? 'available' : 'sold'">
+                {{ account.status === 0 ? 'Còn hàng' : 'Đã bán' }}
+              </span>
             </div>
             <div class="status-item">
               <span class="label">Mã Tài Khoản</span>
@@ -108,13 +126,13 @@
           <!-- ACTION BUTTONS -->
           <div class="button-group" v-if="isAuthenticated">
             <button class="btn-primary" :disabled="account.status !== 0 || loadingBuy" @click="buyNow">
-              <i class="fas fa-shopping-cart"></i>
-              <span v-if="!loadingBuy">{{ account.status === 0 ? 'Mua Ngay' : 'Đã Bán' }}</span>
+              <i class="text-white fas fa-shopping-cart"></i>
+              <span class="text-white" v-if="!loadingBuy">{{ account.status === 0 ? 'Mua Ngay' : 'Đã Bán' }}</span>
               <span v-else>Đang xử lý...</span>
             </button>
-            <button class="btn-secondary" :class="{ 'is-favorite': isFavorite }" :disabled="loadingFavorite"
+            <button class="!bg-transparent btn-secondary" :class="{ 'is-favorite': isFavorite }" :disabled="loadingFavorite"
               @click="toggleFavorite">
-              <i class="fas fa-heart" :class="{ 'fa-solid': isFavorite, 'fa-regular': !isFavorite }"></i>
+              <i class="fas fa-heart" :class="{ 'fa-solid !text-red-600': isFavorite, 'fa-regular': !isFavorite }"></i>
             </button>
           </div>
 
@@ -186,6 +204,22 @@
           </h2>
           <div class="full-description">
             <p>{{ account.description }}</p>
+
+            <div class="description-gallery" v-if="displayImages.length">
+              <h4>Danh sách ảnh</h4>
+              <div class="description-gallery-grid">
+                <button
+                  v-for="(img, index) in displayImages"
+                  :key="`desc-img-${index}`"
+                  class="description-gallery-item"
+                  type="button"
+                  @click="selectImage(index)"
+                >
+                  <img :src="img.imageUrl" :alt="'Ảnh ' + (index + 1)" />
+                </button>
+              </div>
+            </div>
+
             <div class="description-extras">
               <h4>Thông tin bổ sung</h4>
               <ul>
@@ -268,6 +302,39 @@
             </div>
           </div>
         </div>
+
+        <!-- RELATED PRODUCTS -->
+        <div class="section-card related-products-card" v-if="relatedAccounts.length">
+          <h2 class="section-title">
+            <i class="fa-layer-group fas"></i>
+            Sản Phẩm Cùng Loại
+          </h2>
+
+          <div class="related-loading" v-if="relatedLoading">
+            <span>Đang tải sản phẩm liên quan...</span>
+          </div>
+
+          <div class="related-grid" v-else>
+            <nuxt-link
+              v-for="item in relatedAccounts"
+              :key="item.accountId"
+              :to="'/DetailAccountPage/' + item.accountId"
+              class="related-card"
+            >
+              <div class="related-image">
+                <img :src="item.image" :alt="item.title" />
+                <span class="related-badge" v-if="calculateDiscount(item.price, item.priceSale) > 0">
+                  -{{ calculateDiscount(item.price, item.priceSale) }}%
+                </span>
+              </div>
+              <div class="related-body">
+                <h4>{{ item.title }}</h4>
+                <p>{{ item.description }}</p>
+                <div class="related-price">{{ formatPrice(item.priceSale || item.price) }}</div>
+              </div>
+            </nuxt-link>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -324,6 +391,9 @@ export default {
       loadingFavorite: false,
       isFavorite: false,
       error: null,
+      lightTheme: true,
+      relatedAccounts: [],
+      relatedLoading: false,
       selectedImageIndex: 0,
       selectedImage: null,
       showLightbox: false,
@@ -333,8 +403,27 @@ export default {
     };
   },
   computed: {
-    userProfile() {
-      return this.userProfile;
+    displayImages() {
+      return this.account?.getListImages || [];
+    },
+    offerHighlights() {
+      return [
+        {
+          icon: 'fas fa-shield-alt',
+          title: 'Bảo hành',
+          text: 'Đổi tài khoản nếu sai thông tin hoặc lỗi mô tả.',
+        },
+        {
+          icon: 'fas fa-lock-open',
+          title: 'Đổi mật khẩu',
+          text: 'Hỗ trợ đổi mật khẩu miễn phí sau khi mua.',
+        },
+        {
+          icon: 'fas fa-headset',
+          title: 'Hỗ trợ nhanh',
+          text: 'Có người hỗ trợ khi cần xác minh hoặc bàn giao.',
+        },
+      ];
     },
     isAuthenticated() {
       return this.$store.state.isAuthenticated;
@@ -344,6 +433,12 @@ export default {
     formatPrice(price) {
       if (!price) return "0đ";
       return Number(price).toLocaleString("vi-VN") + "đ";
+    },
+
+    calculateDiscount(originalPrice, salePrice) {
+      if (!originalPrice || !salePrice || originalPrice <= 0) return 0;
+      const discount = ((originalPrice - salePrice) / originalPrice) * 100;
+      return Math.round(discount);
     },
 
     async fetchAccount() {
@@ -368,6 +463,8 @@ export default {
           if (this.account.getListImages?.length) {
             this.selectedImage = this.account.getListImages[0].imageUrl;
           }
+
+          await this.getListAccountByCategory();
         } else {
           this.error = res.message || "Lỗi khi lấy thông tin tài khoản";
         }
@@ -392,6 +489,55 @@ export default {
         }
       } catch (err) {
         console.error('Error checking favorite status:', err);
+      }
+    },
+
+    resolveCategoryId() {
+      return (
+        this.account?.categoryId ||
+        this.account?.categoryID ||
+        this.account?.category ||
+        this.$route.query.categoryId ||
+        this.$route.query.categoryID ||
+        ''
+      );
+    },
+
+    async getListAccountByCategory() {
+      const categoryId = this.resolveCategoryId();
+      this.relatedLoading = true;
+      try {
+        const query = {
+          sortType: 0,
+          minPrice: 0,
+          maxPrice: 1000000000,
+          ascending: false,
+          currentPage: 1,
+          recordPerPage: 8,
+        };
+
+        if (categoryId) {
+          query.categoryId = categoryId;
+        }
+
+        const res = await account.getAccountList(query);
+
+        if (res?.success && Array.isArray(res.data)) {
+          this.relatedAccounts = res.data
+            .filter((item) => item.accountId !== this.accountID)
+            .map((item) => ({
+              ...item,
+              image: item?.images || '/default-image.png',
+            }))
+            .slice(0, 8);
+        } else {
+          this.relatedAccounts = [];
+        }
+      } catch (err) {
+        console.error('Error loading related accounts:', err);
+        this.relatedAccounts = [];
+      } finally {
+        this.relatedLoading = false;
       }
     },
 
@@ -504,6 +650,7 @@ export default {
   },
 
   mounted() {
+        this.$store.commit("setIsDarkMode", false);
     this.accountID = this.$route.params.accountID;
     this.pathName = this.$route.query.categoryName || 'Chi tiết tài khoản';
     this.userProfile = this.$store.state.user_data;
@@ -529,27 +676,38 @@ export default {
 // ============================================
 // GAMING DARK THEME VARIABLES
 // ============================================
-$primary: #ff4655;
-$primary-dark: #d63845;
-$secondary: #00d9ff;
+$primary: #ff6b35;
+$primary-dark: #e55f2f;
+$secondary: #ff8a5c;
 $accent: #ffb800;
-$dark: #0a0a0a;
-$dark-card: #121212;
-$dark-light: #1a1a1a;
-$dark-border: #2a2a2a;
-$text-white: #ffffff;
-$text-light: #bbbbbb;
-$text-main: #dddddd;
-$text-sub: #bbbbbb;
-$text-gray: #888888;
-$text-muted: #666666;
-$success: #00ff88;
+$primary-soft: #fff4ee;
+$favorite-soft: #FF6B35;
+$dark: #f3f6fb;
+$dark-card: #ffffff;
+$dark-light: #f9fbfd;
+$dark-border: #dde5ef;
+$text-white: #162133;
+$text-light: #344054;
+$text-main: #162133;
+$text-sub: #475467;
+$text-gray: #667085;
+$text-muted: #98a2b3;
+$success: #2563eb;
 $danger: #ff4655;
 
 .detail-account-page {
   min-height: 100vh;
-  background: $dark;
+  background: linear-gradient(180deg, #fbfcfe 0%, #f3f6fb 100%);
   padding: 20px;
+}
+
+.detail-account-page,
+.detail-account-page * {
+  box-shadow: none !important;
+}
+
+.detail-account-page.light-theme {
+  background: linear-gradient(180deg, #fbfcfe 0%, #f3f6fb 100%);
 }
 
 .page-content {
@@ -646,6 +804,7 @@ $danger: #ff4655;
     transition: all 0.2s;
     text-transform: uppercase;
     letter-spacing: 1px;
+    border-radius: 12px;
 
     &:hover {
       background: $primary-dark;
@@ -658,10 +817,11 @@ $danger: #ff4655;
   display: grid;
   grid-template-columns: 400px 1fr;
   gap: 30px;
-  background: $dark-card;
+  background: rgba(255, 255, 255, 0.94);
   border: 1px solid $dark-border;
   padding: 24px;
   margin-bottom: 24px;
+  border-radius: 18px;
 }
 
 // GALLERY
@@ -674,8 +834,8 @@ $danger: #ff4655;
       top: 12px;
       left: 12px;
       padding: 8px 16px;
-      background: $dark;
-      border: 2px solid $success;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba($success, 0.22);
       color: $success;
       font-size: 11px;
       font-weight: 700;
@@ -691,8 +851,9 @@ $danger: #ff4655;
 
     .image-frame {
       position: relative;
-      background: $dark-light;
+      background: #ffffff;
       border: 1px solid $dark-border;
+      border-radius: 16px;
       overflow: hidden;
       aspect-ratio: 1;
       cursor: pointer;
@@ -704,9 +865,9 @@ $danger: #ff4655;
         height: 100%;
         object-fit: contain;
         object-position: center;
-        background-color: $dark;
+        background-color: #ffffff;
         transition: transform 0.3s;
-        border: 3px solid $primary;
+        border: 1px solid rgba($primary, 0.18);
       }
 
       &:hover {
@@ -723,8 +884,8 @@ $danger: #ff4655;
         right: 12px;
         width: 44px;
         height: 44px;
-        background: $primary;
-        color: $text-white;
+        background: $primary-soft;
+        color: $primary;
         border: none;
         font-size: 16px;
         cursor: pointer;
@@ -733,9 +894,10 @@ $danger: #ff4655;
         align-items: center;
         justify-content: center;
         opacity: 0;
+        border-radius: 14px;
 
         &:hover {
-          background: $primary-dark;
+          background: rgba($primary, 0.12);
         }
       }
 
@@ -755,6 +917,7 @@ $danger: #ff4655;
         overflow: hidden;
         cursor: pointer;
         transition: all 0.2s;
+        border-radius: 12px;
 
         img {
           width: 100%;
@@ -805,10 +968,11 @@ $danger: #ff4655;
 
       .id-badge {
         padding: 6px 12px;
-        background: $dark-light;
-        border: 1px solid $dark-border;
+        background: $primary-soft;
+        border: 1px solid rgba($primary, 0.16);
         color: $primary;
         font-weight: 700;
+        border-radius: 999px;
       }
 
       .seller {
@@ -823,9 +987,68 @@ $danger: #ff4655;
     color: $text-gray;
     line-height: 1.6;
     margin: 0;
-    padding: 12px 16px;
-    background: $dark-light;
+    padding: 14px 16px;
+    background: $primary-soft;
     border-left: 3px solid $primary;
+    border-radius: 14px;
+  }
+
+  .support-panel {
+    padding: 16px;
+    background: #ffffff;
+    border: 1px solid $dark-border;
+    border-radius: 18px;
+
+    .support-panel-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: $text-white;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+
+      i {
+        color: $primary;
+      }
+    }
+
+    .support-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .support-item {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 12px;
+      background: #fcfdff;
+      border: 1px solid $dark-border;
+      border-radius: 14px;
+
+      i {
+        color: $primary;
+        font-size: 18px;
+        margin-top: 2px;
+      }
+
+      h4 {
+        margin: 0 0 4px 0;
+        color: $text-white;
+        font-size: 13px;
+      }
+
+      p {
+        margin: 0;
+        color: $text-gray;
+        font-size: 12px;
+        line-height: 1.5;
+      }
+    }
   }
 
   // PRICE GRID
@@ -837,11 +1060,12 @@ $danger: #ff4655;
     .price-item {
       padding: 16px;
       border: 1px solid $dark-border;
-      background: $dark-light;
+      background: #ffffff;
       transition: all 0.2s;
       display: flex;
       flex-direction: column;
       gap: 8px;
+      border-radius: 16px;
 
       &:hover {
         border-color: $primary;
@@ -872,21 +1096,22 @@ $danger: #ff4655;
 
         .badge-discount {
           padding: 4px 8px;
-          background: rgba($danger, 0.2);
-          border: 1px solid $danger;
+          background: rgba($primary, 0.08);
+          border: 1px solid rgba($primary, 0.16);
           color: $danger;
           font-size: 12px;
           font-weight: 700;
+          border-radius: 999px;
         }
       }
 
       &.atm-price {
-        background: rgba($success, 0.1);
-        border-color: $success;
-        border-left: 3px solid $success;
+        background: #fff8f3;
+        border-color: rgba($primary, 0.18);
+        border-left: 3px solid $primary;
 
         &:hover {
-          border-color: $success;
+          border-color: rgba($primary, 0.28);
         }
       }
     }
@@ -898,8 +1123,9 @@ $danger: #ff4655;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
     padding: 16px;
-    background: $dark-light;
+    background: #ffffff;
     border: 1px solid $dark-border;
+    border-radius: 16px;
 
     .status-item {
       display: flex;
@@ -920,11 +1146,35 @@ $danger: #ff4655;
         color: $text-white;
 
         &.code {
-          background: $dark;
+          background: $primary-soft;
           padding: 6px 10px;
-          color: $secondary;
-          border: 1px solid $dark-border;
+          color: $primary;
+          border: 1px solid rgba($primary, 0.16);
         }
+      }
+
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: fit-content;
+        padding: 7px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        letter-spacing: 0.5px;
+        border: 1px solid transparent;
+      }
+
+      .status-pill.available {
+        background: linear-gradient(135deg, #2563eb 0%, #38bdf8 100%);
+        color: #ffffff;
+        border-color: rgba(37, 99, 235, 0.2);
+      }
+
+      .status-pill.sold {
+        background: linear-gradient(135deg, #ff6b35 0%, #ff8a5c 100%);
+        color: #ffffff;
+        border-color: rgba(255, 107, 53, 0.2);
       }
     }
   }
@@ -932,23 +1182,25 @@ $danger: #ff4655;
   // BENEFITS
   .benefits {
     padding: 16px;
-    background: rgba($success, 0.08);
-    border: 1px solid rgba($success, 0.3);
-    border-left: 3px solid $success;
+    background: #ffffff;
+    border: 1px solid rgba($primary, 0.14);
+    border-left: 3px solid $primary;
     display: flex;
     flex-direction: column;
     gap: 10px;
+    border-radius: 16px;
 
     .benefit {
       display: flex;
       align-items: center;
       gap: 10px;
       font-size: 13px;
-      color: $success;
+      color: $text-light;
 
       i {
         font-size: 14px;
         flex-shrink: 0;
+        color: $primary;
       }
     }
   }
@@ -974,6 +1226,7 @@ $danger: #ff4655;
       gap: 10px;
       text-transform: uppercase;
       letter-spacing: 1px;
+      border-radius: 14px;
 
       &:hover:not(:disabled) {
         background: $primary-dark;
@@ -984,34 +1237,44 @@ $danger: #ff4655;
         color: $text-gray;
         cursor: not-allowed;
       }
+
+      i {
+        color: #ffffff;
+      }
     }
 
     .btn-secondary {
       width: 52px;
       padding: 0;
-      background: $dark-light;
-      color: $text-white;
-      border: 1px solid $dark-border;
+      background: $favorite-soft;
+      color: $primary;
+      border: 1px solid rgba($primary, 0.16);
       font-size: 18px;
       cursor: pointer;
       transition: all 0.2s;
       display: flex;
       align-items: center;
       justify-content: center;
+      border-radius: 14px;
 
-      &:hover:not(:disabled) {
-        border-color: $primary;
+      i {
         color: $primary;
       }
 
+      &:hover:not(:disabled) {
+        border-color: rgba($primary, 0.3);
+        background: rgba($primary, 0.12);
+      }
+
       &.is-favorite {
-        background: $primary;
+        background: transparent;
         border-color: $primary;
-        color: $text-white;
 
         &:hover:not(:disabled) {
           background: $primary-dark;
         }
+
+     
       }
 
       &:disabled {
@@ -1027,8 +1290,9 @@ $danger: #ff4655;
     align-items: center;
     justify-content: space-between;
     padding: 14px;
-    background: $dark-light;
+    background: #ffffff;
     border: 1px solid $dark-border;
+    border-radius: 16px;
 
     .seller-left {
       display: flex;
@@ -1042,6 +1306,7 @@ $danger: #ff4655;
         justify-content: center;
         flex-shrink: 0;
         border: 2px solid $primary;
+        border-radius: 999px;
       }
 
       .label {
@@ -1079,10 +1344,11 @@ $danger: #ff4655;
   gap: 20px;
 
   .section-card {
-    background: $dark-card;
+    background: rgba(255, 255, 255, 0.96);
     border: 1px solid $dark-border;
     padding: 24px;
     transition: all 0.2s;
+    border-radius: 18px;
 
     &:hover {
       border-color: $text-muted;
@@ -1115,10 +1381,11 @@ $danger: #ff4655;
 
       .policy-item {
         padding: 20px;
-        background: $dark-light;
+        background: #ffffff;
         border: 1px solid $dark-border;
         text-align: center;
         transition: all 0.2s;
+        border-radius: 14px;
 
         &:hover {
           border-color: $primary;
@@ -1193,14 +1460,14 @@ $danger: #ff4655;
             letter-spacing: 1px;
 
             &.success {
-              background: rgba($success, 0.2);
-              border: 1px solid $success;
-              color: $success;
+              background: rgba($primary, 0.08);
+              border: 1px solid rgba($primary, 0.16);
+              color: $primary;
             }
 
             &.danger {
-              background: rgba($danger, 0.2);
-              border: 1px solid $danger;
+              background: rgba($danger, 0.08);
+              border: 1px solid rgba($danger, 0.16);
               color: $danger;
             }
           }
@@ -1219,8 +1486,44 @@ $danger: #ff4655;
 
       .description-extras {
         padding: 16px;
-        background: $dark-light;
+        background: #ffffff;
         border-left: 3px solid $primary;
+        border-radius: 14px;
+
+        .description-gallery {
+          margin-bottom: 16px;
+
+          h4 {
+            font-size: 13px;
+            font-weight: 700;
+            color: $text-white;
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+          }
+
+          .description-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+            gap: 8px;
+          }
+
+          .description-gallery-item {
+            padding: 0;
+            border: 1px solid $dark-border;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+
+            img {
+              width: 100%;
+              aspect-ratio: 1;
+              object-fit: cover;
+              display: block;
+            }
+          }
+        }
 
         h4 {
           font-size: 13px;
@@ -1238,7 +1541,7 @@ $danger: #ff4655;
 
           li {
             font-size: 13px;
-            color: $success;
+            color: $text-light;
             padding: 8px 0;
             line-height: 1.6;
           }
@@ -1254,9 +1557,10 @@ $danger: #ff4655;
 
       .faq-item {
         padding: 16px;
-        background: $dark-light;
+        background: #ffffff;
         border: 1px solid $dark-border;
         transition: all 0.2s;
+        border-radius: 14px;
 
         &:hover {
           border-color: $primary;
@@ -1309,18 +1613,19 @@ $danger: #ff4655;
     right: 0;
     width: 44px;
     height: 44px;
-    background: $primary;
+    background: $primary-soft;
     border: none;
-    color: $text-white;
+    color: $primary;
     font-size: 18px;
     cursor: pointer;
     transition: all 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 14px;
 
     &:hover {
-      background: $primary-dark;
+      background: rgba($primary, 0.12);
     }
   }
 
@@ -1346,19 +1651,20 @@ $danger: #ff4655;
       position: absolute;
       width: 48px;
       height: 48px;
-      background: $dark-card;
+      background: #ffffff;
       border: 1px solid $dark-border;
-      color: $text-white;
+      color: $primary;
       font-size: 18px;
       cursor: pointer;
       transition: all 0.2s;
       display: flex;
       align-items: center;
       justify-content: center;
+      border-radius: 14px;
 
       &:hover {
-        background: $primary;
-        border-color: $primary;
+        background: $primary-soft;
+        border-color: rgba($primary, 0.2);
       }
     }
 
@@ -1373,13 +1679,14 @@ $danger: #ff4655;
 
   .lightbox-counter {
     padding: 8px 20px;
-    background: $dark-card;
+    background: #ffffff;
     border: 1px solid $dark-border;
-    color: $text-white;
+    color: $text-light;
     font-size: 12px;
     font-weight: 700;
     margin-bottom: 15px;
     letter-spacing: 1px;
+    border-radius: 999px;
   }
 
   .lightbox-thumbs--container {
@@ -1402,6 +1709,7 @@ $danger: #ff4655;
         cursor: pointer;
         opacity: 0.6;
         transition: all 0.2s;
+          border-radius: 10px;
 
         img {
           width: 100%;
@@ -1419,6 +1727,90 @@ $danger: #ff4655;
           opacity: 1;
         }
       }
+    }
+  }
+}
+
+.related-products-card {
+  .related-loading {
+    color: $text-gray;
+    font-size: 13px;
+    padding: 4px 0 0;
+  }
+
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .related-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid $dark-border;
+    background: #ffffff;
+    border-radius: 14px;
+    overflow: hidden;
+    transition: transform 0.18s, border-color 0.18s;
+
+    &:hover {
+      transform: translateY(-2px);
+      border-color: $primary;
+    }
+  }
+
+  .related-image {
+    position: relative;
+    aspect-ratio: 1;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+
+  .related-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: $primary;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .related-body {
+    padding: 12px;
+
+    h4 {
+      margin: 0 0 6px 0;
+      font-size: 13px;
+      color: $text-white;
+      line-height: 1.4;
+    }
+
+    p {
+      margin: 0 0 10px 0;
+      font-size: 12px;
+      color: $text-gray;
+      line-height: 1.5;
+      line-clamp: 2;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .related-price {
+      font-size: 15px;
+      font-weight: 800;
+      color: $primary;
     }
   }
 }
@@ -1487,6 +1879,10 @@ $danger: #ff4655;
     }
   }
 
+  .related-products-card .related-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .lightbox-overlay {
     .lightbox-main {
       .lightbox-prev {
@@ -1535,6 +1931,10 @@ $danger: #ff4655;
       justify-content: space-between;
 
     }
+
+      .support-panel .support-grid {
+        grid-template-columns: 1fr;
+      }
   }
 
   .bottom-sections {
@@ -1554,6 +1954,10 @@ $danger: #ff4655;
         }
       }
     }
+  }
+
+  .related-products-card .related-grid {
+    grid-template-columns: 1fr;
   }
 
   .lightbox-overlay {
@@ -1611,404 +2015,3 @@ $danger: #ff4655;
   }
 }
 </style>
-<!-- <template>
-    <div class="detail-account-page">
-      <div class="wrarp-detail-account">
-        <div class="title">
-          <strong>tài khoản #{{ accountID }}</strong>
-        </div>
-        <div class="sub-title"><b>danh mục: acc liên minh tự chọn</b></div>
-        <div class="action-block">
-          <div class="price">
-            <div class="pay-card-price">
-              <strong>490.000 đ</strong>
-              <span>CARD</span>
-            </div>
-            -
-            <div class="pay-atm-price">
-              <span>ATM</span>
-              <strong>392.000 đ</strong>
-            </div>
-          </div>
-          <div class="btn-buy-now"><b>mua ngay</b></div>
-        </div>
-        <div class="nav-view-detail">
-          <div
-            @click="viewAcccountInfor('overview')"
-            :class="{ active: overview }"
-          >
-            <p><b>tài khoản</b></p>
-          </div>
-          <div
-            @click="viewAcccountInfor('viewChamps')"
-            :class="{ active: viewChamps }"
-          >
-            <p><b>tướng [103]</b></p>
-          </div>
-          <div
-            @click="viewAcccountInfor('viewSkins')"
-            :class="{ active: viewSkins }"
-          >
-            <p><b>trang phục [61]</b></p>
-          </div>
-          <div
-            @click="viewAcccountInfor('viewOtherInfor')"
-            :class="{ active: viewOtherInfor }"
-          >
-            <p><b>thông tin khác</b></p>
-          </div>
-        </div>
-        <div class="detail-content">
-          <div v-show="overview" class="overview">
-            <div class="recharge-atm-momo">
-              <p>
-                <strong
-                  >nạp atm/momo tự động 24/24 -
-                  <nuxt-link to="/">xem tại đây</nuxt-link></strong
-                >
-              </p>
-            </div>
-            <img
-              src="@/assets/images/account-img/image-bd424bd0-2b8b-46b2-a3f3-556175c0ba8a.jpeg"
-              alt=""
-            />
-          </div>
-          <div v-show="viewChamps" class="view-champs">
-            <div class="wrap-champ">
-              <img src="@/assets/images/champs/aatrox.jpg" alt="" />
-              <div class="champ-name">aatrox</div>
-            </div>
-            <div class="wrap-champ">
-              <img src="@/assets/images/champs/Aphelios_0.jpg" alt="" />
-              <div class="champ-name">aatrox</div>
-            </div>
-            <div class="wrap-champ">
-              <img
-                src="@/assets/images/champs/RiotX_ChampionList_alistar.jpg"
-                alt=""
-              />
-              <div class="champ-name">nhaatroxaatrox</div>
-            </div>
-            <div class="wrap-champ">
-              <img
-                src="@/assets/images/champs/RiotX_ChampionList_amumu.jpg"
-                alt=""
-              />
-              <div class="champ-name">aatrox</div>
-            </div>
-            <div class="wrap-champ">
-              <img
-                src="@/assets/images/champs/RiotX_ChampionList_anivia.jpg"
-                alt=""
-              />
-              <div class="champ-name">aatrox</div>
-            </div>
-            <div class="wrap-champ">
-              <img
-                src="@/assets/images/champs/RiotX_ChampionList_ahri.jpg"
-                alt=""
-              />
-              <div class="champ-name">aatrox</div>
-            </div>
-            <div class="wrap-champ">
-              <img
-                src="@/assets/images/champs/RiotX_ChampionList_annie.jpg"
-                alt=""
-              />
-              <div class="champ-name">aatrox</div>
-            </div>
-            <div class="wrap-champ">
-              <img
-                src="@/assets/images/champs/RiotX_ChampionList_aurelionsol.jpg"
-                alt=""
-              />
-              <div class="champ-name">aatrox</div>
-            </div>
-            <div class="btn-view-more"><p>xem thêm</p></div>
-          </div>
-          <div v-show="viewOtherInfor" class="view-other-infor">
-            <img src="@/assets/images/account-img/profile1.jpeg" alt="" />
-            <img src="@/assets/images/account-img/profile2.jpeg" alt="" />
-            <img src="@/assets/images/account-img/profile3.jpeg" alt="" />
-            <img src="@/assets/images/account-img/profile4.jpeg" alt="" />
-            <img src="@/assets/images/account-img/profile5.jpeg" alt="" />
-          </div>
-        </div>
-      </div>
-    </div>
-  </template>
-
-  <script>
-  export default {
-    data() {
-      return {
-        accountID: "",
-        overview: false,
-        viewChamps: true,
-        viewSkins: false,
-        viewOtherInfor: false,
-      };
-    },
-
-    methods: {
-      viewAcccountInfor(typeInfor) {
-        this.overview =
-          this.viewChamps =
-          this.viewSkins =
-          this.viewOtherInfor =
-            false;
-        this[typeInfor] = true;
-      },
-    },
-
-    mounted() {
-
-      this.accountID = this.$route.params.accountID;
-    },
-  };
-  </script>
-
-  <style lang="scss">
-  .detail-account-page {
-    width: 100%;
-    min-height: calc(100% - 74px);
-    height: auto;
-    background-color: white;
-    margin: 74px auto;
-    padding-top: 1px;
-
-    .wrarp-detail-account {
-      padding: 0px 8px 30px 8px;
-      margin: 30px auto 0px auto;
-      max-width: var(--max-width);
-      display: flex;
-      flex-direction: column;
-
-      .title {
-        text-transform: uppercase;
-        font-size: 1.5rem;
-        text-align: left;
-        padding: 15px 0px 5px 0px;
-        color: var(--black-one);
-      }
-
-      .sub-title {
-        text-transform: uppercase;
-        color: var(--red-text);
-        font-size: 0.9rem;
-      }
-
-      .action-block {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background-color: var(--black-one);
-        border-radius: 5px;
-        margin-top: 25px;
-
-        .price {
-          display: flex;
-
-          .pay-card-price,
-          .pay-atm-price {
-            padding: 20px 10px 10px 10px;
-            font-size: 1.2rem;
-            color: var(--yellow-active);
-            position: relative;
-
-            span {
-              position: absolute;
-              top: 5px;
-              left: 10px;
-              font-size: 0.8rem;
-            }
-          }
-        }
-        .btn-buy-now {
-          background-color: var(--red-btn);
-          padding: 10px 15px;
-          margin-right: 10px;
-          font-size: 1.2rem;
-          text-transform: uppercase;
-          color: #ffffff;
-          border-radius: 5px;
-          cursor: pointer;
-        }
-      }
-
-      .nav-view-detail {
-        margin-top: 20px;
-        display: flex;
-        text-transform: uppercase;
-        flex-wrap: wrap;
-
-        .active {
-          background-color: var(--red-text);
-          color: white;
-        }
-
-        > div {
-          padding: 0px 30px;
-          cursor: pointer;
-        }
-      }
-
-      .detail-content {
-        margin-top: 30px;
-        .overview,
-        .view-other-infor {
-          .recharge-atm-momo {
-            text-transform: uppercase;
-            font-size: 1.4rem;
-            text-align: center;
-
-            a {
-              color: var(--red-text);
-            }
-          }
-          padding-bottom: 40px;
-          img {
-            width: 100%;
-            margin-bottom: 10px;
-          }
-        }
-
-        .view-champs {
-          display: grid;
-          grid-template-columns: repeat(12, 1fr);
-          grid-gap: 10px;
-          position: relative;
-          padding-bottom: 90px;
-
-          .wrap-champ {
-            grid-column: span 2;
-            width: 100%;
-            overflow: hidden;
-            position: relative;
-
-            .champ-name {
-              text-transform: uppercase;
-              position: absolute;
-              bottom: 0;
-              left: 0;
-              width: 100%;
-              color: #ffffff;
-              font-style: italic;
-              background-color: var(--black-one);
-              font-weight: 700;
-              text-align: center;
-              padding: 10px 0px;
-              font-size: 1.2rem;
-              transition: 0.4s;
-            }
-
-            img {
-              transform: scale3d(1.05, 1.05, 1);
-              object-fit: cover;
-              width: 100%;
-              height: 100%;
-              transition: 0.4s;
-            }
-          }
-
-          .btn-view-more {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            text-align: center;
-
-            p {
-              text-transform: uppercase;
-              font-size: 1rem;
-              padding: 5px 10px;
-              border-radius: 5px;
-              border: 1px solid var(--black-one);
-              display: inline-block;
-              cursor: pointer;
-              font-weight: 700;
-              color: var(--grey-btn);
-            }
-          }
-
-          .wrap-champ:after {
-            content: "";
-            position: absolute;
-            top: 0px;
-            right: 0px;
-            width: 11%;
-            padding-top: 11%;
-            background-color: rgb(255, 255, 255);
-            transition: transform 0.5s ease 0s;
-            transform: translate(50%, -50%) rotate(45deg);
-            transition: 0.4s;
-          }
-
-          .wrap-champ:hover {
-            img {
-              transform: scale3d(1, 1, 1);
-            }
-          }
-
-          .wrap-champ:hover:after {
-            transform: translate(100%, -100%) rotate(45deg) !important;
-          }
-        }
-      }
-    }
-  }
-
-  @media (max-width: 1000px) {
-    .wrarp-detail-account {
-      .detail-content {
-        .view-champs {
-          .wrap-champ {
-            grid-column: span 3 !important;
-          }
-          .champ-name {
-            font-size: 1rem !important;
-          }
-        }
-      }
-    }
-  }
-  @media (max-width: 480px) {
-    .wrarp-detail-account {
-      .action-block {
-        .btn-buy-now,
-        .price .pay-card-price,
-        .pay-atm-price {
-          font-size: 1rem !important;
-        }
-      }
-
-      .nav-view-detail {
-        flex-direction: column;
-        > div {
-          padding: 0px 20px !important;
-        }
-      }
-
-      .detail-content {
-        margin-top: 15px !important;
-        .recharge-atm-momo {
-          font-size: 1.1rem !important;
-        }
-
-        .view-champs {
-          .wrap-champ {
-            grid-column: span 4 !important;
-
-            .champ-name {
-              font-size: 0.8rem !important;
-            }
-          }
-
-          .wrap-champ:after {
-            display: none;
-          }
-        }
-      }
-    }
-  }
-  </style> -->

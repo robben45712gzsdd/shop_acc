@@ -104,10 +104,9 @@ export default {
   left: 0;
   right: 0;
   background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    background: #1e3c72;
   box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.3);
   z-index: 9999;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
 }
 
 .cookie-content {
@@ -165,9 +164,8 @@ export default {
 }
 
 .btn-accept-all {
-  padding: 15px 40px;
+  padding: 15px 20px;
   border: none;
-  border-radius: 10px;
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
