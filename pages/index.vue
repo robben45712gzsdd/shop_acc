@@ -4,20 +4,24 @@
     <transition name="modal-fade">
       <div class="promo-modal-overlay" v-if="showPromoModal" @click.self="closePromoModal">
         <div class="promo-modal">
-          <button class="modal-close" @click="closePromoModal">
+
+          <button class="modal-close" @click="closePromoModal" aria-label="Đóng">
             <i class="fas fa-times"></i>
           </button>
 
-          <div class="modal-header">
+          <div class="modal-hero">
+            <div class="modal-hero-bg"></div>
             <div class="flash-badge">
               <i class="fas fa-bolt"></i>
               FLASH SALE
             </div>
             <h2 class="modal-title">SIÊU GIẢM GIÁ</h2>
-            <div class="discount-badge">
+            <div class="discount-wrap">
               <span class="discount-number">50</span>
-              <span class="discount-percent">%</span>
-              <span class="discount-text">GIẢM</span>
+              <div class="discount-right">
+                <span class="discount-percent">%</span>
+                <span class="discount-text">GIẢM</span>
+              </div>
             </div>
           </div>
 
@@ -26,21 +30,24 @@
 
             <ul class="promo-features">
               <li>
-                <i class="fas fa-check-circle"></i>
+                <span class="feat-icon"><i class="fas fa-shield-alt"></i></span>
                 <span>Tài khoản uy tín, bảo hành 100%</span>
               </li>
               <li>
-                <i class="fas fa-check-circle"></i>
+                <span class="feat-icon"><i class="fas fa-bolt"></i></span>
                 <span>Giao dịch tức thì, an toàn tuyệt đối</span>
               </li>
               <li>
-                <i class="fas fa-check-circle"></i>
+                <span class="feat-icon"><i class="fas fa-headset"></i></span>
                 <span>Hỗ trợ 24/7, đổi trả miễn phí</span>
               </li>
             </ul>
 
             <div class="promo-countdown">
-              <span class="countdown-label">Kết thúc sau:</span>
+              <span class="countdown-label">
+                <i class="fas fa-clock"></i>
+                Kết thúc sau
+              </span>
               <div class="countdown-timer">
                 <div class="time-block">
                   <span class="time-value">{{ countdown.hours }}</span>
@@ -61,17 +68,22 @@
           </div>
 
           <div class="modal-actions">
-            <a href="https://www.facebook.com/LyMinhTuan.AdminCheckScamVn" target="_blank" class="btn-promo-secondary">
-              <i class="fab fa-facebook"></i>
+            <a href="https://www.facebook.com/LyMinhTuan.AdminCheckScamVn" target="_blank" class="btn-facebook">
+              <i class="fab fa-facebook-f"></i>
               Fanpage hỗ trợ
             </a>
+            <button class="btn-shop" @click="closePromoModal">
+              Mua ngay
+              <i class="fa-arrow-right fas"></i>
+            </button>
           </div>
+
 
         </div>
       </div>
     </transition>
 
-    <section>
+    <section class="page-section">
       <RechargeOnline />
       <ListGameAccount />
     </section>
@@ -111,7 +123,7 @@ export default {
       const hiddenDate = localStorage.getItem('promoModalHidden');
       const today = new Date().toDateString();
       if (hiddenDate !== today) {
-        this.showPromoModal = true;
+        setTimeout(() => { this.showPromoModal = true; }, 600);
       }
     },
 
@@ -158,24 +170,59 @@ export default {
 </script>
 
 <style lang="scss">
-$primary: #f28a59;
-$primary-dark: #e67540;
-$primary-soft: rgba(242, 138, 89, 0.12);
-$page-bg: #fbfcfd;
-$surface: #ffffff;
-$surface-soft: #f8fafc;
-$border: #e9eef3;
-$border-strong: #dde5ec;
-$text: #0f172a;
-$muted: #64748b;
-$muted-2: #94a3b8;
+// ─── BRAND PALETTE ────────────────────────────────────────────
+// Primary: #76181d (deep crimson)
+// Tints:   #8e1e24  #a62229  #be272f  #d62c35
+// Shades:  #601316  #4a0e10  #340a0b
+// Light accents derived from primary for light theme
+// ──────────────────────────────────────────────────────────────
 
+$brand:         #76181d;
+$brand-dark:    #601316;
+$brand-deeper:  #4a0e10;
+$brand-mid:     #a62229;
+$brand-bright:  #c62a32;
+
+$brand-tint-1:  #f9ecec;   // very soft blush
+$brand-tint-2:  #f2d5d6;   // soft rose
+$brand-tint-3:  #e8b5b7;   // medium rose
+$brand-tint-4:  #d08285;   // dusty rose
+
+$gold:          #c8922a;   // warm accent
+$gold-light:    #f5ead6;
+$gold-mid:      #e4a93a;
+
+$surface:       #fdfbfb;
+$surface-2:     #ffffff;
+$surface-3:     #f7f2f2;
+$border:        #eadede;
+$border-2:      #dfd0d0;
+
+$ink:           #1c0a0b;
+$ink-2:         #4a2426;
+$ink-3:         #7a4a4d;
+$ink-4:         #b08082;
+
+$success:       #1e6e4a;
+$success-bg:    #e6f5ed;
+
+// ─── FONTS ────────────────────────────────────────────────────
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Mulish:wght@400;500;600;700&display=swap');
+
+// ─── HOMEPAGE ─────────────────────────────────────────────────
 .homepage-content {
   min-height: 100vh;
-  background:
-   radial-gradient(circle at top, rgba(242, 138, 89, 0.08), transparent 36%), linear-gradient(180deg, #ffffff 0%, #d7ffd3 38%, #f7fff4 100%);
+  background: $brand;
+  font-family: 'Mulish', sans-serif;
 }
 
+.page-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 16px 48px;
+}
+
+// ─── OVERLAY ──────────────────────────────────────────────────
 .promo-modal-overlay {
   position: fixed;
   inset: 0;
@@ -184,127 +231,199 @@ $muted-2: #94a3b8;
   align-items: center;
   justify-content: center;
   padding: 20px;
-  background: rgba(15, 23, 42, 0.58);
-  backdrop-filter: blur(8px);
+  background: rgba(28, 10, 11, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
+// ─── MODAL CARD ───────────────────────────────────────────────
 .promo-modal {
   width: 100%;
-  max-width: 520px;
+  max-width: 480px;
   position: relative;
+  border-radius: 20px;
+  background: $surface-2;
+  border: 1px solid $border-2;
   overflow: hidden;
-  border-radius: 5px;
-  background: $surface;
-  border: 1px solid rgba(242, 138, 89, 0.16);
-  box-shadow: 0 30px 80px rgba(15, 23, 42, 0.16);
-
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0 0 auto 0;
-    height: 5px;
-    background: linear-gradient(90deg, $primary, #f5a25d, $primary);
-  }
+  box-shadow:
+    0 2px 4px rgba(118, 24, 29, 0.06),
+    0 12px 40px rgba(118, 24, 29, 0.14),
+    0 40px 80px rgba(28, 10, 11, 0.10);
 }
 
+// top accent line
+.promo-modal::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, $brand-deeper, $brand, $brand-mid, $gold-mid, $brand);
+  background-size: 200% 100%;
+  animation: shimmer-line 3s linear infinite;
+  z-index: 2;
+}
+
+@keyframes shimmer-line {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+// ─── CLOSE BUTTON ─────────────────────────────────────────────
 .modal-close {
   position: absolute;
-  top: 14px;
-  right: 14px;
-  width: 38px;
-  height: 38px;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
   border: 1px solid $border;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.9);
-  color: $muted;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.92);
+  color: $ink-3;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.18s ease;
-  z-index: 2;
+  transition: all 0.2s ease;
+  z-index: 10;
+  font-size: 13px;
 
   &:hover {
     transform: rotate(90deg);
-    border-color: rgba(242, 138, 89, 0.24);
-    color: $primary;
-    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+    border-color: $brand-tint-3;
+    color: $brand;
+    background: $brand-tint-1;
   }
 }
 
-.modal-header {
-  padding: 34px 28px 22px;
+// ─── HERO SECTION ─────────────────────────────────────────────
+.modal-hero {
+  position: relative;
+  padding: 40px 28px 28px;
   text-align: center;
-  background: linear-gradient(180deg, rgba(242, 138, 89, 0.08), transparent);
+  overflow: hidden;
+  background: $brand-tint-1;
+
+  .modal-hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 60% at 20% 80%, rgba(118,24,29,0.10) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 50% at 80% 20%, rgba(200,146,42,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  // decorative corner ornament
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background: $surface-2;
+    clip-path: ellipse(55% 100% at 50% 100%);
+  }
 }
 
 .flash-badge {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 7px 14px;
+  gap: 7px;
+  padding: 6px 16px;
   border-radius: 999px;
-  background: $primary-soft;
-  color: $primary;
-  font-size: 11px;
+  background: $brand;
+  color: #fff;
+  font-size: 10px;
   font-weight: 800;
-  letter-spacing: 1.8px;
+  letter-spacing: 2px;
   text-transform: uppercase;
   margin-bottom: 14px;
+  box-shadow: 0 4px 14px rgba(118, 24, 29, 0.30);
 
   i {
-    font-size: 12px;
+    font-size: 11px;
+    animation: pulse-bolt 1.4s ease-in-out infinite;
   }
+}
+
+@keyframes pulse-bolt {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.7; transform: scale(1.2); }
 }
 
 .modal-title {
-  margin: 0 0 14px;
-  color: $text;
-  font-size: 28px;
-  line-height: 1.1;
+  margin: 0 0 16px;
+  color: $brand;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 30px;
   font-weight: 900;
   letter-spacing: 2px;
   text-transform: uppercase;
+  line-height: 1;
+  position: relative;
+  z-index: 1;
 }
 
-.discount-badge {
+.discount-wrap {
   display: inline-flex;
-  align-items: baseline;
-  gap: 4px;
-  padding: 12px 20px;
-  background: linear-gradient(135deg, #ff0000, #ff1919);
-  box-shadow: 0 12px 30px rgba(242, 138, 89, 0.22);
+  align-items: center;
+  gap: 2px;
+  padding: 10px 20px 10px 16px;
+  background: $brand;
+  border-radius: 14px;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 8px 24px rgba(118, 24, 29, 0.28);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent);
+  }
 
   .discount-number {
-    font-size: 48px;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 52px;
     font-weight: 900;
-    color: #ffffff;
+    color: #fff;
     line-height: 1;
+    letter-spacing: -1px;
+  }
+
+  .discount-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 2px;
   }
 
   .discount-percent {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 800;
-    color: rgba(255, 255, 255, 0.95);
+    color: rgba(255,255,255,0.95);
+    line-height: 1;
   }
 
   .discount-text {
-    margin-left: 6px;
-    color: rgba(255, 255, 255, 0.82);
-    font-size: 13px;
-    font-weight: 700;
+    font-size: 11px;
+    font-weight: 800;
+    color: rgba(255,255,255,0.80);
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
+    margin-top: 2px;
   }
 }
 
+// ─── MODAL BODY ───────────────────────────────────────────────
 .modal-body {
-  padding: 0 28px 24px;
+  padding: 22px 26px 20px;
 }
 
 .promo-desc {
   margin: 0 0 18px;
-  color: $muted;
+  color: $ink-2;
   text-align: center;
   line-height: 1.65;
   font-size: 14px;
@@ -312,83 +431,124 @@ $muted-2: #94a3b8;
 
 .promo-features {
   list-style: none;
-  margin: 0 0 22px;
+  margin: 0 0 20px;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 
   li {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 12px;
-    padding: 12px 14px;
+    padding: 11px 14px;
     border: 1px solid $border;
-    border-radius: 16px;
-    background: $surface-soft;
+    border-radius: 12px;
+    background: $surface;
+    transition: border-color 0.18s, background 0.18s;
 
-    i {
-      color: $primary;
-      font-size: 16px;
-      margin-top: 1px;
-      flex-shrink: 0;
+    &:hover {
+      border-color: $brand-tint-3;
+      background: $brand-tint-1;
     }
 
-    span {
-      color: $text;
+    span:last-child {
+      color: $ink-2;
       font-size: 13px;
-      font-weight: 500;
-      line-height: 1.5;
+      font-weight: 600;
+      line-height: 1.4;
     }
   }
 }
 
+.feat-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: $brand-tint-1;
+  border: 1px solid $brand-tint-3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  i {
+    color: $brand;
+    font-size: 13px;
+  }
+}
+
+// ─── COUNTDOWN ────────────────────────────────────────────────
 .promo-countdown {
-  padding: 16px;
-  border-radius: 18px;
-  background: #f8fafc;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: $surface-3;
   border: 1px solid $border;
   text-align: center;
 }
 
 .countdown-label {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   margin-bottom: 12px;
-  color: $muted-2;
-  font-size: 12px;
+  color: $ink-3;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.2px;
+
+  i {
+    color: $brand;
+    font-size: 12px;
+  }
 }
 
 .countdown-timer {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .time-block {
   min-width: 58px;
-  padding: 10px 12px;
-  border-radius: 14px;
-  background: $surface;
-  border: 1px solid $border;
+  padding: 10px 8px 8px;
+  border-radius: 12px;
+  background: $surface-2;
+  border: 1.5px solid $border-2;
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
+  overflow: hidden;
+
+  // subtle top accent
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: $brand;
+    opacity: 0.6;
+  }
 
   .time-value {
-    color: $primary;
+    color: $brand;
+    font-family: 'Playfair Display', Georgia, serif;
     font-size: 28px;
-    font-weight: 900;
+    font-weight: 700;
     line-height: 1;
+    letter-spacing: -0.5px;
   }
 
   .time-label {
     margin-top: 4px;
-    color: $muted-2;
-    font-size: 10px;
+    color: $ink-4;
+    font-size: 9px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -396,24 +556,31 @@ $muted-2: #94a3b8;
 }
 
 .time-sep {
-  margin-bottom: 12px;
-  color: $muted-2;
-  font-size: 24px;
+  color: $brand-tint-3;
+  font-size: 22px;
   font-weight: 700;
+  margin-bottom: 10px;
+  line-height: 1;
+  animation: blink-sep 1s step-end infinite;
 }
 
+@keyframes blink-sep {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.2; }
+}
+
+// ─── ACTIONS ──────────────────────────────────────────────────
 .modal-actions {
-  padding: 0 28px 24px;
+  padding: 0 26px 16px;
   display: flex;
-  gap: 12px;
+  gap: 10px;
 }
 
-.btn-promo-secondary,
-.btn-promo-primary {
+.btn-facebook {
   flex: 1;
-  min-height: 48px;
-  padding: 12px 18px;
-  border-radius: 14px;
+  min-height: 46px;
+  padding: 12px 14px;
+  border-radius: 12px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -423,79 +590,146 @@ $muted-2: #94a3b8;
   transition: all 0.18s ease;
   font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.5px;
-}
-
-.btn-promo-primary {
-  background: linear-gradient(135deg, $primary, #f5a25d);
-  border: 1px solid transparent;
-  color: #ffffff;
-
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 10px 22px rgba(242, 138, 89, 0.18);
-  }
-}
-
-.btn-promo-secondary {
   background: #ffffff;
-  border: 1px solid $border-strong;
-  color: $text;
-
-  &:hover {
-    transform: translateY(-1px);
-    border-color: rgba(242, 138, 89, 0.32);
-    color: $primary;
-    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.06);
-  }
+  border: 1.5px solid $border-2;
+  color: $ink-2;
 
   i {
     color: #1877f2;
-    font-size: 14px;
+    font-size: 15px;
+  }
+
+  &:hover {
+    border-color: #1877f2;
+    background: #f0f5ff;
+    transform: translateY(-1px);
   }
 }
 
-.modal-footer {
-  padding: 14px 28px 22px;
+.btn-shop {
+  flex: 1;
+  min-height: 46px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  font-size: 13px;
+  font-weight: 700;
+  background: $brand;
+  border: none;
+  color: #fff;
+  letter-spacing: 0.3px;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent 60%);
+    pointer-events: none;
+  }
+
+  i {
+    font-size: 12px;
+    transition: transform 0.18s;
+  }
+
+  &:hover {
+    background: $brand-dark;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 22px rgba(118, 24, 29, 0.30);
+
+    i {
+      transform: translateX(3px);
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// ─── FOOTER NOTE ──────────────────────────────────────────────
+.modal-footer-note {
+  padding: 12px 26px 18px;
   border-top: 1px solid $border;
-  background: linear-gradient(180deg, rgba(248, 250, 252, 0.8), #ffffff);
+  display: flex;
+  justify-content: center;
 }
 
 .dont-show-again {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  color: $muted;
+  color: $ink-3;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 12px;
+  font-weight: 500;
+  user-select: none;
 
   input[type="checkbox"] {
+    display: none;
+  }
+
+  .check-custom {
     width: 16px;
     height: 16px;
-    accent-color: $primary;
-    cursor: pointer;
+    border-radius: 4px;
+    border: 1.5px solid $border-2;
+    background: $surface-2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      background: $brand;
+      opacity: 0;
+      transform: scale(0);
+      transition: all 0.15s;
+    }
   }
 
-  span {
-    transition: color 0.18s ease;
+  input:checked + .check-custom {
+    border-color: $brand;
+    background: $brand-tint-1;
+
+    &::after {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 
-  &:hover span {
-    color: $text;
+  span:last-child {
+    transition: color 0.15s;
+  }
+
+  &:hover span:last-child {
+    color: $brand;
   }
 }
 
-.modal-fade-enter-active,
+// ─── TRANSITIONS ──────────────────────────────────────────────
+.modal-fade-enter-active {
+  transition: opacity 0.26s ease;
+  .promo-modal { animation: modal-pop-in 0.26s cubic-bezier(0.34, 1.4, 0.64, 1); }
+}
+
 .modal-fade-leave-active {
-  transition: opacity 0.24s ease;
-}
-
-.modal-fade-enter-active .promo-modal {
-  animation: modalSlideIn 0.24s ease;
-}
-
-.modal-fade-leave-active .promo-modal {
-  animation: modalSlideOut 0.18s ease;
+  transition: opacity 0.18s ease;
+  .promo-modal { animation: modal-pop-out 0.18s ease forwards; }
 }
 
 .modal-fade-enter,
@@ -503,91 +737,55 @@ $muted-2: #94a3b8;
   opacity: 0;
 }
 
-@keyframes modalSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(18px) scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+@keyframes modal-pop-in {
+  from { opacity: 0; transform: scale(0.92) translateY(20px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-@keyframes modalSlideOut {
-  from {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(16px) scale(0.97);
-  }
+@keyframes modal-pop-out {
+  from { opacity: 1; transform: scale(1) translateY(0); }
+  to   { opacity: 0; transform: scale(0.94) translateY(16px); }
 }
 
-section {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 18px 16px 28px;
-}
-
-@media (max-width: 768px) {
+// ─── RESPONSIVE ───────────────────────────────────────────────
+@media (max-width: 540px) {
   .promo-modal {
-    max-width: 100%;
-    border-radius: 20px;
+    border-radius: 18px;
+    max-height: 92vh;
+    overflow-y: auto;
   }
 
-  .modal-header {
-    padding: 30px 20px 18px;
+  .modal-hero {
+    padding: 36px 20px 26px;
+  }
+
+  .modal-title {
+    font-size: 24px;
+  }
+
+  .discount-wrap .discount-number {
+    font-size: 42px;
   }
 
   .modal-body,
   .modal-actions,
-  .modal-footer {
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-
-  .modal-title {
-    font-size: 22px;
-    letter-spacing: 1.5px;
-  }
-
-  .discount-badge {
-    .discount-number {
-      font-size: 38px;
-    }
-
-    .discount-percent {
-      font-size: 18px;
-    }
-  }
-
-  .countdown-timer {
-    gap: 8px;
+  .modal-footer-note {
+    padding-left: 18px;
+    padding-right: 18px;
   }
 
   .time-block {
-    min-width: 52px;
-    padding: 8px 10px;
-
-    .time-value {
-      font-size: 24px;
-    }
+    min-width: 50px;
+    .time-value { font-size: 24px; }
   }
+
+  .countdown-timer { gap: 6px; }
+  .time-sep { font-size: 18px; }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 360px) {
   .modal-actions {
     flex-direction: column;
-  }
-
-  .countdown-timer {
-    gap: 6px;
-  }
-
-  .time-sep {
-    font-size: 20px;
   }
 }
 </style>

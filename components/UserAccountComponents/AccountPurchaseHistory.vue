@@ -302,7 +302,7 @@ export default {
           recordPerPage: this.limit
         });
 
-        this.history = res.data || [];
+        this.history = res.data?.map(item => ({ ...item, image: process.env.NUXT_ENV_BASE_URL + item?.images || '/default-image.png' })) || [];
         this.totalRecords = res.totalRecords || 0;
         this.initVisibleItems();
       } catch (err) {

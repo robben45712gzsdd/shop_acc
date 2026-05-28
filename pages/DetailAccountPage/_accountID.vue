@@ -2,16 +2,16 @@
   <div class="detail-account-page" :class="{ 'light-theme': lightTheme }">
     <!-- LOADING STATE -->
     <div v-if="loading" class="loading-container">
-      <div class="spinner"></div>
-      <p>Đang tải thông tin tài khoản...</p>
+      <div class="!text-white spinner"></div> 
+      <p class="!text-white">Đang tải thông tin tài khoản...</p>
     </div>
 
     <!-- ERROR STATE -->
     <div v-else-if="error" class="error-container">
       <div class="error-icon">⚠️</div>
-      <h3>Không thể tải thông tin</h3>
-      <p>{{ error }}</p>
-      <button @click="fetchAccount" class="retry-btn">Thử lại</button>
+      <h3 class="!text-white">Không thể tải thông tin</h3>
+      <p class="!text-white">{{ error }}</p>
+      <button @click="fetchAccount" class="!text-white retry-btn">Thử lại</button>
     </div>
 
     <!-- MAIN CONTENT -->
@@ -19,10 +19,10 @@
       <!-- BREADCRUMB -->
       <div class="breadcrumb">
         <nuxt-link to="/">
-          <i class="fas fa-home"></i>
+          <i class="!text-white fas fa-home"></i>
         </nuxt-link>
-        <span>/</span>
-        <span>{{ pathName }}</span>
+        <span class="!text-white">/</span>
+        <span class="!text-white">{{ pathName }}</span>
       </div>
 
       <div class="!flex md:flex-row flex-col gap-6 content-wrapper">
@@ -305,13 +305,13 @@
 
         <!-- RELATED PRODUCTS -->
         <div class="section-card related-products-card" v-if="relatedAccounts.length">
-          <h2 class="section-title">
-            <i class="fa-layer-group fas"></i>
+          <h2 class="!text-white section-title">
+            <i class="fa-layer-group !text-white fas"></i>
             Sản Phẩm Cùng Loại
           </h2>
 
           <div class="related-loading" v-if="relatedLoading">
-            <span>Đang tải sản phẩm liên quan...</span>
+            <span class="!text-white">Đang tải sản phẩm liên quan...</span> 
           </div>
 
           <div class="related-grid" v-else>
@@ -450,7 +450,13 @@ export default {
         });
         if (res.success) {
           this.account = res.data;
-          this.account.getListImages = this.account.getListImages || [];
+          this.account.images =  process.env.NUXT_ENV_BASE_URL + this.account.images;
+          this.account.getListImages = this.account.getListImages?.map(
+            img => ({
+              ...img,
+              imageUrl: process.env.NUXT_ENV_BASE_URL + img.imageUrl
+            })
+          ) || [];
           
           // Add the single image from 'images' field to getListImages array
           if (this.account.images && !this.account.getListImages.some(img => img.imageUrl === this.account.images)) {
@@ -527,7 +533,7 @@ export default {
             .filter((item) => item.accountId !== this.accountID)
             .map((item) => ({
               ...item,
-              image: item?.images || '/default-image.png',
+              image: process.env.NUXT_ENV_BASE_URL + item?.images || '/default-image.png',
             }))
             .slice(0, 8);
         } else {
@@ -694,10 +700,37 @@ $text-gray: #667085;
 $text-muted: #98a2b3;
 $success: #2563eb;
 $danger: #ff4655;
+$brand:         #76181d;
+$brand-dark:    #601316;
+$brand-deeper:  #4a0e10;
+$brand-mid:     #a62229;
+$brand-bright:  #c62a32;
 
+$brand-tint-1:  #f9ecec;   // very soft blush
+$brand-tint-2:  #f2d5d6;   // soft rose
+$brand-tint-3:  #e8b5b7;   // medium rose
+$brand-tint-4:  #d08285;   // dusty rose
+
+$gold:          #c8922a;   // warm accent
+$gold-light:    #f5ead6;
+$gold-mid:      #e4a93a;
+
+$surface:       #fdfbfb;
+$surface-2:     #ffffff;
+$surface-3:     #f7f2f2;
+$border:        #eadede;
+$border-2:      #dfd0d0;
+
+$ink:           #1c0a0b;
+$ink-2:         #4a2426;
+$ink-3:         #7a4a4d;
+$ink-4:         #b08082;
+
+$success:       #1e6e4a;
+$success-bg:    #e6f5ed;
 .detail-account-page {
   min-height: 100vh;
-  background: linear-gradient(180deg, #fbfcfe 0%, #f3f6fb 100%);
+  background: $brand;
   padding: 20px;
 }
 
@@ -706,9 +739,6 @@ $danger: #ff4655;
   box-shadow: none !important;
 }
 
-.detail-account-page.light-theme {
-  background: linear-gradient(180deg, #fbfcfe 0%, #f3f6fb 100%);
-}
 
 .page-content {
   max-width: 1200px;
@@ -1357,7 +1387,6 @@ $danger: #ff4655;
     .section-title {
       font-size: 16px;
       font-weight: 700;
-      color: $text-white;
       margin: 0 0 20px 0;
       display: flex;
       align-items: center;
@@ -1732,6 +1761,10 @@ $danger: #ff4655;
 }
 
 .related-products-card {
+  &.section-card{
+    background: #AE2F19 !important;
+    border: none !important;
+  }
   .related-loading {
     color: $text-gray;
     font-size: 13px;
@@ -1763,7 +1796,7 @@ $danger: #ff4655;
 
   .related-image {
     position: relative;
-    aspect-ratio: 1;
+    aspect-ratio: 3 / 2;
 
     img {
       width: 100%;

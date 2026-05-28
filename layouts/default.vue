@@ -726,7 +726,7 @@ export default {
         }
 
         &.register {
-          background: linear-gradient(135deg, #ff6b35 0%, #ff8c5a 100%);
+          background: linear-gradient(135deg, #ff6b35 0%, #76181d 100%);
           border: none;
           color: #fff;
 
@@ -769,7 +769,7 @@ export default {
           align-items: center;
           gap: 6px;
           padding: 8px 12px;
-          background: linear-gradient(135deg, #ff6b35 0%, #ff8c5a 100%);
+          background: linear-gradient(135deg, #ff6b35 0%, #76181d 100%);
           border-radius: 6px;
           color: #fff;
             background: #ff6b35;
@@ -815,7 +815,7 @@ export default {
 
         &:hover {
           .balance-box {
-            background: linear-gradient(135deg, #ff8c5a 0%, #ffa575 100%);
+            background: linear-gradient(135deg, #76181d 0%, #ffa575 100%);
             transform: translateY(-2px);
           }
 
@@ -1516,7 +1516,7 @@ export default {
               white-space: nowrap;
 
               &:hover {
-                background: #ff8c5a;
+                background: #76181d;
                 transform: translateY(-2px);
               }
 

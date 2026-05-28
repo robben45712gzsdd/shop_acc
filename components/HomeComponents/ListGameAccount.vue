@@ -48,6 +48,7 @@ export default {
           if (res.success) {
             let data = res.data.map(cat => ({
               ...cat,
+              banner: process.env.NUXT_ENV_BASE_URL + cat?.banner || '/default-banner.png',
             }));
 
             this.listCategoryGameAccount = data;
