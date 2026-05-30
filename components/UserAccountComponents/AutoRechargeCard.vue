@@ -286,7 +286,7 @@ export default {
 
 <style lang="scss" scoped>
 // DESIGN TOKENS
-$primary: #ff6b35;
+$primary: #af2e34;
 $primary-dark: #e55a28;
 $primary-light: #ff8f5f;
 $text-main: #1a1a1a;

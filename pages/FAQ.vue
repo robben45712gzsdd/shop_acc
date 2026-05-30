@@ -112,7 +112,7 @@ export default {
         {
           id: 1,
           categoryId: 'account',
-          question: 'Làm thế nào để đăng ký tài khoản trên ACCGAME247?',
+          question: 'Làm thế nào để đăng ký tài khoản trên SHOPACCGK?',
           answer: 'Để đăng ký tài khoản:<br/>1. Click vào nút "ĐĂNG KÝ" ở góc trên bên phải<br/>2. Điền đầy đủ thông tin: Tên đăng nhập, Email, Mật khẩu<br/>3. Xác nhận đăng ký<br/>4. Kiểm tra email để kích hoạt tài khoản (nếu có)<br/>5. Đăng nhập và bắt đầu mua sắm',
           date: '2024-12-28'
         },
@@ -169,7 +169,7 @@ export default {
           id: 9,
           categoryId: 'security',
           question: 'Thông tin cá nhân và giao dịch có được bảo mật?',
-          answer: 'Chúng tôi cam kết bảo mật tuyệt đối:<br/>🔒 <strong>Mã hóa SSL:</strong> Tất cả dữ liệu được mã hóa 256-bit<br/>🔒 <strong>Không chia sẻ:</strong> Thông tin của bạn không bao giờ được bán cho bên thứ ba<br/>🔒 <strong>Thanh toán an toàn:</strong> Qua cổng thanh toán uy tín<br/>🔒 <strong>Tuân thủ pháp luật:</strong> Đúng quy định về bảo vệ dữ liệu cá nhân<br/><br/>Yên tâm mua sắm tại ACCGAME247!',
+          answer: 'Chúng tôi cam kết bảo mật tuyệt đối:<br/>🔒 <strong>Mã hóa SSL:</strong> Tất cả dữ liệu được mã hóa 256-bit<br/>🔒 <strong>Không chia sẻ:</strong> Thông tin của bạn không bao giờ được bán cho bên thứ ba<br/>🔒 <strong>Thanh toán an toàn:</strong> Qua cổng thanh toán uy tín<br/>🔒 <strong>Tuân thủ pháp luật:</strong> Đúng quy định về bảo vệ dữ liệu cá nhân<br/><br/>Yên tâm mua sắm tại SHOPACCGK!',
           date: '2024-12-28'
         },
         {

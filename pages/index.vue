@@ -171,13 +171,13 @@ export default {
 
 <style lang="scss">
 // ─── BRAND PALETTE ────────────────────────────────────────────
-// Primary: #76181d (deep crimson)
+// Primary: #af2e34 (deep crimson)
 // Tints:   #8e1e24  #a62229  #be272f  #d62c35
 // Shades:  #601316  #4a0e10  #340a0b
 // Light accents derived from primary for light theme
 // ──────────────────────────────────────────────────────────────
 
-$brand:         #76181d;
+$brand:         #6E161A;
 $brand-dark:    #601316;
 $brand-deeper:  #4a0e10;
 $brand-mid:     #a62229;
@@ -213,7 +213,7 @@ $success-bg:    #e6f5ed;
 .homepage-content {
   min-height: 100vh;
   background: $brand;
-  font-family: 'Mulish', sans-serif;
+  font-family: "Roboto Condensed", sans-serif;
 }
 
 .page-section {
@@ -221,7 +221,11 @@ $success-bg:    #e6f5ed;
   margin: 0 auto;
   padding: 20px 16px 48px;
 }
-
+@media (max-width: 768px) {
+  .page-section {
+    padding: 10px;
+  }
+}
 // ─── OVERLAY ──────────────────────────────────────────────────
 .promo-modal-overlay {
   position: fixed;
@@ -354,7 +358,7 @@ $success-bg:    #e6f5ed;
 .modal-title {
   margin: 0 0 16px;
   color: $brand;
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: "Roboto Condensed", sans-serif;
   font-size: 30px;
   font-weight: 900;
   letter-spacing: 2px;
@@ -384,7 +388,7 @@ $success-bg:    #e6f5ed;
   }
 
   .discount-number {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: "Roboto Condensed", sans-serif;
     font-size: 52px;
     font-weight: 900;
     color: #fff;
@@ -538,7 +542,7 @@ $success-bg:    #e6f5ed;
 
   .time-value {
     color: $brand;
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: "Roboto Condensed", sans-serif;
     font-size: 28px;
     font-weight: 700;
     line-height: 1;

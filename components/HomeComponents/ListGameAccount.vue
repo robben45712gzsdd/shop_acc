@@ -90,7 +90,6 @@ $muted: #64748b;
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
     gap: 12px;
-    padding: 0 10px;
     overflow-x: hidden;
 
     .type-account {
@@ -98,7 +97,7 @@ $muted: #64748b;
       display: flex;
       background: $surface;
       border: 1px solid $border;
-      border-radius: 18px;
+      border-radius: 8px;
       overflow: hidden;
       box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
       transition: all 0.18s ease;
@@ -124,7 +123,7 @@ $muted: #64748b;
 
         .img-type-account {
           width: 100%;
-          border-radius: 14px;
+          border-radius: 7px;
           background: $surface-soft;
         }
 
@@ -177,10 +176,10 @@ $muted: #64748b;
 
   .list-game-account .list-type-account {
     gap: 10px;
-    padding: 0 8px;
+    padding: 0;
 
     .type-account {
-      border-radius: 16px;
+      border-radius: 8px;
 
       .wrap-type-account {
         padding: 10px;

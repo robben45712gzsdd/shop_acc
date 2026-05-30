@@ -203,7 +203,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-$primary: #ff6b35;
+$primary: #af2e34;
 $primary-dark: #e55a2b;
 $text-main: #1a1a1a;
 $text-sub: #666;

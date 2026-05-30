@@ -431,7 +431,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-$primary: #ff6b35;
+$primary: #af2e34;
 $primary-dark: #e55a2b;
 $text-main: #1a1a1a;
 $text-sub: #666;
@@ -1226,7 +1226,7 @@ $success-light: #ecfdf5;
         margin-bottom: 8px;
 
         .code-text {
-          font-family: 'Courier New', monospace;
+          font-family: "Roboto Condensed", sans-serif;
           font-size: 12px;
           color: $primary;
           font-weight: 600;

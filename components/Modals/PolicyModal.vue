@@ -7,7 +7,7 @@
       
       <div class="policy-content">
         <div class="policy-intro">
-          <p><strong>Chào mừng bạn đến với ACCGAME247</strong></p>
+          <p><strong>Chào mừng bạn đến với SHOPACCGK</strong></p>
           <p>Vui lòng đọc kỹ các điều khoản trước khi sử dụng dịch vụ. Việc tiếp tục sử dụng website đồng nghĩa với việc bạn chấp nhận toàn bộ các điều khoản này.</p>
         </div>
 

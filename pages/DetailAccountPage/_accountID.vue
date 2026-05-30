@@ -682,12 +682,12 @@ export default {
 // ============================================
 // GAMING DARK THEME VARIABLES
 // ============================================
-$primary: #ff6b35;
+$primary: #af2e34;
 $primary-dark: #e55f2f;
 $secondary: #ff8a5c;
 $accent: #ffb800;
 $primary-soft: #fff4ee;
-$favorite-soft: #FF6B35;
+$favorite-soft: #af2e34;
 $dark: #f3f6fb;
 $dark-card: #ffffff;
 $dark-light: #f9fbfd;
@@ -700,7 +700,7 @@ $text-gray: #667085;
 $text-muted: #98a2b3;
 $success: #2563eb;
 $danger: #ff4655;
-$brand:         #76181d;
+$brand:         #af2e34;
 $brand-dark:    #601316;
 $brand-deeper:  #4a0e10;
 $brand-mid:     #a62229;
@@ -1202,7 +1202,7 @@ $success-bg:    #e6f5ed;
       }
 
       .status-pill.sold {
-        background: linear-gradient(135deg, #ff6b35 0%, #ff8a5c 100%);
+        background: linear-gradient(135deg, #af2e34 0%, #ff8a5c 100%);
         color: #ffffff;
         border-color: rgba(255, 107, 53, 0.2);
       }

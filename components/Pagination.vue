@@ -86,16 +86,16 @@ export default {
 }
 
 .page-btn:hover:not(:disabled) {
-  border-color: #ff6b35;
-  color: #ff6b35;
+  border-color: #af2e34;
+  color: #af2e34;
   transform: translateY(-2px);
 }
 
 .page-btn.active {
-  background: linear-gradient(135deg, #ff6b35, #76181d);
-    background: #ff6b35;
+  background: linear-gradient(135deg, #af2e34, #af2e34);
+    background: #af2e34;
   color: white;
-  border-color: #ff6b35;
+  border-color: #af2e34;
 }
 
 .page-btn:disabled {

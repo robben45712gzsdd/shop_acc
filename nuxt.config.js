@@ -2,8 +2,8 @@ export default {
   ssr: false,
   components: true,
   head: {
-    titleTemplate: "%s - ACCGAME247 ",
-    title: "ACCGAME247 - Shop bán tài khoản game uy tín hàng đầu Việt Nam",
+    titleTemplate: "%s - SHOPACCGK ",
+    title: "SHOPACCGK - Shop bán tài khoản game uy tín hàng đầu Việt Nam",
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
@@ -30,12 +30,6 @@ export default {
           "sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==",
         crossorigin: "anonymous",
         referrerpolicy: "no-referrer",
-      },
-    ],
-    script: [
-      {
-        src: "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4",
-        defer: true,
       },
     ],
   },

@@ -279,7 +279,7 @@ export default {
 /* Compact light UI with orange accent and no shadows. */
 
 .account-categories {
-  --primary: #ff6b35;
+  --primary: #af3b2e;
   --primary-soft: #fff1ea;
   --bg: #f6f7fb;
   --bg-2: #ffffff;
@@ -287,7 +287,7 @@ export default {
   --border: #e5e7eb;
   --text: #111827;
   --muted: #6b7280;
-  $brand: #76181d;
+  $brand: #af2e34;
   $brand-dark: #601316;
   $brand-deeper: #4a0e10;
   $brand-mid: #a62229;
@@ -329,7 +329,7 @@ export default {
   --border: #e5e7eb;
   --text: #111827;
   --muted: #6b7280;
-  --primary: #ff6b35;
+  --primary: #af2e34;
   --primary-soft: #fff1ea;
 }
 
@@ -352,7 +352,7 @@ export default {
     left: 0;
     width: 56px;
     height: 2px;
-    background: var(--primary);
+    background: var(--primary-soft);
   }
 
   .category-title {
@@ -369,7 +369,6 @@ export default {
   background: var(--card);
   border: 1px solid var(--border);
   margin-bottom: 16px;
-  border-radius: 14px;
   overflow: hidden;
 
   .filter-header {
@@ -516,8 +515,8 @@ export default {
   background: var(--card);
   border: 1px solid var(--border);
   transition: transform .18s, border-color .18s;
-  border-radius: 14px;
   overflow: hidden;
+  padding: 8px;
 
   .wrap-type-account {
     display: flex;

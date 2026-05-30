@@ -771,7 +771,7 @@ export default {
   min-height: 100vh;
   background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
   color: #fff;
-  font-family: 'Inter', 'Segoe UI', sans-serif;
+  font-family: "Roboto Condensed", sans-serif;
   position: relative;
   overflow: hidden;
 }
@@ -1174,7 +1174,7 @@ export default {
 
 .segment-text {
   text-anchor: middle;
-  font-family: 'Inter', sans-serif;
+  font-family: "Roboto Condensed", sans-serif;
   font-size: 14px;
 }
 

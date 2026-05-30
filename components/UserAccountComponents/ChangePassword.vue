@@ -318,7 +318,7 @@ export default {
 
 <style lang="scss" scoped>
 // DESIGN TOKENS
-$primary: #ff6b35;
+$primary: #af2e34;
 $primary-dark: #e55a28;
 $primary-light: #ff8f5f;
 $text-main: #1a1a1a;
@@ -430,7 +430,7 @@ $shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
         border-radius: 8px;
         background: $bg-light;
         transition: all 0.2s ease;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-family: "Roboto Condensed", sans-serif;
 
         &:focus {
           outline: none;

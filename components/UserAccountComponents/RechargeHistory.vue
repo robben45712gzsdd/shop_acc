@@ -174,7 +174,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$primary: #ff6b35;
+$primary: #af2e34;
 $text-main: #1a1a1a;
 $text-sub: #6b7280;
 $text-light: #9ca3af;

@@ -262,7 +262,7 @@ export default {
 
 <style lang="scss" scoped>
 // === VARIABLES ===
-$primary: #ff6b35;
+$primary: #af2e34;
 $primary-light: #ff8f5f;
 $primary-lighter: #fff5f2;
 $text-dark: #1a1a1a;
