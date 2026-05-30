@@ -12,7 +12,7 @@
         <div class="nav-left flex-1" @click.stop>
           <div class="logo">
             <nuxt-link to="/">
-              <img src="@/assets/images/logo/ACCGAME247_2.gif" alt="logo" />
+              <img src="@/assets/images/logo/accgame247_2.gif" alt="logo" />
             </nuxt-link>
           </div>
           <ul class="menu" :class="{ active: showMenuMobile }" @click.stop="closeMenuOnClick">
