@@ -88,8 +88,8 @@
         <div class="policy-section">
           <h3>6. Liên Hệ Hỗ Trợ</h3>
           <ul>
-            <li><strong>Hotline:</strong> 0336.856.626 (8:00 - 22:00)</li>
-            <li><strong>Zalo:</strong> 0336.856.626 (24/7)</li>
+            <li><strong>Hotline:</strong> 0981.897.301 (8:00 - 22:00)</li>
+            <li><strong>Zalo:</strong> 0981.897.301 (24/7)</li>
             <li><strong>Email:</strong> tuanfbchinh@gmail.com</li>
           </ul>
         </div>

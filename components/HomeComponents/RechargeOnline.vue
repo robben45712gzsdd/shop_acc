@@ -1,5 +1,5 @@
 <template>
-  <div class="flex md:flex-row flex-col gap-x-6 content-wrapper ro-wrap">
+  <div class="flex md:flex-row flex-col gap-4 content-wrapper ro-wrap">
 
     <div class="flex-1 ro-card">
 
@@ -135,9 +135,9 @@
     </div>
 
     <!-- Right banner -->
-    <div class="flex-[2] ro-banner">
+    <div class="flex-[2] gap-4 ro-banner">
       <img src="@/assets/images/logo/banner.gif" alt="Banner" class="banner-main" />
-      <div class="banner-sub">
+      <div class="gap-4 banner-sub">
         <img src="@/assets/images/logo/chuyenkhoan.gif" alt="Chuyển khoản" />
         <img src="@/assets/images/logo/thecao.gif" alt="Thẻ cào" />
       </div>
@@ -801,7 +801,6 @@ $f:"Roboto Condensed", sans-serif;
 .ro-banner {
   display: flex;
   flex-direction: column;
-  gap: 10px;
 
   .banner-main {
     flex: 1;

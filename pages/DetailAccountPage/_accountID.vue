@@ -27,7 +27,7 @@
 
       <div class="!flex md:flex-row flex-col gap-6 content-wrapper">
         <!-- LEFT: GALLERY -->
-        <div class="!flex-5 gallery-section">
+        <div class="flex-1 gallery-section">
           <div class="main-image-container">
             <div class="status-badge" :class="account.status === 0 ? 'available' : 'sold'">
               {{ account.status === 0 ? 'Còn hàng' : 'Đã bán' }}
@@ -52,7 +52,7 @@
         </div>
 
         <!-- RIGHT: INFO -->
-        <div class="!flex-4 info-section">
+        <div class="flex-1 info-section">
           <div class="title-section">
             <h1 class="account-title">{{ account.title }}</h1>
             <div class="meta-info">
@@ -147,7 +147,7 @@
                 <p class="name">Hoàng Thái Sơn</p>
               </div>
             </div>
-            <a class="btn-contact" href="https://zalo.me/0336.856.626" target="_blank">
+            <a class="btn-contact" href="https://zalo.me/g/rtqsvs427" target="_blank">
               <img src="@/assets/images/zalo.webp" alt="Zalo" width="32" height="32" />
             </a>
           </div>
@@ -373,6 +373,7 @@
         </div>
       </div>
     </transition>
+    <footer-chinh-sach />
   </div>
 </template>
 
@@ -380,8 +381,12 @@
 import account from '~/api/account';
 import order from '~/api/order';
 import favoriteApi from '~/api/favorite';
+import FooterChinhSach from '~/components/common/FooterChinhSach.vue';
 
 export default {
+  components: {
+    FooterChinhSach
+  },
   data() {
     return {
       accountID: "",
@@ -1380,10 +1385,6 @@ $success-bg:    #e6f5ed;
     transition: all 0.2s;
     border-radius: 18px;
 
-    &:hover {
-      border-color: $text-muted;
-    }
-
     .section-title {
       font-size: 16px;
       font-weight: 700;
@@ -1748,7 +1749,6 @@ $success-bg:    #e6f5ed;
 
         &:hover {
           opacity: 1;
-          border-color: $text-gray;
         }
 
         &.active {
@@ -1762,8 +1762,8 @@ $success-bg:    #e6f5ed;
 
 .related-products-card {
   &.section-card{
-    background: #AE2F19 !important;
-    border: none !important;
+    background: #fefefe36 !important;
+    border: 1px solid white;
   }
   .related-loading {
     color: $text-gray;
@@ -1782,15 +1782,14 @@ $success-bg:    #e6f5ed;
     flex-direction: column;
     text-decoration: none;
     color: inherit;
+    padding: 6px;
     border: 1px solid $dark-border;
     background: #ffffff;
-    border-radius: 14px;
     overflow: hidden;
     transition: transform 0.18s, border-color 0.18s;
 
     &:hover {
       transform: translateY(-2px);
-      border-color: $primary;
     }
   }
 

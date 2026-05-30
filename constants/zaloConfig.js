@@ -5,7 +5,7 @@
 
 export default {
   // Số Zalo chủ tài khoản mặc định
-  DEFAULT_ZALO_PHONE: process.env.NUXT_ENV_ZALO_PHONE || "0987654321",
+  DEFAULT_ZALO_PHONE: process.env.NUXT_ENV_ZALO_PHONE || "0981897301",
 
   // Tùy chỉnh theo danh mục (tùy chọn)
   CATEGORY_ZALO_MAP: {

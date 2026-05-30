@@ -68,7 +68,7 @@
           </div>
 
           <div class="modal-actions">
-            <a href="https://www.facebook.com/LyMinhTuan.AdminCheckScamVn" target="_blank" class="btn-facebook">
+            <a href="https://www.facebook.com/funkymanh" target="_blank" class="btn-facebook">
               <i class="fab fa-facebook-f"></i>
               Fanpage hỗ trợ
             </a>
@@ -87,15 +87,18 @@
       <RechargeOnline />
       <ListGameAccount />
     </section>
+
+    <FooterChinhSach />
   </div>
 </template>
 
 <script>
 import RechargeOnline from "@/components/HomeComponents/RechargeOnline";
 import ListGameAccount from "@/components/HomeComponents/ListGameAccount";
+import FooterChinhSach from "~/components/common/FooterChinhSach.vue";
 
 export default {
-  components: { RechargeOnline, ListGameAccount },
+  components: { RechargeOnline, ListGameAccount, FooterChinhSach },
 
   data() {
     return {
@@ -422,7 +425,7 @@ $success-bg:    #e6f5ed;
 
 // ─── MODAL BODY ───────────────────────────────────────────────
 .modal-body {
-  padding: 22px 26px 20px;
+  padding: 10px 26px;
 }
 
 .promo-desc {

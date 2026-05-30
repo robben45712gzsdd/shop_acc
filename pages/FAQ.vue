@@ -77,12 +77,18 @@
       </div>
 
     </div>
+    <footer-chinh-sach />
   </div>
 </template>
 
 <script>
+import FooterChinhSach from '~/components/common/FooterChinhSach.vue';
+
 export default {
   name: 'FAQPage',
+  components: {
+    FooterChinhSach
+  },
   head() {
     return {
       title: 'Câu Hỏi Thường Gặp - FAQ',
@@ -120,7 +126,7 @@ export default {
           id: 2,
           categoryId: 'account',
           question: 'Quên mật khẩu tài khoản, tôi phải làm sao?',
-          answer: 'Nếu quên mật khẩu:<br/>1. Vào trang đăng nhập<br/>2. Click "Quên mật khẩu"<br/>3. Nhập email đã đăng ký<br/>4. Kiểm tra email và làm theo hướng dẫn để đặt lại mật khẩu<br/>5. Hoặc liên hệ hotline 0336.856.626 để được hỗ trợ',
+          answer: 'Nếu quên mật khẩu:<br/>1. Vào trang đăng nhập<br/>2. Click "Quên mật khẩu"<br/>3. Nhập email đã đăng ký<br/>4. Kiểm tra email và làm theo hướng dẫn để đặt lại mật khẩu<br/>5. Hoặc liên hệ hotline 0981.897.301 để được hỗ trợ',
           date: '2024-12-28'
         },
         {
@@ -134,7 +140,7 @@ export default {
           id: 4,
           categoryId: 'payment',
           question: 'Thời gian nạp tiền mất bao lâu?',
-          answer: 'Thời gian nạp tiền phụ thuộc vào phương thức:<br/>💳 <strong>Thẻ cào:</strong> 1-5 phút<br/>🏦 <strong>ATM/MOMO:</strong> Tức thì (30 giây - 2 phút)<br/>💰 <strong>Ví điện tử:</strong> Tức thì<br/><br/>Hệ thống xử lý tự động 24/24. Nếu sau 10 phút chưa nhận được tiền, vui lòng liên hệ Zalo: 0336.856.626',
+          answer: 'Thời gian nạp tiền phụ thuộc vào phương thức:<br/>💳 <strong>Thẻ cào:</strong> 1-5 phút<br/>🏦 <strong>ATM/MOMO:</strong> Tức thì (30 giây - 2 phút)<br/>💰 <strong>Ví điện tử:</strong> Tức thì<br/><br/>Hệ thống xử lý tự động 24/24. Nếu sau 10 phút chưa nhận được tiền, vui lòng liên hệ Zalo: 0981.897.301',
           date: '2024-12-28'
         },
         {
@@ -183,7 +189,7 @@ export default {
           id: 11,
           categoryId: 'technical',
           question: 'Tôi gặp lỗi khi thanh toán, phải làm sao?',
-          answer: 'Nếu gặp lỗi thanh toán, hãy thử:<br/>1️⃣ Kiểm tra kết nối internet<br/>2️⃣ Xóa cache trình duyệt (Ctrl + Shift + Delete)<br/>3️⃣ Thử lại sau 5 phút<br/>4️⃣ Thử phương thức thanh toán khác<br/>5️⃣ Đảm bảo số dư đủ để thanh toán<br/>6️⃣ Kiểm tra thông tin thẻ/tài khoản chính xác<br/><br/>❌ Vẫn lỗi? Liên hệ ngay:<br/>📞 Hotline: 0336.856.626<br/>💬 Zalo: 0336.856.626',
+          answer: 'Nếu gặp lỗi thanh toán, hãy thử:<br/>1️⃣ Kiểm tra kết nối internet<br/>2️⃣ Xóa cache trình duyệt (Ctrl + Shift + Delete)<br/>3️⃣ Thử lại sau 5 phút<br/>4️⃣ Thử phương thức thanh toán khác<br/>5️⃣ Đảm bảo số dư đủ để thanh toán<br/>6️⃣ Kiểm tra thông tin thẻ/tài khoản chính xác<br/><br/>❌ Vẫn lỗi? Liên hệ ngay:<br/>📞 Hotline: 0981.897.301<br/>💬 Zalo: 0981.897.301',
           date: '2024-12-28'
         },
         {

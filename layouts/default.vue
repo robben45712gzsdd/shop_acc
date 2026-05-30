@@ -74,173 +74,7 @@
     <div class="!mt-[100px] min-h-[calc(100vh-100px)]" :class="{ 'dark-mode': darkMode, 'pb-mobile': is_login }"
       id="main">
       <Nuxt />
-
-
-      <!-- footer -->
-      <div class="homepage-content-footer">
-        <div class="gap-10 page-section">
-          <!-- ══════════════════════════════════════════════
-       BANNER 1 — HỖ TRỢ VÀ THU MUA
-  ══════════════════════════════════════════════ -->
-          <div class="relative flex items-center bg-[#c0291e] rounded-2xl w-full min-h-[220px] overflow-hidden"
-            style="background-image: url('YOUR_BG_1.jpg'); background-size: cover; background-position: center;">
-            <!-- Dark overlay for text legibility -->
-            <div class="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-transparent"></div>
-
-            <!-- Left: text block -->
-            <div class="z-10 relative flex flex-col gap-3 px-10 py-8 max-w-sm">
-              <h2 class="drop-shadow-lg font-black text-white text-4xl leading-tight tracking-wide">
-                HỖ TRỢ VÀ THU MUA
-              </h2>
-              <p class="font-black text-yellow-400 text-xl tracking-wide">ACC FREE FIRE</p>
-              <p class="text-white/90 text-sm leading-relaxed">
-                Liên hệ với shop để được đảm bảo giá<br />
-                và tẩn các acc và gói nổ rổ!
-              </p>
-              <div class="mt-1">
-                <button
-                  class="bg-[#e05c4a] hover:bg-[#c9463a] shadow px-7 py-2.5 rounded-full font-bold text-white text-sm tracking-widest transition-colors">
-                  LIÊN HỆ
-                </button>
-              </div>
-            </div>
-
-            <!-- Center: character image -->
-            <div class="bottom-0 left-1/2 absolute flex items-end h-full -translate-x-1/2 pointer-events-none">
-              <img src="YOUR_CHARACTER_1.png" alt="Characters" class="drop-shadow-2xl w-auto h-[110%] object-contain" />
-            </div>
-
-            <!-- Right: QR code card -->
-            <div class="z-10 relative flex-shrink-0 mr-8 ml-auto">
-              <div class="bg-white shadow-xl p-3 rounded-2xl w-[130px]">
-                <!-- QR placeholder — replace with real QR img -->
-                <img src="YOUR_QR_CODE.png" alt="QR Zalo" class="rounded-lg w-full" />
-                <p class="mt-1.5 text-[10px] text-gray-400 text-center leading-tight">Mở Zalo, bấm quét QR để quét kết
-                  bạn</p>
-              </div>
-            </div>
-          </div>
-
-
-          <!-- ══════════════════════════════════════════════
-       BANNER 2 — HƯỚNG DẪN BẢO MẬT
-  ══════════════════════════════════════════════ -->
-          <div class="relative flex items-center bg-[#d4a520] rounded-2xl w-full min-h-[200px] overflow-hidden"
-            style="background-image: url('YOUR_BG_2.jpg'); background-size: cover; background-position: center;">
-            <!-- Subtle dark strips top & bottom (as in original) -->
-            <div class="top-0 right-0 left-0 absolute bg-[#7a1010]/60 h-6"></div>
-            <div class="right-0 bottom-0 left-0 absolute bg-[#7a1010]/60 h-6"></div>
-
-            <!-- Left: character image -->
-            <div class="bottom-0 left-0 absolute flex items-end h-full pointer-events-none">
-              <img src="YOUR_CHARACTER_2L.png" alt="Character Left"
-                class="drop-shadow-xl w-auto h-[105%] object-contain" />
-            </div>
-
-            <!-- Center: text + buttons -->
-            <div class="z-10 relative flex flex-col items-center gap-4 mx-auto px-4 py-8 max-w-sm text-center">
-              <!-- Icon -->
-              <img src="YOUR_ICON.png" alt="Icon" class="w-12 h-12 object-contain" />
-
-              <div>
-                <h2 class="drop-shadow font-black text-[#1a0a0b] text-3xl leading-tight tracking-wide">
-                  HƯỚNG DẪN BẢO MẬT
-                </h2>
-                <p class="mt-0.5 font-medium text-[#2a1010] text-base">cho khách hàng mua ACC</p>
-              </div>
-
-              <div class="flex gap-3">
-                <button
-                  class="bg-white hover:bg-gray-50 shadow px-6 py-2.5 rounded-full font-bold text-[#c0291e] text-sm transition-colors">
-                  Xem ngay
-                </button>
-                <button
-                  class="bg-[#7c3aed] hover:bg-[#6d28d9] shadow px-6 py-2.5 rounded-full font-bold text-white text-sm transition-colors">
-                  Liên hệ
-                </button>
-              </div>
-
-              <p class="text-[#2a1010]/80 text-sm leading-relaxed">
-                Lười đọc quá thì liên hệ Shop Acc AE<br />
-                để được hỗ trợ từ A – Z nhé bạn yêu !!!
-              </p>
-            </div>
-
-            <!-- Right: character image -->
-            <div class="right-0 bottom-0 absolute flex items-end h-full pointer-events-none">
-              <img src="YOUR_CHARACTER_2R.png" alt="Character Right"
-                class="drop-shadow-xl w-auto h-[105%] object-contain" />
-            </div>
-          </div>
-
-
-          <!-- ══════════════════════════════════════════════
-       BANNER 3 — THUÊ ACC FREE FIRE
-  ══════════════════════════════════════════════ -->
-          <div class="relative flex items-center bg-[#c0291e] rounded-2xl w-full min-h-[220px] overflow-hidden"
-            style="background-image: url('YOUR_BG_3.jpg'); background-size: cover; background-position: center;">
-            <div class="absolute inset-0 bg-gradient-to-r from-black/25 via-transparent to-transparent"></div>
-
-            <!-- Left: text block -->
-            <div class="z-10 relative flex flex-col gap-2 px-10 py-8 max-w-xs">
-              <h2 class="drop-shadow-lg font-black text-white text-3xl leading-tight tracking-wide">
-                THUÊ ACC FREE FIRE
-              </h2>
-              <p class="font-semibold text-yellow-400 text-base">Giá chỉ từ</p>
-              <p class="drop-shadow-lg font-black text-white text-4xl leading-tight">
-                20 – 70k/giờ
-              </p>
-              <div class="mt-2">
-                <button
-                  class="bg-[#e05c4a] hover:bg-[#c9463a] shadow px-7 py-2.5 rounded-full font-bold text-white text-sm tracking-widest transition-colors">
-                  LIÊN HỆ
-                </button>
-              </div>
-            </div>
-
-            <!-- Center: character image -->
-            <div class="bottom-0 left-1/2 absolute flex items-end h-full -translate-x-1/2 pointer-events-none">
-              <img src="YOUR_CHARACTER_3.png" alt="Characters" class="drop-shadow-2xl w-auto h-[108%] object-contain" />
-            </div>
-
-            <!-- Right: QR code card -->
-            <div class="z-10 relative flex-shrink-0 mr-8 ml-auto">
-              <div class="bg-white shadow-xl p-3 rounded-2xl w-[130px]">
-                <img src="YOUR_QR_CODE.png" alt="QR Zalo" class="rounded-lg w-full" />
-                <p class="mt-1.5 text-[10px] text-gray-400 text-center leading-tight">Mở Zalo, bấm quét QR để quét kết
-                  bạn</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Banner: Chính sách bảo hành -->
-          <div class="flex items-center rounded-full w-full min-h-[80px] overflow-hidden footer-chinhsach">
-
-            <!-- Left: game character image (add your bg image here) -->
-            <div class="flex-3"> </div>
-
-            <!-- Middle: text -->
-            <div class="z-10 flex-2 py-4">
-              <p class="font-bold text-white text-lg text-center leading-tight">
-                Chính sách bảo hành và Uy tín của Shop
-              </p>
-              <p class="mt-0.5 font-medium text-yellow-400 text-sm text-center">
-                (Chuyên nghiệp – Chất lượng – Trung thực)
-              </p>
-            </div>
-
-            <!-- Right: CTA button -->
-            <div class="z-10 flex-1 pr-4">
-              <button
-                class="!bg-white hover:!bg-red-50 !shadow-sm !px-6 !py-2.5 !rounded-full !font-bold !text-[#b91c1c] !text-sm !whitespace-nowrap !transition-colors">
-                Xem chi tiết
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-
     <!-- MOBILE BOTTOM NAV (only when logged in) -->
     <div v-if="is_login" class="mobile-bottom-nav">
       <nuxt-link to="/" class="nav-item" :class="{ active: $route.path === '/' }">
@@ -297,13 +131,13 @@
           <div class="footer-contact">
             <h4>Liên hệ</h4>
             <p>Email: <a href="mailto:tuanfbchinh@gmail.com">tuanfbchinh@gmail.com</a></p>
-            <p>Hotline: <a href="tel:0123456789">0336.856.626</a></p>
+            <p>Hotline: <a href="tel:0123456789">0981.897.301</a></p>
             <p>Mạng xã hội:
             <div class="flex justify-center md:!justify-start items-center gap-4 mx-auto md:mx-0 mt-2">
-              <a href="https://zalo.me/0336.856.626" target="_blank">
+              <a href="https://zalo.me/g/rtqsvs427" target="_blank">
                 <img src="~/assets/images/zalo.webp" alt="Zalo" style="width: 30px; height: 30px;"></img>
               </a>
-              <a href="https://www.facebook.com/LyMinhTuan.AdminCheckScamVn" target="_blank">
+              <a href="https://www.facebook.com/funkymanh" target="_blank">
                 <img src="~/assets/images/mess.png" alt="Facebook" style="width: 30px; height: 30px;"></img>
               </a>
             </div>
@@ -332,10 +166,10 @@
 
     <!-- FLOATING ICONS -->
     <div class="float-icons" :class="{ 'isLogined': is_login }">
-      <a href="https://zalo.me/0336.856.626" target="_blank" class="float-icon zalo" title="Zalo">
+      <a href="https://zalo.me/g/rtqsvs427" target="_blank" class="float-icon zalo" title="Zalo">
         <img src="@/assets/images/zalo.webp" alt="Zalo" style="width: 24px; height: 24px;" />
       </a>
-      <a href="https://www.facebook.com/LyMinhTuan.AdminCheckScamVn" target="_blank" class="float-icon facebook"
+      <a href="https://www.facebook.com/funkymanh" target="_blank" class="float-icon facebook"
         title="Facebook">
         <img src="@/assets/images/mess.png" alt="Facebook" style="width: 24px; height: 24px;" />
       </a>
@@ -484,7 +318,7 @@
 
                     <div class="info-item">
                       <i class="fas fa-phone-alt"></i>
-                      <span>Nếu gặp lỗi, vui lòng liên hệ hỗ trợ: <b>0336.856.626</b></span>
+                      <span>Nếu gặp lỗi, vui lòng liên hệ hỗ trợ: <b>0981.897.301</b></span>
                     </div>
 
                   </div>
@@ -502,6 +336,7 @@
 
 <script>
 import payment from '~/api/payment';
+import FAQ from '~/pages/FAQ.vue';
 export default {
   components: {
     CookieConsent: () => import('@/components/Modals/CookieConsent'),
@@ -2282,7 +2117,7 @@ $success-bg: #e6f5ed;
 
 // ─── MODAL BODY ───────────────────────────────────────────────
 .modal-body {
-  padding: 22px 26px 20px;
+  padding: 10px 26px;
 }
 
 .promo-desc {

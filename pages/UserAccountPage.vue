@@ -344,7 +344,7 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
   .profile-bg {
     height: 10px;
     background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
-      background: $primary;
+    background: $primary;
     border-radius: 12px;
     margin-bottom: -60px;
     position: relative;
@@ -377,7 +377,7 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
     position: relative;
     background: $bg;
     border-radius: 12px;
-      border-radius: 8px;
+    border-radius: 8px;
     padding: 10px;
     display: flex;
     align-items: center;
@@ -445,33 +445,28 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
     }
 
     .logout-button {
-      padding: 12px 24px;
-      border-radius: 10px;
+      padding: 8px 12px;
+      border-radius: 5px;
       border: none;
       background: linear-gradient(135deg, #ef4444, #dc2626);
       color: white;
-      font-size: 15px;
-      font-weight: 600;
+      font-size: 12px;
+      font-weight: 500;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 8px;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 
       i {
         font-size: 16px;
       }
 
-      &:hover {
-      background: #ef4444;
-    }
 
-    .logout-button:hover {
+      .logout-button:hover {
         background: darken(#ef4444, 10%);
-          background: $primary;
+        background: $primary;
         transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
       }
 
       &:active {
@@ -538,7 +533,6 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
     gap: 14px;
-    box-shadow: 0 4px 12px rgba($primary, 0.25);
     margin-bottom: 4px;
 
     .sidebar-avatar {
@@ -612,7 +606,7 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
   .nav-group {
     background: $bg;
     border-radius: 12px;
-      border-radius: 8px;
+    border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
     border: 1px solid rgba($border, 0.8);
@@ -719,7 +713,7 @@ $shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
 .main-panel {
   background: $bg;
   border-radius: 12px;
-    border-radius: 8px;
+  border-radius: 8px;
   box-shadow: $shadow-md;
   overflow: hidden;
   height: fit-content;

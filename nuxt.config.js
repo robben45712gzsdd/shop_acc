@@ -22,7 +22,6 @@ export default {
         href: "/acgame247_logo.png",
       },
 
-
       {
         rel: "stylesheet",
         href: "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css",
@@ -40,7 +39,7 @@ export default {
     "~/plugins/toast.js",
     { src: "~/plugins/ws.client.js", mode: "client" },
   ],
-  buildModules: ["@nuxtjs/vuetify"],
+  buildModules: ["@nuxtjs/vuetify", "@nuxtjs/tailwindcss"],
   vuetify: { customVariables: ["~/assets/styles/variables.scss"] },
   css: ["~/assets/styles/main.scss", "~/assets/styles/toast.scss"],
   router: { middleware: ["auth"] },
