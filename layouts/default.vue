@@ -74,52 +74,14 @@
     <div class="!mt-[100px] min-h-[calc(100vh-100px)]" :class="{ 'dark-mode': darkMode, 'pb-mobile': is_login }"
       id="main">
       <Nuxt />
-    </div>
-    <!-- MOBILE BOTTOM NAV (only when logged in) -->
-    <div v-if="is_login" class="mobile-bottom-nav">
-      <nuxt-link to="/" class="nav-item" :class="{ active: $route.path === '/' }">
-        <i class="fas fa-home"></i>
-        <span>Trang chủ</span>
-      </nuxt-link>
-
-      <nuxt-link to="/UserAccountPage?tab=autoRechargeCard" class="nav-item"
-        :class="{ active: $route.query.tab === 'autoRechargeCard' }">
-        <i class="fas fa-credit-card"></i>
-        <span>Nạp thẻ</span>
-      </nuxt-link>
-
-      <nuxt-link to="/UserAccountPage" class="nav-item avatar-item"
-        :class="{ active: $route.path === '/UserAccountPage' && !$route.query.tab }">
-        <div class="avatar-circle">
-          <i class="fas fa-user"></i>
-        </div>
-      </nuxt-link>
-
-      <a href="#" @click.prevent="openRechargeModal" class="nav-item">
-        <i class="fas fa-wallet"></i>
-        <span>Nạp tiền</span>
-      </a>
-
-      <nuxt-link to="/FAQ" class="nav-item" :class="{ active: $route.path === '/FAQ' }">
-        <i class="fas fa-question-circle"></i>
-        <span>Hỏi đáp</span>
-      </nuxt-link>
-    </div>
-
-
-
-
-
-
-
-    <footer class="footer">
+       <footer class="footer">
       <div class="wrap-footer">
         <!-- TOP: logo + info + liên hệ -->
         <div class="footer-top">
           <!-- Logo & Giới thiệu -->
           <div class="footer-brand">
             <nuxt-link to="/" class="flex !justify-center md:!justify-start">
-              <img src="@/assets/images/logo/acgame247_logo.png" alt="ThaiSonShop Logo" class="footer-logo" />
+              <img src="@/assets/images/logo/accgame247_2.gif" alt="ThaiSonShop Logo" class="footer-logo" />
             </nuxt-link>
             <p>
               Hệ thống bán acc tự động, đảm bảo uy tín và chất lượng.
@@ -163,14 +125,44 @@
         </div>
       </div>
     </footer>
+    </div>
+    <!-- MOBILE BOTTOM NAV (only when logged in) -->
+    <div v-if="is_login" class="mobile-bottom-nav">
+      <nuxt-link to="/" class="nav-item" :class="{ active: $route.path === '/' }">
+        <i class="fas fa-home"></i>
+        <span>Trang chủ</span>
+      </nuxt-link>
+
+      <nuxt-link to="/UserAccountPage?tab=autoRechargeCard" class="nav-item"
+        :class="{ active: $route.query.tab === 'autoRechargeCard' }">
+        <i class="fas fa-credit-card"></i>
+        <span>Nạp thẻ</span>
+      </nuxt-link>
+
+      <nuxt-link to="/UserAccountPage" class="nav-item avatar-item"
+        :class="{ active: $route.path === '/UserAccountPage' && !$route.query.tab }">
+        <div class="avatar-circle">
+          <i class="fas fa-user"></i>
+        </div>
+      </nuxt-link>
+
+      <a href="#" @click.prevent="openRechargeModal" class="nav-item">
+        <i class="fas fa-wallet"></i>
+        <span>Nạp tiền</span>
+      </a>
+
+      <nuxt-link to="/FAQ" class="nav-item" :class="{ active: $route.path === '/FAQ' }">
+        <i class="fas fa-question-circle"></i>
+        <span>Hỏi đáp</span>
+      </nuxt-link>
+    </div>
 
     <!-- FLOATING ICONS -->
     <div class="float-icons" :class="{ 'isLogined': is_login }">
       <a href="https://zalo.me/g/rtqsvs427" target="_blank" class="float-icon zalo" title="Zalo">
         <img src="@/assets/images/zalo.webp" alt="Zalo" style="width: 24px; height: 24px;" />
       </a>
-      <a href="https://www.facebook.com/funkymanh" target="_blank" class="float-icon facebook"
-        title="Facebook">
+      <a href="https://www.facebook.com/funkymanh" target="_blank" class="float-icon facebook" title="Facebook">
         <img src="@/assets/images/mess.png" alt="Facebook" style="width: 24px; height: 24px;" />
       </a>
     </div>
@@ -329,14 +321,13 @@
           </div>
         </div>
       </transition>
-
     </div>
+   
   </div>
 </template>
 
 <script>
 import payment from '~/api/payment';
-import FAQ from '~/pages/FAQ.vue';
 export default {
   components: {
     CookieConsent: () => import('@/components/Modals/CookieConsent'),
@@ -591,6 +582,17 @@ export default {
 // ============================================
 // NAVBAR
 // ============================================
+#main {
+  background: url("@/assets/images/logo/tai-anh-dong-dep-11.gif") no-repeat center;
+  background-size: cover;
+  height: 100vh;
+  width: 100vw;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
 
 #nav {
   position: fixed;
@@ -1898,7 +1900,7 @@ $success-bg: #e6f5ed;
 .page-section {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px 16px 48px;
+  padding: 20px 16px 20px;
 }
 
 @media (max-width: 768px) {

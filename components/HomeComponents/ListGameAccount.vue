@@ -1,6 +1,6 @@
 <template>
   <div class="list-game-account">
-    <div class="title"><strong>danh mục acc game</strong></div>
+    <div class="!text-white title"><strong>danh mục acc game</strong></div>
 
     <div class="list-type-account">
       <nuxt-link v-for="category in listCategoryGameAccount" :key="category.categoryId"
@@ -23,6 +23,55 @@
         </div>
       </nuxt-link>
     </div>
+    <div class="mt-10 mb-2 !text-white title"><strong>Free Fire</strong></div>
+    <div class="bg-white w-full h-[2px]"></div>
+
+    <div class="gap-4 grid grid-cols-1 md:grid-cols-2 mt-4 w-full">
+      <nuxt-link 
+      :to="{
+         path: '/AccountCategories/8f3b6f1a-2d4c-4f7e-9a11-5c7d2b9e8a30',
+         query: {
+          imageUrlThumb: item.imageUrlThumb,
+          banner: item.banner,
+          title: item.name,
+          minPrice: item.minPrice,
+          maxPrice: item.maxPrice,
+         }
+      }"
+      class="bg-white border border-[5px] border-white rounded-lg overflow-hidden" v-for="(item, index) in listCateFreeFire" :key="index">
+        <!-- Banner -->
+        <div class="relative">
+          <img :src="(item.banner)" :alt="item.name" class="w-full h-72 object-cover" />
+          <img :src="(item.imageUrlThumb)" :alt="item.name" class="right-0 bottom-0 absolute w-[40%] h-auto object-cover" />
+        </div>
+
+        <!-- Content -->
+        <div class="flex justify-between items-center bg-white p-6">
+          <!-- Left -->
+          <div>
+            <h2 class="font-bold text-red-800 text-3xl">
+             {{ item.name }}
+            </h2>
+
+            <div class="inline-block bg-red-500 mt-3 px-5 py-1 rounded font-bold text-white text-2xl">
+              Siêu giảm giá 50%
+            </div>
+          </div>
+
+          <!-- Right -->
+          <div class="text-right">
+            <p class="mb-5 text-black text-md">
+              Đã bán {{ item.totalAccount }} Nick
+            </p>
+
+            <button
+              class="bg-red-500 hover:bg-red-600 shadow-lg px-4 py-2 rounded-2xl font-bold text-white text-xl transition">
+              Xem tất cả
+            </button>
+          </div>
+        </div>
+      </nuxt-link>
+    </div>
   </div>
 </template>
 
@@ -33,7 +82,57 @@ export default {
   name: "ListGameAccount",
   data() {
     return {
-      listCategoryGameAccount: []
+      listCategoryGameAccount: [],
+      listCateFreeFire: [
+        {
+          name: 'Acc Free Fire dưới 1M',
+          imageUrlThumb: require('@/assets/images/banner/duoi1m.png'),
+          banner: require('@/assets/images/banner/sieu-pham-tet.gif'),
+          totalAccount: 120,
+          minPrice: 10000,
+          maxPrice: 1000000,
+        },
+        {
+          name: 'Acc Free Fire 1M - 2M',
+          imageUrlThumb: require('@/assets/images/banner/1m2m.png'),
+          banner: require('@/assets/images/banner/sieu-pham-tet.gif'),
+          totalAccount: 80,
+          minPrice: 1000000,
+          maxPrice: 2000000,
+        },
+        {
+          name: 'Acc Free Fire 2M - 5M',
+          imageUrlThumb: require('@/assets/images/banner/2m5m.png'),
+          banner: require('@/assets/images/banner/sieu-pham-tet.gif'),
+          totalAccount: 50,
+          minPrice: 2000000,
+          maxPrice: 5000000,
+        },
+        {
+          name: 'Acc Free Fire 5M - 10M',
+          imageUrlThumb: require('@/assets/images/banner/5m10m.png'),
+          banner: require('@/assets/images/banner/sieu-pham-tet.gif'),
+          totalAccount: 30,
+          minPrice: 5000000,
+          maxPrice: 10000000,
+        },
+        {
+          name: 'Acc Free Fire 10M - 20M',
+          imageUrlThumb: require('@/assets/images/banner/10m20m.png'),
+          banner: require('@/assets/images/banner/sieu-pham-tet.gif'),
+          totalAccount: 20,
+          minPrice: 10000000,
+          maxPrice: 20000000,
+        },
+        {
+            name: 'Acc Free Fire Siêu Phẩm',
+            imageUrlThumb: require('@/assets/images/banner/sieupham.png'),
+            banner: require('@/assets/images/banner/sieu-pham-tet.gif'),
+            totalAccount: 10,
+            minPrice: 20000000,
+            maxPrice: 1000000000,
+          },
+      ],
     };
   },
 

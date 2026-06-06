@@ -180,34 +180,34 @@ export default {
 // Light accents derived from primary for light theme
 // ──────────────────────────────────────────────────────────────
 
-$brand:         #6E161A;
-$brand-dark:    #601316;
-$brand-deeper:  #4a0e10;
-$brand-mid:     #a62229;
-$brand-bright:  #c62a32;
+$brand: #6E161A;
+$brand-dark: #601316;
+$brand-deeper: #4a0e10;
+$brand-mid: #a62229;
+$brand-bright: #c62a32;
 
-$brand-tint-1:  #f9ecec;   // very soft blush
-$brand-tint-2:  #f2d5d6;   // soft rose
-$brand-tint-3:  #e8b5b7;   // medium rose
-$brand-tint-4:  #d08285;   // dusty rose
+$brand-tint-1: #f9ecec; // very soft blush
+$brand-tint-2: #f2d5d6; // soft rose
+$brand-tint-3: #e8b5b7; // medium rose
+$brand-tint-4: #d08285; // dusty rose
 
-$gold:          #c8922a;   // warm accent
-$gold-light:    #f5ead6;
-$gold-mid:      #e4a93a;
+$gold: #c8922a; // warm accent
+$gold-light: #f5ead6;
+$gold-mid: #e4a93a;
 
-$surface:       #fdfbfb;
-$surface-2:     #ffffff;
-$surface-3:     #f7f2f2;
-$border:        #eadede;
-$border-2:      #dfd0d0;
+$surface: #fdfbfb;
+$surface-2: #ffffff;
+$surface-3: #f7f2f2;
+$border: #eadede;
+$border-2: #dfd0d0;
 
-$ink:           #1c0a0b;
-$ink-2:         #4a2426;
-$ink-3:         #7a4a4d;
-$ink-4:         #b08082;
+$ink: #1c0a0b;
+$ink-2: #4a2426;
+$ink-3: #7a4a4d;
+$ink-4: #b08082;
 
-$success:       #1e6e4a;
-$success-bg:    #e6f5ed;
+$success: #1e6e4a;
+$success-bg: #e6f5ed;
 
 // ─── FONTS ────────────────────────────────────────────────────
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Mulish:wght@400;500;600;700&display=swap');
@@ -215,20 +215,23 @@ $success-bg:    #e6f5ed;
 // ─── HOMEPAGE ─────────────────────────────────────────────────
 .homepage-content {
   min-height: 100vh;
-  background: $brand;
+  //background: $brand;
+
   font-family: "Roboto Condensed", sans-serif;
 }
 
 .page-section {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px 16px 48px;
+  padding: 20px 16px 20px;
 }
+
 @media (max-width: 768px) {
   .page-section {
     padding: 10px;
   }
 }
+
 // ─── OVERLAY ──────────────────────────────────────────────────
 .promo-modal-overlay {
   position: fixed;
@@ -271,8 +274,13 @@ $success-bg:    #e6f5ed;
 }
 
 @keyframes shimmer-line {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 // ─── CLOSE BUTTON ─────────────────────────────────────────────
@@ -284,7 +292,7 @@ $success-bg:    #e6f5ed;
   height: 36px;
   border: 1px solid $border;
   border-radius: 50%;
-  background: rgba(255,255,255,0.92);
+  background: rgba(255, 255, 255, 0.92);
   color: $ink-3;
   display: flex;
   align-items: center;
@@ -314,8 +322,8 @@ $success-bg:    #e6f5ed;
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(ellipse 60% 60% at 20% 80%, rgba(118,24,29,0.10) 0%, transparent 70%),
-      radial-gradient(ellipse 50% 50% at 80% 20%, rgba(200,146,42,0.08) 0%, transparent 70%);
+      radial-gradient(ellipse 60% 60% at 20% 80%, rgba(118, 24, 29, 0.10) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 50% at 80% 20%, rgba(200, 146, 42, 0.08) 0%, transparent 70%);
     pointer-events: none;
   }
 
@@ -354,8 +362,17 @@ $success-bg:    #e6f5ed;
 }
 
 @keyframes pulse-bolt {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: 0.7; transform: scale(1.2); }
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.7;
+    transform: scale(1.2);
+  }
 }
 
 .modal-title {
@@ -387,7 +404,7 @@ $success-bg:    #e6f5ed;
     position: absolute;
     inset: 0;
     border-radius: 14px;
-    background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), transparent);
   }
 
   .discount-number {
@@ -409,14 +426,14 @@ $success-bg:    #e6f5ed;
   .discount-percent {
     font-size: 22px;
     font-weight: 800;
-    color: rgba(255,255,255,0.95);
+    color: rgba(255, 255, 255, 0.95);
     line-height: 1;
   }
 
   .discount-text {
     font-size: 11px;
     font-weight: 800;
-    color: rgba(255,255,255,0.80);
+    color: rgba(255, 255, 255, 0.80);
     text-transform: uppercase;
     letter-spacing: 1.5px;
     margin-top: 2px;
@@ -572,8 +589,15 @@ $success-bg:    #e6f5ed;
 }
 
 @keyframes blink-sep {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.2; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.2;
+  }
 }
 
 // ─── ACTIONS ──────────────────────────────────────────────────
@@ -637,7 +661,7 @@ $success-bg:    #e6f5ed;
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent 60%);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), transparent 60%);
     pointer-events: none;
   }
 
@@ -709,7 +733,7 @@ $success-bg:    #e6f5ed;
     }
   }
 
-  input:checked + .check-custom {
+  input:checked+.check-custom {
     border-color: $brand;
     background: $brand-tint-1;
 
@@ -731,12 +755,18 @@ $success-bg:    #e6f5ed;
 // ─── TRANSITIONS ──────────────────────────────────────────────
 .modal-fade-enter-active {
   transition: opacity 0.26s ease;
-  .promo-modal { animation: modal-pop-in 0.26s cubic-bezier(0.34, 1.4, 0.64, 1); }
+
+  .promo-modal {
+    animation: modal-pop-in 0.26s cubic-bezier(0.34, 1.4, 0.64, 1);
+  }
 }
 
 .modal-fade-leave-active {
   transition: opacity 0.18s ease;
-  .promo-modal { animation: modal-pop-out 0.18s ease forwards; }
+
+  .promo-modal {
+    animation: modal-pop-out 0.18s ease forwards;
+  }
 }
 
 .modal-fade-enter,
@@ -745,13 +775,27 @@ $success-bg:    #e6f5ed;
 }
 
 @keyframes modal-pop-in {
-  from { opacity: 0; transform: scale(0.92) translateY(20px); }
-  to   { opacity: 1; transform: scale(1) translateY(0); }
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 @keyframes modal-pop-out {
-  from { opacity: 1; transform: scale(1) translateY(0); }
-  to   { opacity: 0; transform: scale(0.94) translateY(16px); }
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.94) translateY(16px);
+  }
 }
 
 // ─── RESPONSIVE ───────────────────────────────────────────────
@@ -783,11 +827,19 @@ $success-bg:    #e6f5ed;
 
   .time-block {
     min-width: 50px;
-    .time-value { font-size: 24px; }
+
+    .time-value {
+      font-size: 24px;
+    }
   }
 
-  .countdown-timer { gap: 6px; }
-  .time-sep { font-size: 18px; }
+  .countdown-timer {
+    gap: 6px;
+  }
+
+  .time-sep {
+    font-size: 18px;
+  }
 }
 
 @media (max-width: 360px) {

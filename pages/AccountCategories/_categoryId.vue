@@ -1,135 +1,161 @@
 <template>
   <div class="account-categories" :class="{ 'light-theme': lightTheme }">
     <div class="wrap-categories">
-      <!-- TITLE -->
-      <div class="category-header">
-        <h1 class="!text-white category-title">{{ pathName }}</h1>
-        <div class="category-divider"></div>
-      </div>
-
-      <!-- FILTER SECTION -->
-      <div class="filter-section">
-        <div class="filter-header">
-          <div class="filter-title">
-            <i class="fas fa-sliders-h"></i>
-            <span>Bộ lọc tìm kiếm</span>
+      <div class="w-full h-full" v-if="dataCateRoute.imageUrlThumb">
+        <!-- TITLE -->
+        <div class="w-full h-full">
+          <div class="pt-10 category-header">
+            <h1 class="font-bold !text-white text-3xl category-title">{{ dataCateRoute.title }}</h1>
+            <div class="category-divider"></div>
           </div>
-          <button class="btn-toggle-filter" @click="filterExpanded = !filterExpanded">
-            <i :class="filterExpanded ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
-          </button>
+          <!-- IMAGE -->
+          <div class="relative m-auto mb-6 w-full h-auto md:h-[80vh] image-container">
+            <img class="rounded-lg w-full h-full object-cover img-type-account" :src="dataCateRoute.banner" alt="Category Image" />
+            <img class="right-0 bottom-0 absolute w-[40%] object-cover img-type-account" :src="dataCateRoute.imageUrlThumb" alt="Category Image" />
+          </div>
         </div>
+      </div>
+      <!-- FILTER SECTION -->
+      <div class="pt-10 w-full h-full" v-else>
 
-        <transition name="filter-collapse">
-          <div class="filter-container" v-show="filterExpanded">
-            <!-- ROW 1: SORT & ORDER -->
-            <div class="filter-row">
-              <div class="filter-group">
-                <label class="filter-label">
-                  <i class="fas fa-sort"></i>
-                  Sắp xếp
-                </label>
-                <select v-model="params.sortType" @change="applyFilters" class="filter-select">
-                  <option value="0">Mới nhất</option>
-                  <option value="1">Giá thấp → cao</option>
-                  <option value="2">Giá cao → thấp</option>
-                  <option value="3">Bán chạy nhất</option>
-                </select>
-              </div>
-
-              <div class="filter-group">
-                <label class="filter-label">
-                  <i class="fas fa-arrows-alt-v"></i>
-                  Thứ tự
-                </label>
-                <select v-model.number="params.ascending" @change="applyFilters" class="filter-select">
-                  <option :value="false">Giảm dần</option>
-                  <option :value="true">Tăng dần</option>
-                </select>
-              </div>
+        <div class="category-header">
+          <h1 class="font-bold !text-white text-2xl category-title">{{ pathName }}</h1>
+          <div class="category-divider"></div>
+        </div>
+        <div class="filter-section">
+          <div class="filter-header">
+            <div class="filter-title">
+              <i class="fas fa-sliders-h"></i>
+              <span>Bộ lọc tìm kiếm</span>
             </div>
+            <button class="btn-toggle-filter" @click="filterExpanded = !filterExpanded">
+              <i :class="filterExpanded ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
+            </button>
+          </div>
 
-            <!-- ROW 2: PRICE RANGE -->
-            <div class="filter-row">
-              <div class="price-group filter-group">
-                <label class="filter-label">
-                  <i class="fas fa-money-bill-wave"></i>
-                  Khoảng giá
-                </label>
-                <div class="flex-wrap !max-w-full price-inputs">
-                  <input v-model="minPriceInput" type="text" placeholder="Tối thiểu" class="filter-input"
-                    @input="onPriceInput('minPrice')" @change="applyFilters" />
-                  <span class="price-divider">-</span>
-                  <input v-model="maxPriceInput" type="text" placeholder="Tối đa" class="filter-input"
-                    @input="onPriceInput('maxPrice')" @change="applyFilters" />
+          <transition name="filter-collapse">
+            <div class="filter-container" v-show="filterExpanded">
+              <!-- ROW 1: SORT & ORDER -->
+              <div class="filter-row">
+                <div class="filter-group">
+                  <label class="filter-label">Từ khoá</label>
+                  <input v-model="params.keyWord" type="text" placeholder="Nhập từ khoá tìm kiếm" class="filter-input"
+                    @change="applyFilters" />
+                </div>
+                <div class="filter-group">
+                  <label class="filter-label">
+                    <i class="fas fa-sort"></i>
+                    Sắp xếp
+                  </label>
+                  <select v-model="params.sortType" @change="applyFilters" class="filter-select">
+                    <option value="0">Mới nhất</option>
+                    <option value="1">Giá thấp → cao</option>
+                    <option value="2">Giá cao → thấp</option>
+                    <option value="3">Bán chạy nhất</option>
+                  </select>
+                </div>
+
+                <div class="filter-group">
+                  <label class="filter-label">
+                    <i class="fas fa-arrows-alt-v"></i>
+                    Thứ tự
+                  </label>
+                  <select v-model.number="params.ascending" @change="applyFilters" class="filter-select">
+                    <option :value="false">Giảm dần</option>
+                    <option :value="true">Tăng dần</option>
+                  </select>
                 </div>
               </div>
 
-              <!-- RESET BUTTON -->
-              <div class="filter-group">
-                <button class="btn-reset" @click="resetFilters">
-                  <i class="fas fa-redo-alt"></i>
-                  <span>Đặt lại bộ lọc</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </transition>
-      </div>
-
-      <!-- ACCOUNTS GRID -->
-      <div class="list-account-category" v-if="accounts.length > 0 && !loading">
-        <div v-for="(acc, index) in accounts" :key="acc.accountId" class="account-type">
-          <nuxt-link :to="'/DetailAccountPage/' + acc.accountId" class="account-link">
-            <div class="wrap-type-account">
-              <div class="image-container">
-                <img class="img-type-account" :src="acc.image" :alt="acc.title" />
-                <div class="image-label">
-                  <div class="account-code">{{ acc.accountCode }}</div>
-                  <div class="discount-badge" v-if="calculateDiscount(acc.price, acc.priceSale) > 0">
-                    -{{ calculateDiscount(acc.price, acc.priceSale) }}%
+              <!-- ROW 2: PRICE RANGE -->
+              <div class="filter-row">
+                <div class="price-group filter-group">
+                  <label class="filter-label">
+                    <i class="fas fa-money-bill-wave"></i>
+                    Khoảng giá
+                  </label>
+                  <div class="flex-wrap !max-w-full price-inputs">
+                    <input v-model="minPriceInput" type="text" placeholder="Tối thiểu" class="filter-input"
+                      @input="onPriceInput('minPrice')" @change="applyFilters" />
+                    <span class="price-divider">-</span>
+                    <input v-model="maxPriceInput" type="text" placeholder="Tối đa" class="filter-input"
+                      @input="onPriceInput('maxPrice')" @change="applyFilters" />
                   </div>
                 </div>
-              </div>
-              <p class="name-type-acc"><strong>{{ acc.title }}</strong></p>
-              <p class="num-acc">Mô tả: <strong>{{ acc.description }}</strong></p>
-              <div class="price">
-                <span class="old-price" v-if="acc.price">{{ formatPrice(acc.price) }}</span>
-                <span class="new-price">{{ formatPrice(acc.priceSale || acc.price) }}</span>
-              </div>
-              <div class="btn-buy-now">
-                <img src="@/assets/images/btn-buy-now.png" alt="" />
+
+                <!-- RESET BUTTON -->
+                <div class="filter-group">
+                  <button class="btn-reset" @click="resetFilters">
+                    <i class="fas fa-redo-alt"></i>
+                    <span>Đặt lại bộ lọc</span>
+                  </button>
+                </div>
               </div>
             </div>
-          </nuxt-link>
-
-          <!-- FAVORITE SECTION -->
-          <div class="favorite-section">
-            <div class="favorite-count">
-              <i class="fas fa-heart"></i>
-              <span>{{ acc.totalFavorite || 0 }} lượt thích</span>
-            </div>
-
-          </div>
+          </transition>
         </div>
       </div>
 
-      <!-- EMPTY STATE -->
-      <div v-if="accounts.length === 0 && !loading" class="empty-state">
-        <i class="fas fa-inbox"></i>
-        <p>Không có sản phẩm nào phù hợp với bộ lọc của bạn</p>
-      </div>
+    <!-- TITLE -->
+    <div class="p-0 category-header">
+      <h3 class="!py-2 !text-white !text-sm category-title text">Kết quả tìm kiếm: {{ accounts.length }} tài khoản
+      </h3>
+      <div class="category-divider"></div>
+    </div>
+    <!-- ACCOUNTS GRID -->
+    <div class="list-account-category" v-if="accounts.length > 0 && !loading">
+      <div v-for="(acc, index) in accounts" :key="acc.accountId" class="account-type">
+        <nuxt-link :to="'/DetailAccountPage/' + acc.accountId" class="account-link">
+          <div class="wrap-type-account">
+            <div class="image-container">
+              <img class="img-type-account" :src="acc.image" :alt="acc.title" />
+              <div class="image-label">
+                <div class="account-code">{{ acc.accountCode }}</div>
+                <div class="discount-badge" v-if="calculateDiscount(acc.price, acc.priceSale) > 0">
+                  -{{ calculateDiscount(acc.price, acc.priceSale) }}%
+                </div>
+              </div>
+            </div>
+            <p class="name-type-acc"><strong>{{ acc.title }}</strong></p>
+            <p class="num-acc">Mô tả: <strong>{{ acc.description }}</strong></p>
+            <div class="price">
+              <span class="old-price" v-if="acc.price">{{ formatPrice(acc.price) }}</span>
+              <span class="new-price">{{ formatPrice(acc.priceSale || acc.price) }}</span>
+            </div>
+            <div class="btn-buy-now">
+              <img src="@/assets/images/btn-buy-now.png" alt="" />
+            </div>
+          </div>
+        </nuxt-link>
 
-      <!-- PAGINATION -->
-      <Pagination v-if="totalPages > 1 && accounts.length > 0 && !loading" :currentPage="currentPage"
-        :totalPages="totalPages" @update:page="handlePageChange" />
+        <!-- FAVORITE SECTION -->
+        <div class="favorite-section">
+          <div class="favorite-count">
+            <i class="fas fa-heart"></i>
+            <span>{{ acc.totalFavorite || 0 }} lượt thích</span>
+          </div>
 
-      <!-- LOADING -->
-      <div v-if="loading" class="loading-wrapper">
-        <div class="my-10">
-          <LoadingSpinner />
         </div>
       </div>
     </div>
+
+    <!-- EMPTY STATE -->
+    <div v-if="accounts.length === 0 && !loading" class="empty-state">
+      <i class="fas fa-inbox"></i>
+      <p>Không có sản phẩm nào phù hợp với bộ lọc của bạn</p>
+    </div>
+
+    <!-- PAGINATION -->
+    <Pagination v-if="totalPages > 1 && accounts.length > 0 && !loading" :currentPage="currentPage"
+      :totalPages="totalPages" @update:page="handlePageChange" />
+
+    <!-- LOADING -->
+    <div v-if="loading" class="loading-wrapper">
+      <div class="my-10">
+        <LoadingSpinner />
+      </div>
+    </div>
+  </div>
   </div>
 </template>
 
@@ -140,6 +166,11 @@ import favorite from "~/api/favorite";
 export default {
   data() {
     return {
+      dataCateRoute: {
+        title: this.$route.query.title || "",
+        imageUrlThumb: this.$route.query.imageUrlThumb || "",
+        banner: this.$route.query.banner || "",
+      },
       pathName: "",
       accounts: [],
       // enable light theme for this page by default (toggleable)
@@ -152,14 +183,15 @@ export default {
       params: {
         categoryId: "",
         sortType: 0,
+        keyWord: "",
         minPrice: 0,
         maxPrice: 1000000000,
         ascending: false,
         currentPage: 1,
         recordPerPage: 12,
       },
-      minPriceInput: "0",
-      maxPriceInput: "1.000.000.000",
+      minPriceInput: this.$route.query.minPrice || "0",
+      maxPriceInput: this.$route.query.maxPrice || "1.000.000.000",
     };
   },
   computed: {
@@ -356,8 +388,6 @@ export default {
   }
 
   .category-title {
-    font-size: 1.35rem;
-    font-weight: 700;
     color: var(--text);
     margin: 0 0 6px 0;
     text-transform: uppercase;
@@ -370,6 +400,7 @@ export default {
   border: 1px solid var(--border);
   margin-bottom: 16px;
   overflow: hidden;
+  border-radius: 5px;
 
   .filter-header {
     display: flex;
@@ -410,13 +441,15 @@ export default {
     padding: 12px;
     display: flex;
     flex-direction: column;
+    background: antiquewhite;
     gap: 10px;
   }
 
   .filter-row {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 10px;
+
   }
 
   .filter-group {
@@ -517,6 +550,7 @@ export default {
   transition: transform .18s, border-color .18s;
   overflow: hidden;
   padding: 8px;
+  border-radius: 5px;
 
   .wrap-type-account {
     display: flex;
@@ -532,7 +566,7 @@ export default {
   .image-container {
     position: relative;
     width: 100%;
-    height: 164px;
+    height: 209px;
     overflow: hidden;
   }
 
@@ -600,7 +634,7 @@ export default {
     padding: 9px 10px;
     background: var(--primary-soft);
     border-left: 3px solid var(--primary);
-    border-radius: 10px;
+    border-radius: 5px;
   }
 
   .old-price {

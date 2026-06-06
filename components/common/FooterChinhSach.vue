@@ -1,6 +1,6 @@
 <template>
     <!-- footer -->
-    <div class="hidden md:flex flex-col items-center !gap-8 page-section-footer">
+    <div class="hidden md:flex flex-col items-center !gap-8 mb-[34px] page-section-footer">
 
 
         <!-- ══════════════════════════════════════════════
@@ -1483,7 +1483,7 @@ $success-bg: #e6f5ed;
 .page-section-footer {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px 16px 0;
+    padding: 20px 16px 20px;
 }
 
 @media (max-width: 768px) {

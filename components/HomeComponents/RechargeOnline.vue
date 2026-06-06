@@ -1,9 +1,8 @@
 <template>
   <div class="flex md:flex-row flex-col gap-4 content-wrapper ro-wrap">
 
-    <div class="flex-1 ro-card">
+    <!-- <div class="flex-1 ro-card">
 
-      <!-- Tab switcher -->
       <div class="ro-tabs">
         <button class="ro-tab" :class="{ active: activeTab === 'deals' }" @click="switchTab('deals')">
           <span class="ro-tab-icon">🔥</span>
@@ -17,10 +16,8 @@
         <div class="ro-tab-slider" :class="activeTab === 'top' ? 'to-right' : ''"></div>
       </div>
 
-      <!-- Body -->
       <div class="ro-body">
 
-        <!-- ── TOP NẠP ── -->
         <transition name="pane">
           <div v-if="activeTab === 'top'" class="ro-pane" key="top">
             <div v-if="isLoading" class="ro-loader">
@@ -29,7 +26,6 @@
 
             <div v-else-if="topRechargeHistory && topRechargeHistory.length > 0">
 
-              <!-- Top 3 podium -->
               <div class="podium">
                 <div class="podium-slot" v-if="topRechargeHistory[1]">
                   <div class="pod-crown silver-crown">✦</div>
@@ -56,7 +52,6 @@
                 </div>
               </div>
 
-              <!-- Rank 4+ -->
               <div class="rest-list" v-if="topRechargeHistory.length > 3">
                 <div class="rest-row" v-for="(item, index) in topRechargeHistory.slice(3)" :key="item.stt"
                   :style="{ animationDelay: `${index * 0.06}s` }">
@@ -78,7 +73,6 @@
           </div>
         </transition>
 
-        <!-- ── ƯU ĐÃI HOT ── -->
         <transition name="pane">
           <div v-if="activeTab === 'deals'" class="ro-pane" key="deals">
             <div v-if="isLoadingDeals" class="ro-loader">
@@ -91,10 +85,8 @@
 
 
 
-                <!-- Middle: info -->
                 <div class="deal-body">
                   <div class="flex items-start gap-2">
-                    <!-- Left: discount badge -->
                     <div class="deal-left">
                       <div class="deal-pct">-{{ deal.discount?.toFixed(0) }}%</div>
                     </div>
@@ -114,7 +106,6 @@
                   </div>
                 </div>
 
-                <!-- Right: arrow -->
                 <div class="deal-cta">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <line x1="5" y1="12" x2="19" y2="12" />
@@ -132,11 +123,11 @@
         </transition>
 
       </div>
-    </div>
+    </div> -->
 
     <!-- Right banner -->
     <div class="flex-[2] gap-4 ro-banner">
-      <img src="@/assets/images/logo/banner.gif" alt="Banner" class="banner-main" />
+      <img :src="bannerImage" alt="Banner" class="banner-main" />
       <div class="gap-4 banner-sub">
         <img src="@/assets/images/logo/chuyenkhoan.gif" alt="Chuyển khoản" />
         <img src="@/assets/images/logo/thecao.gif" alt="Thẻ cào" />
@@ -149,6 +140,9 @@
 <script>
 import account from '~/api/account';
 
+import banner1 from '@/assets/images/logo/banner.gif'
+import banner2 from '@/assets/images/logo/banner3.gif'
+
 export default {
   data() {
     return {
@@ -156,8 +150,10 @@ export default {
       isLoading: false,
       isLoadingDeals: false,
       error: null,
+      bannerImage: banner1,
       topRechargeHistory: [],
       hotDeals: [],
+      timer: null,
     };
   },
 
@@ -221,6 +217,14 @@ export default {
 
   mounted() {
     this.getHotDeals();
+    this.timer = setInterval(() => {
+      this.bannerImage =
+        this.bannerImage === banner1 ? banner2 : banner1
+    }, 5000);
+  },
+
+  beforeUnmount() {
+    clearInterval(this.timer)
   },
 };
 </script>
@@ -251,7 +255,7 @@ $bg-2: white;
 $border: #eedede;
 $shadow: rgba(175, 46, 52, 0.07);
 
-$f:"Roboto Condensed", sans-serif;
+$f: "Roboto Condensed", sans-serif;
 
 // ── WRAP ─────────────────────────────────────────────────────
 .ro-wrap {
@@ -270,6 +274,7 @@ $f:"Roboto Condensed", sans-serif;
   background: $bg;
   border: 1.5px solid $border;
 }
+
 @media (max-width: 768px) {
   .ro-card {
     border-radius: 6px;
@@ -801,14 +806,18 @@ $f:"Roboto Condensed", sans-serif;
 .ro-banner {
   display: flex;
   flex-direction: column;
+  height: 100vh;
 
   .banner-main {
     flex: 1;
     width: 100%;
     min-height: 0;
     object-fit: cover;
+    object-position: top;
     display: block;
-    border: 1.5px solid $border;
+    transition: opacity 0.5s ease;
+    border: 3px solid $border;
+    border-radius: 12px;
   }
 
   .banner-sub {
@@ -821,7 +830,8 @@ $f:"Roboto Condensed", sans-serif;
       width: 0;
       height: auto;
       display: block;
-      border: 1.5px solid $border;
+      border: 3px solid $border;
+      border-radius: 12px;
       object-fit: cover;
     }
   }
@@ -847,6 +857,4 @@ $f:"Roboto Condensed", sans-serif;
     }
   }
 }
-
-
 </style>
