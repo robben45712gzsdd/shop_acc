@@ -48,7 +48,7 @@
                 <div class="info-item">
                   <span class="info-label">Số Tài Khoản</span>
                   <div class="info-value-with-copy">
-                    <span ref="bankAccountNumber">3513042002</span>
+                    <span ref="bankAccountNumber">32822886868</span>
                     <button class="btn-copy-small" @click="copyToClipboard('bankAccountNumber', 'copyBankBtn')"
                       ref="copyBankBtn" title="Sao chép">
                       <i class="fas fa-copy"></i>
@@ -76,7 +76,7 @@
             <div class="detail-section">
               <div class="section-title">Quét Mã QR Để Thanh Toán</div>
               <div class="qr-container">
-                <img :src="`https://img.vietqr.io/image/MB-3513042002-print.png?addInfo=${transactionId}`" alt="QR Code"
+                <img :src="`https://img.vietqr.io/image/MB-32822886868-print.png?addInfo=${transactionId}`" alt="QR Code"
                   class="!h-fit object-contain qr-code" />
                 <p class="qr-hint">Sử dụng ứng dụng ngân hàng để quét mã QR</p>
               </div>
@@ -104,7 +104,7 @@
                   <div class="step-number">3</div>
                   <div class="step-content">
                     <p class="step-title">Điền thông tin chuyển khoản</p>
-                    <p class="step-desc">Số tài khoản: <strong>3513042002</strong> | Nội dung: <strong>{{ transactionId
+                    <p class="step-desc">Số tài khoản: <strong>32822886868</strong> | Nội dung: <strong>{{ transactionId
                         }}</strong></p>
                   </div>
                 </div>

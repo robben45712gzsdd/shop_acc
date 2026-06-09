@@ -184,7 +184,7 @@
                     <h3>Quét mã QR</h3>
                     <div class="qr-box">
                       <img
-                        :src="`https://img.vietqr.io/image/MB-3513042002-print.png?amount=${rechargeAmount}&addInfo=${transactionId}`"
+                        :src="`https://img.vietqr.io/image/MB-32822886868-print.png?amount=${rechargeAmount}&addInfo=${transactionId}`"
                         alt="QR Code" />
                     </div>
                     <p>Dùng Momo hoặc app ngân hàng quét</p>
@@ -322,7 +322,7 @@
         </div>
       </transition>
     </div>
-   
+
   </div>
 </template>
 
@@ -1938,17 +1938,6 @@ $success-bg: #e6f5ed;
     0 40px 80px rgba(28, 10, 11, 0.10);
 }
 
-// top accent line
-.promo-modal::before {
-  content: '';
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 3px;
-  background: linear-gradient(90deg, $brand-deeper, $brand, $brand-mid, $gold-mid, $brand);
-  background-size: 200% 100%;
-  animation: shimmer-line 3s linear infinite;
-  z-index: 2;
-}
 
 @keyframes shimmer-line {
   0% {

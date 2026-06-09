@@ -5,7 +5,7 @@
         <!-- TITLE -->
         <div class="w-full h-full">
           <div class="pt-10 category-header">
-            <h1 class="font-bold !text-white text-3xl category-title">{{ dataCateRoute.title }}</h1>
+            <h1 class="font-bold !text-white text-2xl category-title">{{ dataCateRoute.title }}</h1>
             <div class="category-divider"></div>
           </div>
           <!-- IMAGE -->
@@ -16,9 +16,9 @@
         </div>
       </div>
       <!-- FILTER SECTION -->
-      <div class="pt-10 w-full h-full" v-else>
+      <div class="w-full h-full">
 
-        <div class="category-header">
+        <div class="category-header"  v-if="!dataCateRoute.title">
           <h1 class="font-bold !text-white text-2xl category-title">{{ pathName }}</h1>
           <div class="category-divider"></div>
         </div>

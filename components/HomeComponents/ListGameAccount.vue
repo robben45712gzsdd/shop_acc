@@ -1,6 +1,6 @@
 <template>
   <div class="list-game-account">
-    <div class="!text-white title"><strong>danh mục acc game</strong></div>
+    <!-- <div class="!text-white title"><strong>danh mục acc game</strong></div>
 
     <div class="list-type-account">
       <nuxt-link v-for="category in listCategoryGameAccount" :key="category.categoryId"
@@ -24,10 +24,10 @@
       </nuxt-link>
     </div>
     <div class="mt-10 mb-2 !text-white title"><strong>Free Fire</strong></div>
-    <div class="bg-white w-full h-[2px]"></div>
+    <div class="bg-white w-full h-[2px]"></div> -->
 
     <div class="gap-4 grid grid-cols-1 md:grid-cols-2 mt-4 w-full">
-      <nuxt-link 
+      <nuxt-link
       :to="{
          path: '/AccountCategories/8f3b6f1a-2d4c-4f7e-9a11-5c7d2b9e8a30',
          query: {
@@ -41,33 +41,21 @@
       class="bg-white border border-[5px] border-white rounded-lg overflow-hidden" v-for="(item, index) in listCateFreeFire" :key="index">
         <!-- Banner -->
         <div class="relative">
-          <img :src="(item.banner)" :alt="item.name" class="w-full h-72 object-cover" />
+          <img :src="(item.banner)" :alt="item.name" class="w-full h-auto object-cover" />
           <img :src="(item.imageUrlThumb)" :alt="item.name" class="right-0 bottom-0 absolute w-[40%] h-auto object-cover" />
         </div>
 
         <!-- Content -->
-        <div class="flex justify-between items-center bg-white p-6">
+        <div class="flex justify-between items-center bg-white py-4 px-3">
           <!-- Left -->
           <div>
-            <h2 class="font-bold text-red-800 text-3xl">
+            <h2 class="font-bold text-red-800 text-2xl">
              {{ item.name }}
             </h2>
 
-            <div class="inline-block bg-red-500 mt-3 px-5 py-1 rounded font-bold text-white text-2xl">
+            <div class="inline-block bg-red-500 mt-3 px-5 py-1 rounded font-bold text-white text-xl">
               Siêu giảm giá 50%
             </div>
-          </div>
-
-          <!-- Right -->
-          <div class="text-right">
-            <p class="mb-5 text-black text-md">
-              Đã bán {{ item.totalAccount }} Nick
-            </p>
-
-            <button
-              class="bg-red-500 hover:bg-red-600 shadow-lg px-4 py-2 rounded-2xl font-bold text-white text-xl transition">
-              Xem tất cả
-            </button>
           </div>
         </div>
       </nuxt-link>

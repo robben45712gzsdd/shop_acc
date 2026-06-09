@@ -29,10 +29,10 @@
             </div>
 
             <!-- Center: character image -->
-            <div class="bottom-0 left-1/2 absolute flex items-end h-full -translate-x-1/2 pointer-events-none">
+            <!-- <div class="bottom-0 left-1/2 absolute flex items-end h-full -translate-x-1/2 pointer-events-none">
                 <img src="@/assets/images/logo/0c5c2627f823f5ee27062920c2dd921b322f4338-2712x2160.avif" alt="Characters"
                     class="drop-shadow-2xl w-auto h-[110%] object-contain" />
-            </div>
+            </div> -->
 
             <!-- Right: QR code card -->
             <div class="z-10 relative flex-shrink-0 mr-8 ml-auto">
@@ -1519,18 +1519,6 @@ $success-bg: #e6f5ed;
         0 2px 4px rgba(118, 24, 29, 0.06),
         0 12px 40px rgba(118, 24, 29, 0.14),
         0 40px 80px rgba(28, 10, 11, 0.10);
-}
-
-// top accent line
-.promo-modal::before {
-    content: '';
-    position: absolute;
-    inset: 0 0 auto 0;
-    height: 3px;
-    background: linear-gradient(90deg, $brand-deeper, $brand, $brand-mid, $gold-mid, $brand);
-    background-size: 200% 100%;
-    animation: shimmer-line 3s linear infinite;
-    z-index: 2;
 }
 
 @keyframes shimmer-line {
