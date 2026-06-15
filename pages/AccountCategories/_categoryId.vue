@@ -9,8 +9,8 @@
             <div class="category-divider"></div>
           </div>
           <!-- IMAGE -->
-          <div class="relative m-auto mb-6 w-full h-auto md:h-[80vh] image-container">
-            <img class="rounded-lg w-full h-full object-cover img-type-account" :src="dataCateRoute.banner" alt="Category Image" />
+          <div class="relative m-auto mb-6 w-full h-auto image-container">
+            <img class="rounded-lg border border-white border-1 w-full h-full object-cover img-type-account" :src="dataCateRoute.banner" alt="Category Image" />
             <img class="right-0 bottom-0 absolute w-[40%] object-cover img-type-account" :src="dataCateRoute.imageUrlThumb" alt="Category Image" />
           </div>
         </div>
@@ -574,6 +574,7 @@ export default {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
     display: block;
   }
 

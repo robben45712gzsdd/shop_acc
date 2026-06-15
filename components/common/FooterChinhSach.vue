@@ -7,7 +7,7 @@
        BANNER 1 — HỖ TRỢ VÀ THU MUA
   ══════════════════════════════════════════════ -->
         <div class="relative flex items-center bg-[#c0291e] border-[#fff] border-2 rounded-2xl w-full min-h-[220px]"
-            :style="`background-image: url('` + require('@/assets/images/logo/nen-do-do.jpg') + `'); background-size: cover; background-position: center;`">
+            :style="`background-image: url('` + require('@/assets/images/logo/abc.jpg') + `'); background-size: cover; background-position: center;`">
             <!-- Dark overlay for text legibility -->
 
             <!-- Left: text block -->

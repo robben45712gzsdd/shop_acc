@@ -126,7 +126,7 @@
     </div> -->
 
     <!-- Right banner -->
-    <div class="flex-[2] gap-4 ro-banner pt-10">
+    <div class="flex-[2] gap-4 ro-banner pt-10 md:pt-0">
       <img :src="bannerImage" alt="Banner" class="banner-main" />
       <div class="gap-4 banner-sub">
         <img src="@/assets/images/logo/chuyenkhoan.gif" alt="Chuyển khoản" />
